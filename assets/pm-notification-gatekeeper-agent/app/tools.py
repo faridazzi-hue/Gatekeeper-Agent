@@ -294,10 +294,11 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         result = await client.get(f"{NOTIF_ROOT}/MaintenanceNotification", params=params)
         if isinstance(result, dict) and "d" in result:
             records = result["d"].get("results", [])
-            result["d"]["results"] = [
-                r for r in records
-                if "OSNO" in (r.get("ConcatenatedActiveSystStsName") or "")
-            ]
+            for r in records:
+                logger.info("OSNO_DEBUG notif=%s status=%r", r.get("MaintenanceNotification"), r.get("ConcatenatedActiveSystStsName"))
+            filtered = [r for r in records if "OSNO" in (r.get("ConcatenatedActiveSystStsName") or "")]
+            logger.info("OSNO_DEBUG total=%d kept=%d", len(records), len(filtered))
+            result["d"]["results"] = filtered
         return _rj(result)
 
     async def get_maintenancenotification(
