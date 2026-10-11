@@ -3,11 +3,10 @@ name: session-tracking
 description: Rules for maintaining and displaying a session progress table after every agent response, tracking notifications reviewed and actions taken.
 ---
 
-# Session Progress Tracking
+# MANDATORY: Session Progress Table
 
-## Purpose
-
-After every response, append a session progress table that lets the gatekeeper see at a glance which notifications have been reviewed, what was recommended, what action was taken, and what the current SAP status is.
+**You MUST end EVERY response with the session progress table below — no exceptions.**
+This rule applies whether you are listing, reviewing, approving, rejecting, or answering a general question about notifications. The only exception is when no notifications have been encountered yet in this session (e.g. the user has not yet provided a plant, or the first message is a general question with no notification context).
 
 ## Table Format
 
@@ -45,10 +44,6 @@ Use this exact markdown format:
 2. Update the Recommendation column as soon as analysis is complete.
 3. Update the Action and SAP Status columns only after a SAP write action is confirmed and its API response received — never infer the result.
 4. Carry the full table forward every turn, updating only the changed rows.
-
-## When to Omit
-
-Omit the table only if the session has not yet encountered any notifications (e.g. the user has not yet provided a plant, or the first message is a general question with no notification context).
 
 ## Proposed Next Action
 
