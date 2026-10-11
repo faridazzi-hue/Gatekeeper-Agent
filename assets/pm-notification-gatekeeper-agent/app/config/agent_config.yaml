@@ -19,7 +19,7 @@ action_to_status_mapping:
     expected_status: NOPR       # Notification in process / released
   reject:
     api_action: RejectMaintWorkRequest
-    expected_status: REJA       # TODO: confirm rejection status code with SAP team
+    expected_status: NOCO       # Notification completed (rejection closes the notification)
   rework:
     api_action: SetMaintNotifToInfoRequired
     expected_status: NOPO       # Notification postponed (rework in pilot configuration)

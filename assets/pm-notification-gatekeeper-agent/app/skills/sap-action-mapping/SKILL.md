@@ -14,7 +14,7 @@ Default pilot mapping (may be overridden by configuration):
 | Gatekeeper Decision | SAP API Action | Expected Resulting Status |
 |--------------------|---------------|--------------------------|
 | Approve | `ApproveMaintWorkRequest` | NOPR (notification in process) |
-| Reject (duplicate) | `RejectMaintWorkRequest` | Configured rejection status |
+| Reject (duplicate) | `RejectMaintWorkRequest` | NOCO (notification completed — rejection closes the notification) |
 | Rework / Info required | `SetMaintNotifToInfoRequired` | NOPO (notification postponed) |
 | Place in process | `SetMaintNotifToInProcess` | NOPR |
 | Complete | `CompleteMaintNotification` | NOCO |

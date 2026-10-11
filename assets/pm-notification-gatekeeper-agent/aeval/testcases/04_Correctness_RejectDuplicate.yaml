@@ -23,10 +23,12 @@ test_steps:
       - check: 'The agent presents duplicate candidates with notification numbers, statuses, creation dates, equipment, short descriptions, and the specific matching evidence.'
       - check: 'The agent classifies each candidate as High, Medium, Low, or Not a duplicate likelihood.'
       - check: 'The recommendation cites matching evidence across at least two of: equipment match, failure mode, description semantics — not text similarity alone.'
+      - check: 'After the gatekeeper confirms Reject, the agent reports that the notification status is now NOCO (completed), confirming that rejection closes the notification.'
       - check: 'After the gatekeeper confirms Reject, the agent presents a rejection email draft referencing the duplicate notification number and similarity evidence.'
     rule_compliance_validations:
       - check: 'The agent does not recommend Reject based on text similarity alone; it cites equipment and failure mode evidence alongside description similarity.'
       - check: 'The agent excludes notifications with NOCO status from the duplicate candidate list.'
+      - check: 'The agent does not claim the resulting status is REJA or any other status — it reports the actual status returned by the API, which should be NOCO.'
     tool_validations:
       expected_tool_calls:
         - tool: get_maintenancenotification_for_cds_api_maintnotification

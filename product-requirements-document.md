@@ -582,7 +582,7 @@ All write actions in SAP require explicit gatekeeper confirmation. Override deci
 
 ## Open Questions
 
-- What is the configured action-to-status mapping for this pilot? Specifically: which API action maps to NOPO (notification postponed / rework in the pilot configuration)?
+- What is the configured action-to-status mapping for this pilot? Specifically: which API action maps to NOPO (notification postponed / rework in the pilot configuration)? **Resolved:** `RejectMaintWorkRequest` results in status NOCO (notification completed) — rejection closes the notification rather than setting a separate rejection status. `SetMaintNotifToInfoRequired` maps to NOPO for rework.
 - What are the attachment requirement rules — which notification types or equipment classes require an attachment before approval?
 - Will Outlook draft integration be in scope for the pilot, or will email drafts be presented as text for the gatekeeper to copy manually?
 - What is the target audit storage destination — a file system path, a database table, or an API endpoint?
@@ -597,7 +597,7 @@ All write actions in SAP require explicit gatekeeper confirmation. Override deci
 |------|------------|
 | OSNO | Outstanding notification — the initial SAP status of a newly created maintenance notification awaiting review. |
 | NOPR | Notification in process / released — the SAP status after a notification has been approved and placed in the execution pipeline. |
-| NOCO | Notification completed — the SAP status of a closed notification; excluded from duplicate detection. |
+| NOCO | Notification completed — the SAP status of a closed notification. Also the resulting status when a notification is rejected via RejectMaintWorkRequest (rejection closes the notification). Excluded from duplicate detection. |
 | NOPO | Notification postponed — the SAP status used in the pilot to represent a notification sent back for rework. |
 | ABC indicator | Equipment criticality classification: A = high-critical, B = medium-critical, C = low-critical. |
 | M1 | SAP maintenance notification type for malfunction reports, requiring malfunction start/end dates, breakdown indicator, and duration. |
