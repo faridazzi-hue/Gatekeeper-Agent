@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PM Notification Gatekeeper — SAP</title>
+  <style>
+    :root {
+      --blue:        #0070F2;
+      --blue-dark:   #0040B0;
+      --blue-light:  #EAF3FF;
+      --green:       #107E3E;
+      --orange:      #E76500;
+      --red:         #BB0000;
+      --bg:          #F7F8F9;
+      --surface:     #FFFFFF;
+      --border:      #D9DADB;
+      --text:        #1D2D3E;
+      --muted:       #6A7984;
+      --radius:      8px;
+      --shadow-sm:   0 1px 4px rgba(0,0,0,.10);
+      --shadow:      0 2px 10px rgba(0,0,0,.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "72","72full",Arial,Helvetica,sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--blue);
+      color: #fff;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 12px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,.20);
+      z-index: 10;
+    }
+    .hdr-sap {
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -.5px;
+      line-height: 1;
+    }
+    .hdr-sep { opacity: .4; font-size: 18px; }
+    .hdr-name { font-size: 13px; opacity: .92; }
+    .hdr-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      opacity: .9;
+    }
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #36D068;
+      box-shadow: 0 0 0 2px rgba(54,208,104,.3);
+      flex-shrink: 0;
+    }
+    .new-chat-btn {
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      color: #fff;
+      border-radius: 5px;
+      padding: 3px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background .15s;
+    }
+    .new-chat-btn:hover { background: rgba(255,255,255,.25); }
+
+    /* ── Main ── */
+    main {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-width: 860px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px 16px 0;
+    }
+
+    /* ── Messages ── */
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-bottom: 8px;
+      scroll-behavior: smooth;
+    }
+    .messages::-webkit-scrollbar { width: 4px; }
+    .messages::-webkit-scrollbar-track { background: transparent; }
+    .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* ── Welcome screen ── */
+    .welcome {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      text-align: center;
+      padding: 32px 16px;
+      animation: fadein .3s ease;
+    }
+    .welcome-icon {
+      width: 68px; height: 68px;
+      border-radius: 50%;
+      background: var(--blue-light);
+      border: 2px solid #C5DCF9;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 30px;
+    }
+    .welcome h1 { font-size: 18px; font-weight: 700; }
+    .welcome p { font-size: 13px; color: var(--muted); max-width: 400px; line-height: 1.55; }
+    .chips {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      width: 100%;
+      max-width: 480px;
+    }
+    .chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 9px 14px;
+      font-size: 13px;
+      color: var(--blue);
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      line-height: 1.4;
+      transition: border-color .12s, background .12s;
+    }
+    .chip:hover { border-color: var(--blue); background: var(--blue-light); }
+
+    /* ── Message row ── */
+    .msg { display: flex; gap: 9px; align-items: flex-start; animation: fadein .15s ease; }
+    .msg.user { flex-direction: row-reverse; }
+
+    @keyframes fadein { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+
+    .avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+    .avatar.a { background: var(--blue); color: #fff; }
+    .avatar.u { background: var(--muted); color: #fff; }
+
+    .bubble {
+      max-width: 74%;
+      padding: 9px 13px;
+      border-radius: var(--radius);
+      font-size: 13.5px;
+      line-height: 1.6;
+      box-shadow: var(--shadow-sm);
+      word-break: break-word;
+    }
+    .msg.agent .bubble {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top-left-radius: 2px;
+    }
+    .msg.user .bubble {
+      background: var(--blue);
+      color: #fff;
+      border-top-right-radius: 2px;
+    }
+    .msg.error .bubble {
+      background: #FFF3F3;
+      border: 1px solid #FFCDD2;
+      color: var(--red);
+      font-size: 13px;
+    }
+
+    /* Markdown in agent bubbles */
+    .bubble h1,.bubble h2,.bubble h3 { font-size: 14px; font-weight: 700; margin: 10px 0 4px; }
+    .bubble h1:first-child,.bubble h2:first-child,.bubble h3:first-child { margin-top: 0; }
+    .bubble p { margin: 5px 0; }
+    .bubble p:first-child { margin-top: 0; }
+    .bubble p:last-child { margin-bottom: 0; }
+    .bubble ul,.bubble ol { padding-left: 20px; margin: 5px 0; }
+    .bubble li { margin: 2px 0; }
+    .bubble strong { font-weight: 700; }
+    .bubble em { font-style: italic; }
+    .bubble code {
+      background: #F0F2F3;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-family: "Cascadia Code","Consolas",monospace;
+      font-size: 12px;
+    }
+    .bubble pre {
+      background: #F0F2F3;
+      border-radius: 5px;
+      padding: 10px 12px;
+      overflow-x: auto;
+      margin: 8px 0;
+      font-size: 12px;
+    }
+    .bubble pre code { background: none; padding: 0; }
+    .bubble hr { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+
+    /* Recommendation badges */
+    .badge {
+      display: inline-block;
+      border-radius: 4px;
+      padding: 1px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+    }
+    .badge-approve { background: #EBFBEE; color: var(--green); border: 1px solid #A5D6A7; }
+    .badge-rework  { background: #FFF3E0; color: var(--orange); border: 1px solid #FFCC80; }
+    .badge-reject  { background: #FFF3F3; color: var(--red); border: 1px solid #FFCDD2; }
+
+    /* Streaming cursor */
+    .cursor {
+      display: inline-block;
+      width: 2px; height: 13px;
+      background: var(--blue);
+      border-radius: 1px;
+      animation: blink 1s step-end infinite;
+      vertical-align: text-bottom;
+      margin-left: 2px;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── Input area ── */
+    .input-wrap {
+      flex-shrink: 0;
+      padding: 10px 0 14px;
+    }
+    .input-box {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 7px 8px;
+      box-shadow: var(--shadow);
+      transition: border-color .15s;
+    }
+    .input-box:focus-within { border-color: var(--blue); }
+    textarea {
+      flex: 1;
+      border: none;
+      outline: none;
+      resize: none;
+      font-family: inherit;
+      font-size: 13.5px;
+      line-height: 1.5;
+      min-height: 34px;
+      max-height: 110px;
+      padding: 5px 6px;
+      background: transparent;
+      color: var(--text);
+    }
+    textarea::placeholder { color: var(--muted); }
+    .send-btn {
+      width: 34px; height: 34px;
+      border-radius: 6px;
+      border: none;
+      background: var(--blue);
+      color: #fff;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background .12s, transform .1s;
+    }
+    .send-btn:hover:not(:disabled) { background: var(--blue-dark); }
+    .send-btn:active:not(:disabled) { transform: scale(.94); }
+    .send-btn:disabled { background: var(--border); cursor: not-allowed; }
+    .send-btn svg { width: 15px; height: 15px; }
+    .hint {
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="hdr-sap">SAP</span>
+  <span class="hdr-sep">|</span>
+  <span class="hdr-name">PM Notification Gatekeeper</span>
+  <div class="hdr-right">
+    <span class="status-pill"><span class="status-dot"></span>Online</span>
+    <button class="new-chat-btn" onclick="newConversation()">+ New conversation</button>
+  </div>
+</header>
+
+<main>
+  <div class="messages" id="msgs"></div>
+  <div class="input-wrap">
+    <div class="input-box">
+      <textarea
+        id="inp"
+        placeholder="Ask about maintenance notifications…"
+        rows="1"
+        onkeydown="onKey(event)"
+        oninput="grow(this)"
+        autocomplete="off"
+        spellcheck="true"
+      ></textarea>
+      <button class="send-btn" id="sendBtn" onclick="send()" title="Send  (Enter)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="hint">Enter to send &nbsp;·&nbsp; Shift+Enter for new line</div>
+  </div>
+</main>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let contextId  = null;
+let streaming  = false;
+
+const EXAMPLES = [
+  "Show me the pending maintenance notifications for plant 1710",
+  "Review notification 10000123 and give me your recommendation",
+  "Are there any incomplete or duplicate notifications this week?",
+  "Which notifications are missing equipment or malfunction class?",
+];
+
+// ── Bootstrap ──────────────────────────────────────────────────────────────
+(function init() { showWelcome(); })();
+
+function showWelcome() {
+  const msgs = document.getElementById('msgs');
+  msgs.innerHTML = '';
+  msgs.innerHTML = `
+    <div class="welcome" id="welcome">
+      <div class="welcome-icon">🔧</div>
+      <h1>PM Notification Gatekeeper</h1>
+      <p>I screen SAP plant maintenance notifications for completeness, consistency,
+         and duplicate detection — then recommend <strong>Approve</strong>,
+         <strong>Rework</strong>, or <strong>Reject</strong> before any SAP action.</p>
+      <div class="chips">
+        ${EXAMPLES.map(e => `<button class="chip" onclick="sendExample(this)">${e}</button>`).join('')}
+      </div>
+    </div>`;
+  contextId = null;
+}
+
+// ── Helpers ─────────────────────────────────────────────────────────────────
+function uid() { return Math.random().toString(36).slice(2,9) + Date.now().toString(36); }
+
+function grow(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 110) + 'px';
+}
+
+function onKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+}
+
+function scrollBottom() {
+  const el = document.getElementById('msgs');
+  el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+}
+
+// ── Render helpers ──────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+function mdToHtml(raw) {
+  // Escape HTML, then apply lightweight markdown
+  let s = esc(raw);
+
+  // Code blocks (``` ... ```) — do before inline code
+  s = s.replace(/```[^\n]*\n?([\s\S]*?)```/g, (_, code) =>
+    `<pre><code>${code.trim()}</code></pre>`);
+  // Inline code
+  s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+  // Bold / italic
+  s = s.replace(/\*\*\*([^*]+)\*\*\*/g, '<strong><em>$1</em></strong>');
+  s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+  // Horizontal rules
+  s = s.replace(/^---+$/gm, '<hr>');
+  // Headers
+  s = s.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  s = s.replace(/^## (.+)$/gm, '<h3>$1</h3>');
+  s = s.replace(/^# (.+)$/gm, '<h3>$1</h3>');
+  // Unordered lists — collect consecutive lines
+  s = s.replace(/^[*\-•] (.+)$/gm, '<li>$1</li>');
+  s = s.replace(/(<li>[\s\S]*?<\/li>\n?)+/g, m => `<ul>${m.trim()}</ul>`);
+  // Ordered lists
+  s = s.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+  // Recommendation badge shortcuts
+  s = s.replace(/\[APPROVE\]/gi, '<span class="badge badge-approve">Approve</span>');
+  s = s.replace(/\[REWORK\]/gi,  '<span class="badge badge-rework">Rework</span>');
+  s = s.replace(/\[REJECT\]/gi,  '<span class="badge badge-reject">Reject</span>');
+  // Paragraphs
+  s = s.replace(/\n{2,}/g, '</p><p>');
+  s = s.replace(/\n/g, '<br>');
+  s = `<p>${s}</p>`;
+  // Clean up paragraph wrapping around block elements
+  s = s.replace(/<p>(<(?:ul|ol|pre|h\d|hr)[^>]*>)/g, '$1');
+  s = s.replace(/(<\/(?:ul|ol|pre|h\d|hr)>)<\/p>/g, '$1');
+  s = s.replace(/<p><\/p>/g, '');
+
+  return s;
+}
+
+// ── Message creation ────────────────────────────────────────────────────────
+function addMsg(role, htmlContent) {
+  // Remove welcome screen on first real message
+  const welcome = document.getElementById('welcome');
+  if (welcome) welcome.remove();
+
+  const msgs = document.getElementById('msgs');
+  const row  = document.createElement('div');
+  row.className = `msg ${role}`;
+
+  const avatarText = role === 'agent' ? '⚙' : '👤';
+  const avatarCls  = role === 'agent' ? 'a'  : 'u';
+
+  row.innerHTML = `
+    <div class="avatar ${avatarCls}">${avatarText}</div>
+    <div class="bubble">${htmlContent}</div>`;
+  msgs.appendChild(row);
+  scrollBottom();
+  return row.querySelector('.bubble');
+}
+
+// ── Actions ─────────────────────────────────────────────────────────────────
+function newConversation() {
+  if (streaming) return;
+  showWelcome();
+  document.getElementById('inp').value = '';
+  document.getElementById('inp').style.height = 'auto';
+}
+
+function sendExample(btn) {
+  document.getElementById('inp').value = btn.textContent;
+  send();
+}
+
+async function send() {
+  if (streaming) return;
+  const inp  = document.getElementById('inp');
+  const text = inp.value.trim();
+  if (!text) return;
+
+  inp.value = '';
+  inp.style.height = 'auto';
+  document.getElementById('sendBtn').disabled = true;
+
+  // User bubble
+  addMsg('user', esc(text).replace(/\n/g,'<br>'));
+
+  // Agent bubble with live cursor
+  const bubble = addMsg('agent', '<span class="cursor"></span>');
+  let rawText = '';
+  streaming   = true;
+
+  try {
+    const body = {
+      jsonrpc: '2.0',
+      id: uid(),
+      method: 'message/stream',
+      params: {
+        message: {
+          messageId: uid(),
+          role: 'user',
+          parts: [{ kind: 'text', text }],
+          ...(contextId ? { contextId } : {}),
+        }
+      }
+    };
+
+    const resp = await fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'text/event-stream' },
+      body: JSON.stringify(body),
+    });
+
+    if (!resp.ok) throw new Error(`HTTP ${resp.status} — ${resp.statusText}`);
+
+    const reader = resp.body.getReader();
+    const dec    = new TextDecoder();
+    let   buf    = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+
+      let nl;
+      while ((nl = buf.indexOf('\n')) !== -1) {
+        const line = buf.slice(0, nl).trim();
+        buf = buf.slice(nl + 1);
+
+        if (!line.startsWith('data:')) continue;
+        const payload = line.slice(5).trim();
+        if (!payload || payload === '[DONE]') continue;
+
+        let evt;
+        try { evt = JSON.parse(payload); } catch { continue; }
+
+        const result = evt.result ?? evt;
+
+        // Capture session context
+        if (result.contextId && !contextId) contextId = result.contextId;
+
+        const kind = result.kind;
+
+        if (kind === 'artifact-update') {
+          const parts = result.artifact?.parts ?? [];
+          for (const p of parts) {
+            if (p.kind === 'text' && p.text) rawText += p.text;
+          }
+          bubble.innerHTML = mdToHtml(rawText) + '<span class="cursor"></span>';
+          scrollBottom();
+        } else if (kind === 'status-update') {
+          if (result.status?.message?.parts) {
+            // "Processing…" interim text — optionally show as tooltip/log
+          }
+        }
+      }
+    }
+
+    // Finalise
+    bubble.innerHTML = rawText ? mdToHtml(rawText) : '<em style="color:var(--muted)">No response received.</em>';
+
+  } catch (err) {
+    bubble.className = 'bubble';  // remove inherited styling
+    const row = bubble.closest('.msg');
+    row.className = 'msg error';
+    bubble.textContent = '⚠ ' + err.message;
+  }
+
+  streaming = false;
+  document.getElementById('sendBtn').disabled = false;
+  scrollBottom();
+  inp.focus();
+}
+</script>
+
+</body>
+</html>

@@ -1,4 +1,5 @@
 import os
+import pathlib
 
 # Gate Joule/Kyma-specific AI Core telemetry setup.
 # On CF this env var is not set, so the block is skipped.
@@ -16,9 +17,17 @@ from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import AgentCapabilities, AgentCard, AgentSkill
 from sap_cloud_sdk import bootstrap
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+from starlette.responses import HTMLResponse
 
 from agent_executor import AgentExecutor
 from mcp_providers.agw import set_user_token, reset_user_token
+
+_CHAT_HTML = (pathlib.Path(__file__).parent / "static" / "chat.html").read_text(encoding="utf-8")
+
+
+async def _chat_page(request: Request) -> HTMLResponse:
+    return HTMLResponse(_CHAT_HTML)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -69,6 +78,7 @@ def _build_app():
         ),
     )
     app = server.build()
+    app.add_route("/chat", _chat_page, methods=["GET"])
     app.add_middleware(JWTContextMiddleware)
     try:
         bootstrap(app)
