@@ -492,19 +492,38 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
 
     async def function_rejectmaintworkrequest(
         MaintenanceNotification: str,
-        MaintNotifLongTextForRejection: str | None = None,
+        MaintNotifRejectionReasonCode: str,
+        MaintNotifLongTextForEdit: str | None = None,
     ) -> str:
-        params: dict[str, Any] = {"MaintenanceNotification": f"'{MaintenanceNotification}'"}
-        if MaintNotifLongTextForRejection:
-            params["MaintNotifLongTextForRejection"] = f"'{MaintNotifLongTextForRejection}'"
+        """Reject a maintenance work request (sets status APRF / NOCO).
+        MaintNotifRejectionReasonCode is mandatory (see customizing V_EAM_REASONCODE).
+        MaintNotifLongTextForEdit is the rejection explanation text."""
+        params: dict[str, Any] = {
+            "MaintenanceNotification": f"'{MaintenanceNotification}'",
+            "MaintNotifRejectionReasonCode": f"'{MaintNotifRejectionReasonCode}'",
+        }
+        if MaintNotifLongTextForEdit:
+            params["MaintNotifLongTextForEdit"] = f"'{MaintNotifLongTextForEdit}'"
         result = await client.function_import(NOTIF_ROOT, "RejectMaintWorkRequest", params=params, method="POST")
         return _rj(result)
 
-    async def function_setmaintnotiftoinforequired(MaintenanceNotification: str) -> str:
+    async def function_setmaintnotiftoinforequired(
+        MaintenanceNotification: str,
+        MaintNotifRejectionReasonCode: str,
+        MaintNotifLongTextForEdit: str | None = None,
+    ) -> str:
+        """Send notification back to reporter for correction (sets status AIRQ / OSNO).
+        MaintNotifRejectionReasonCode is mandatory. MaintNotifLongTextForEdit explains
+        what additional information is required."""
+        params: dict[str, Any] = {
+            "MaintenanceNotification": f"'{MaintenanceNotification}'",
+            "MaintNotifRejectionReasonCode": f"'{MaintNotifRejectionReasonCode}'",
+        }
+        if MaintNotifLongTextForEdit:
+            params["MaintNotifLongTextForEdit"] = f"'{MaintNotifLongTextForEdit}'"
         result = await client.function_import(
             NOTIF_ROOT, "SetMaintNotifToInfoRequired",
-            params={"MaintenanceNotification": f"'{MaintenanceNotification}'"},
-            method="POST",
+            params=params, method="POST",
         )
         return _rj(result)
 

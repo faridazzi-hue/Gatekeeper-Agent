@@ -390,10 +390,17 @@ class Client:
                         headers=self._base_headers(),
                         params=etag_params,
                     )
-                    etag = etag_r.headers.get("ETag") or etag_r.headers.get("etag") or "*"
+                    etag = etag_r.headers.get("ETag") or etag_r.headers.get("etag")
+                    if not etag:
+                        try:
+                            etag_meta = etag_r.json().get("d", {}).get("__metadata") or {}
+                            etag = etag_meta.get("etag") or ""
+                        except Exception:
+                            etag = ""
                 else:
-                    etag = "*"
-                headers["If-Match"] = etag
+                    etag = ""
+                if etag:
+                    headers["If-Match"] = etag
                 r = await client.post(
                     self._build_url(dest.url, path),
                     auth=self._auth(dest),
