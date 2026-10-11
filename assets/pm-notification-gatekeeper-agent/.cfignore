@@ -1,0 +1,39 @@
+# Joule/Kyma artefacts — kept on disk for dual-mode, excluded from CF upload
+asset.yaml
+
+# Test infrastructure
+tests/
+prebuilt_tests/
+conftest.py
+pytest.ini
+requirements-test.txt
+
+# Coverage and test artifacts
+.coverage
+.coveragerc
+coverage.json
+test_report.json
+
+# Evaluation suite
+aeval/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Documentation and meta
+*.md
+TEMPLATE_VERSION
+
+# Mock data (test fixture — not needed at runtime)
+mcp-mock.json
+
+# Migration artifacts
+migration-audit/
+
+# Joule requirements file (CF uses requirements.txt)
+requirements-joule.txt

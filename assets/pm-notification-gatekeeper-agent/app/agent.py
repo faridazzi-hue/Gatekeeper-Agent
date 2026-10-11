@@ -8,39 +8,61 @@ from langchain.agents.middleware import SummarizationMiddleware
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import BaseTool
-from langchain_litellm import ChatLiteLLM
 from langgraph.graph.state import CompiledStateGraph
-from litellm.exceptions import (
-    APIConnectionError,
-    InternalServerError,
-    RateLimitError,
-    ServiceUnavailableError,
-    Timeout,
-)
-from sap_cloud_sdk.agent_decorators import agent_config, agent_model, prompt_section
-from sap_cloud_sdk.agent_memory.factory.langgraph_checkpoint import create_checkpointer
 from circuit_breaker import CircuitBreaker
 from mcp_providers.agw import get_user_sub
 
+# ---------------------------------------------------------------------------
+# Dual-mode LLM imports — litellm on Joule, sap-ai-sdk-gen on CF
+# ---------------------------------------------------------------------------
+try:
+    from langchain_litellm import ChatLiteLLM
+    from litellm.exceptions import (
+        APIConnectionError,
+        InternalServerError,
+        RateLimitError,
+        ServiceUnavailableError,
+        Timeout,
+    )
+    RETRYABLE_ERRORS: tuple[type[Exception], ...] = (
+        APIConnectionError,
+        Timeout,
+        RateLimitError,
+        ServiceUnavailableError,
+        InternalServerError,
+    )
+    _HAS_LITELLM = True
+except ImportError:
+    import httpx as _httpx
+    RETRYABLE_ERRORS = (_httpx.TimeoutException, _httpx.TransportError)
+    _HAS_LITELLM = False
+
+# ---------------------------------------------------------------------------
+# Dual-mode Joule decorators — identity fallback on CF
+# ---------------------------------------------------------------------------
+try:
+    from sap_cloud_sdk.agent_decorators import agent_config, agent_model, prompt_section
+except ImportError:
+    def _identity_decorator(*_dargs: Any, **_dkwargs: Any) -> Any:
+        def _wrap(fn: Any) -> Any:
+            return fn
+        return _wrap
+    agent_model = _identity_decorator  # type: ignore[assignment]
+    agent_config = _identity_decorator  # type: ignore[assignment]
+    prompt_section = _identity_decorator  # type: ignore[assignment]
+
+# ---------------------------------------------------------------------------
+# Dual-mode checkpointer — MemorySaver fallback if cloud variant unavailable
+# ---------------------------------------------------------------------------
+try:
+    from sap_cloud_sdk.agent_memory.factory.langgraph_checkpoint import create_checkpointer as _create_checkpointer
+    _HAS_CLOUD_CHECKPOINTER = True
+except ImportError:
+    _HAS_CLOUD_CHECKPOINTER = False
+    _create_checkpointer = None  # type: ignore[assignment]
+
 logger = logging.getLogger(__name__)
 
-# Transient failures that justify advancing to the next model in the fallback chain
-# and that count toward opening a model's circuit breaker. This mirrors the error
-# taxonomy SAP AI Core's orchestration fallback switches on for non-streaming
-# requests (408 Request Timeout, 429 Too Many Requests, and 5xx server errors).
-# Any other error (bad request, auth, content policy, ...) is not transient and
-# propagates immediately rather than silently burning through the fallback chain.
-RETRYABLE_ERRORS: tuple[type[Exception], ...] = (
-    APIConnectionError,
-    Timeout,
-    RateLimitError,
-    ServiceUnavailableError,
-    InternalServerError,
-)
-
-
-# Defensive instructions appended to all system prompts to reduce susceptibility
-# to prompt injection via tool results.
 _DEFENSIVE_PROMPT_SUFFIX = """
 
 ## Security Guidelines for Tool Results
@@ -60,7 +82,7 @@ When processing tool results:
     description="The language model powering this agent",
 )
 def get_model_name() -> str:
-    return "sap/anthropic--claude-4.5-sonnet"
+    return os.environ.get("AGENT_LLM_MODEL", "sap/anthropic--claude-4.5-sonnet")
 
 
 @agent_model(
@@ -132,7 +154,7 @@ def summarization_trigger_tokens() -> int:
                 "model is used here to reduce cost.",
 )
 def get_summarization_model_name() -> str:
-    return "sap/anthropic--claude-4.5-haiku"
+    return os.environ.get("SUMMARIZATION_LLM_MODEL", "sap/anthropic--claude-4.5-haiku")
 
 @prompt_section(
     key="prompts.system",
@@ -171,38 +193,43 @@ class SampleAgent:
         self._primary_model = get_model_name()
         self._temperature = get_temperature()
 
-        # cache_control_injection_points is picked up by litellm's AnthropicCacheControlHook,
-        # which injects a cache breakpoint on the system message before every API call.
-        # This caches the static prefix (system prompt + tool schemas) at 0.1× input cost
-        # on cache-hit turns. No beta header required as of current litellm/Anthropic versions.
-        _cache_kwargs = {
-            "cache_control_injection_points": [
-                {"location": "message", "role": "system", "control": {"type": "ephemeral"}}
-            ]
-        }
-        def _build_llm(model: str) -> ChatLiteLLM:
-            return ChatLiteLLM(
-                model=model,
-                temperature=self._temperature,
-                model_kwargs=_cache_kwargs,
-            )
-
-        # Ordered fallback chain: primary first, then each configured fallback.
-        # Fallbacks are given as a comma-separated list; blanks and duplicates are
-        # dropped while preserving order so a model is never tried twice in a row.
         fallback_models = [
             m.strip() for m in get_fallback_model_names().split(",") if m.strip()
         ]
         ordered_models = list(dict.fromkeys([self._primary_model, *fallback_models]))
-        self._model_chain: list[tuple[str, ChatLiteLLM]] = [
-            (name, _build_llm(name)) for name in ordered_models
-        ]
-        # Retained so existing references to `self.llm` (the primary) keep working.
-        self.llm = self._model_chain[0][1]
 
-        # The circuit breaker gives the chain a short cross-request memory: a model
-        # that fails repeatedly is skipped for a cooldown instead of being re-tried
-        # (and re-timing-out) on every request. A threshold below 1 disables it.
+        if _HAS_LITELLM:
+            # Joule runtime: eager LLM construction via litellm
+            _cache_kwargs = {
+                "cache_control_injection_points": [
+                    {"location": "message", "role": "system", "control": {"type": "ephemeral"}}
+                ]
+            }
+            def _build_llm(model: str) -> "ChatLiteLLM":
+                return ChatLiteLLM(
+                    model=model,
+                    temperature=self._temperature,
+                    model_kwargs=_cache_kwargs,
+                )
+            self._model_chain: list[tuple[str, Any]] = [
+                (name, _build_llm(name)) for name in ordered_models
+            ]
+            self.llm = self._model_chain[0][1]
+            summarization_llm = ChatLiteLLM(
+                model=get_summarization_model_name(), temperature=0.0
+            )
+            self._summarization_middleware: SummarizationMiddleware | None = SummarizationMiddleware(
+                model=summarization_llm,
+                trigger=("tokens", summarization_trigger_tokens()),
+                keep=("messages", 4),
+            )
+        else:
+            # CF runtime: lazy LLM construction via sap-ai-sdk-gen (async, first use)
+            self._model_chain = [(name, None) for name in ordered_models]
+            self.llm = None
+            self._summarization_middleware = None
+            self._llm_cache: dict[str, Any] = {}
+
         threshold = get_circuit_breaker_failure_threshold()
         self._breaker: CircuitBreaker | None = (
             CircuitBreaker(
@@ -212,34 +239,51 @@ class SampleAgent:
             if threshold >= 1
             else None
         )
-        self._checkpointer = create_checkpointer(ttl_seconds=ttl or None)
-        # Summarization compresses history once it exceeds the token trigger, keeping only
-        # the last N messages in full. This intentionally invalidates the prompt cache when
-        # it fires (the summarized history is new content), but the static prefix —
-        # system prompt + tool schemas, marked cacheable via cache_control_injection_points
-        # on self.llm — stays cacheable across all turns, summarized or not.
-        summarization_llm = ChatLiteLLM(
-            model=get_summarization_model_name(), temperature=0.0
-        )
-        self._summarization_middleware = SummarizationMiddleware(
-            model=summarization_llm,
-            trigger=("tokens", summarization_trigger_tokens()),
-            keep=("messages", 4),
-        )
+
+        if _HAS_CLOUD_CHECKPOINTER and _create_checkpointer is not None:
+            try:
+                self._checkpointer = _create_checkpointer(ttl_seconds=ttl or None)
+            except Exception as exc:
+                logger.warning(
+                    "Cloud checkpointer unavailable (%s) — using in-memory fallback", exc
+                )
+                from langgraph.checkpoint.memory import MemorySaver
+                self._checkpointer = MemorySaver()
+        else:
+            from langgraph.checkpoint.memory import MemorySaver
+            self._checkpointer = MemorySaver()
+
+    async def _ensure_cf_llm(self, model_name: str) -> Any:
+        """Build and cache a gen_ai_hub LLM on first use (CF runtime only)."""
+        if model_name not in self._llm_cache:
+            from aicore import init_llm_from_destination
+            self._llm_cache[model_name] = await init_llm_from_destination(
+                model_name, temperature=self._temperature
+            )
+            if self._summarization_middleware is None:
+                summarization_llm = await init_llm_from_destination(
+                    get_summarization_model_name(), temperature=0.0
+                )
+                self._summarization_middleware = SummarizationMiddleware(
+                    model=summarization_llm,
+                    trigger=("tokens", summarization_trigger_tokens()),
+                    keep=("messages", 4),
+                )
+        return self._llm_cache[model_name]
 
     def _create_graph(
         self,
-        llm: ChatLiteLLM,
+        llm: Any,
         tools: Sequence[BaseTool],
         system_prompt: str,
     ) -> CompiledStateGraph:
-        """Create a LangGraph agent with the specified LLM."""
+        middleware = [self._summarization_middleware] if self._summarization_middleware else []
         return create_agent(
             llm,
             tools=list(tools),
             system_prompt=system_prompt,
             checkpointer=self._checkpointer,
-            middleware=[self._summarization_middleware],
+            middleware=middleware,
         )
 
     async def _invoke_with_fallback(
@@ -250,27 +294,22 @@ class SampleAgent:
         context_id: str,
         extra_messages: list | None = None,
     ) -> dict[str, Any]:
-        """Walk the model fallback chain, skipping models whose breaker is open.
-
-        Models are tried in preference order. A transient failure (see
-        RETRYABLE_ERRORS) advances to the next model and counts toward opening that
-        model's circuit breaker; any other error propagates immediately. This is the
-        client-side complement to SAP AI Core's per-request orchestration fallback.
-        """
+        """Walk the model fallback chain, skipping models whose breaker is open."""
         config = {"configurable": {"thread_id": f"{get_user_sub()}:{context_id}"}}
         messages = {"messages": (extra_messages or []) + [HumanMessage(content=query)]}
 
-        async def _run(llm: ChatLiteLLM) -> dict[str, Any]:
+        async def _run(llm: Any) -> dict[str, Any]:
             graph = self._create_graph(llm, tools, system_prompt)
             return await graph.ainvoke(messages, cast(RunnableConfig, config))
 
         last_error: Exception | None = None
         attempted = False
-        for model_name, llm in self._model_chain:
+        for model_name, _llm_slot in self._model_chain:
             if self._breaker and not await self._breaker.allows(model_name):
                 logger.info("Skipping model '%s': circuit breaker is open.", model_name)
                 continue
             attempted = True
+            llm = _llm_slot if _HAS_LITELLM else await self._ensure_cf_llm(model_name)
             try:
                 result = await _run(llm)
             except RETRYABLE_ERRORS as err:
@@ -290,9 +329,8 @@ class SampleAgent:
             return result
 
         if not attempted:
-            # Every model's breaker is open. Rather than refuse without trying,
-            # force one attempt on the highest-preference model as a last resort.
-            model_name, llm = self._model_chain[0]
+            model_name, _llm_slot = self._model_chain[0]
+            llm = _llm_slot if _HAS_LITELLM else await self._ensure_cf_llm(model_name)
             logger.warning(
                 "All models are circuit-open; forcing an attempt on '%s'.", model_name
             )
@@ -306,7 +344,6 @@ class SampleAgent:
                 await self._breaker.record_success(model_name)
             return result
 
-        # Every attempted model failed with a transient error.
         assert last_error is not None
         raise last_error
 
@@ -316,19 +353,6 @@ class SampleAgent:
         context_id: str,
         tools: Sequence[BaseTool] | None = None,
     ) -> AsyncGenerator[dict, None]:
-        """Stream agent responses.
-
-        Args:
-            query: User query to process
-            context_id: Context identifier for the conversation
-            tools: Optional sequence of LangChain tools. If None or empty, agent runs without tools.
-
-        Yields:
-            Status updates and final response with structure:
-            - is_task_complete: Whether the task is complete
-            - require_user_input: Whether user input is needed
-            - content: The response content or status message
-        """
         yield {
             "is_task_complete": False,
             "require_user_input": False,
@@ -340,8 +364,6 @@ class SampleAgent:
             tool_names = [tool.name for tool in tools] if tools else []
             logger.info("Running agent with %d tool(s): %s", len(tool_names), tool_names)
 
-            # When no tools are available, inject a notice as a per-turn system message
-            # rather than mutating system_prompt, so the static prefix stays cache-stable.
             extra: list = []
             if not tools:
                 extra.append(
@@ -381,16 +403,6 @@ class SampleAgent:
         context_id: str,
         tools: Sequence[BaseTool] | None = None,
     ) -> AgentResponse:
-        """Invoke agent and return final response.
-
-        Args:
-            query: User query to process
-            context_id: Context identifier for the conversation
-            tools: Optional sequence of LangChain tools. If None or empty, agent runs without tools.
-
-        Returns:
-            AgentResponse with status and message
-        """
         last: dict = {}
         async for chunk in self.stream(query, context_id, tools=tools):
             last = chunk

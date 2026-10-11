@@ -1,22 +1,17 @@
-# Deploy to Joule Studio
-# Trigger manually from GitHub UI: Actions > Deploy to Joule Studio > Run workflow
+# Deploy pm-notification-gatekeeper-agent to BTP Cloud Foundry
+# Trigger manually: Actions > Deploy to Cloud Foundry > Run workflow
 #
-# Required organization secrets (Settings > Secrets and variables > Actions > Secrets):
-#   SCI_TENANT_URL   - Issuer URI of the SAP Cloud Identity Services tenant
-#   SCI_CLIENT_ID    - Client ID of the SCI application
-#   JOULE_STUDIO_URL - Base URL of the Joule Studio solution handling API
-#   SCI_CLIENT_SECRET - Client secret of the SCI application
-#
-# Setup:
-#   1. This file is pushed automatically by Joule Studio when you push your solution
-#   2. Set the required organization secrets listed above
-#   3. Grant this repository access to each organization secret
-#   4. Complete the SCI client credentials configuration described in SETUP.md
+# Required repository secrets (Settings > Secrets and variables > Actions):
+#   CF_API      - CF API endpoint, e.g. https://api.cf.eu11.hana.ondemand.com
+#   CF_ORG      - CF org name
+#   CF_SPACE    - CF space name
+#   CF_USERNAME - SAP user email (technical/service account recommended)
+#   CF_PASSWORD - SAP user password
 
-name: Deploy to Joule Studio
+name: Deploy to Cloud Foundry
 
 on:
-  workflow_dispatch:  # manual trigger only
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -28,22 +23,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Joule Studio CLI
-        uses: ./.github/actions/setup-jl
+      - name: Install CF CLI v8
+        run: |
+          wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key \
+            | sudo gpg --dearmor -o /usr/share/keyrings/cf-cli.gpg
+          echo "deb [signed-by=/usr/share/keyrings/cf-cli.gpg] https://packages.cloudfoundry.org/debian stable main" \
+            | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+          sudo apt-get update -qq
+          sudo apt-get install -y cf8-cli
 
-      - name: Fetch SCI token via client secret
-        id: fetch-token
-        uses: ./.github/actions/token-fetch
-        with:
-          sciTenantUrl: ${{ secrets.SCI_TENANT_URL }}
-          sciClientId: ${{ secrets.SCI_CLIENT_ID }}
-          sciClientSecret: ${{ secrets.SCI_CLIENT_SECRET }}
+      - name: CF Login
+        run: |
+          cf login \
+            -a "${{ secrets.CF_API }}" \
+            -u "${{ secrets.CF_USERNAME }}" \
+            -p "${{ secrets.CF_PASSWORD }}" \
+            -o "${{ secrets.CF_ORG }}" \
+            -s "${{ secrets.CF_SPACE }}"
 
-      - name: Build solution
-        uses: ./.github/actions/build
-
-      - name: Deploy solution
-        uses: ./.github/actions/deploy
-        with:
-          sciToken: ${{ steps.fetch-token.outputs.sciToken }}
-          jouleStudioUrl: ${{ secrets.JOULE_STUDIO_URL }}
+      - name: CF Push
+        working-directory: assets/pm-notification-gatekeeper-agent
+        run: cf push
