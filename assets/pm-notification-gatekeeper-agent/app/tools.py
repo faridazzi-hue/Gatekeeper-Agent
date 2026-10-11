@@ -516,7 +516,10 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         params: dict[str, Any] = {"$format": "json"}
         if select: params["$select"] = select
         if expand: params["$expand"] = expand
-        return _rj(await client.get(f"{EQUIP_ROOT}/Equipment('{Equipment}')", params=params))
+        return _rj(await client.get(
+            f"{EQUIP_ROOT}/Equipment(Equipment='{Equipment}',ValidityEndDate=datetime'9999-12-31T00:00:00')",
+            params=params,
+        ))
 
     async def count_equipment(filter: str | None = None) -> str:
         params: dict[str, Any] = {}
@@ -573,7 +576,8 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         if select: params["$select"] = select
         if expand: params["$expand"] = expand
         return _rj(await client.get(
-            f"{EQUIP_ROOT}/Equipment('{Equipment}')/to_LongText", params=params,
+            f"{EQUIP_ROOT}/Equipment(Equipment='{Equipment}',ValidityEndDate=datetime'9999-12-31T00:00:00')/to_LongText",
+            params=params,
         ))
 
     # ---- FunctionalLocation ----
@@ -748,24 +752,38 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
 
         # Equipment
         StructuredTool(name="get_metadata_cds_api_equipment",
-            description="Get the OData metadata (XML) for the API_EQUIPMENT service. Call this first if you are unsure of property names.",
+            description=(
+                "Get the OData metadata (XML) for the API_EQUIPMENT service. "
+                "Confirmed OData v2 field names on Equipment: "
+                "Equipment (number), EquipmentName, EquipmentCategory, "
+                "MaintenancePlant (plant filter, e.g. '0001'), MaintenancePlanningPlant, "
+                "FunctionalLocation, CostCenter, CompanyCode, ABCIndicator, "
+                "CreationDate, LastChangeDateTime, EquipmentIsInstalled, EquipmentIsMarkedForDeletion. "
+                "Key is composite: Equipment + ValidityEndDate (use datetime'9999-12-31T00:00:00' for active records). "
+                "Navigation: to_LongText, to_Warranty, to_Partner, to_Classification."
+            ),
             args_schema=NoInput,
             coroutine=get_metadata_equipment, handle_tool_error=True),
         StructuredTool(name="list_equipment_for_cds_api_equipment",
-            description="Retrieve a list of Equipment entities from SAP.",
+            description=(
+                "Retrieve a list of Equipment entities. Supports $filter, $select, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
+                "CONFIRMED field names: MaintenancePlant eq '0001' (plant filter), "
+                "MaintenancePlanningPlant, FunctionalLocation, EquipmentCategory, EquipmentName, ABCIndicator. "
+                "Date fields use datetime'YYYY-MM-DDTHH:MM:SS' format."
+            ),
             args_schema=ODataListInput, coroutine=list_equipment, handle_tool_error=True),
         StructuredTool(name="get_equipment_for_cds_api_equipment",
-            description="Retrieve a single Equipment entity by equipment number.",
+            description="Retrieve a single active Equipment entity by equipment number. Uses composite key (ValidityEndDate defaults to 9999-12-31).",
             args_schema=GetEquipmentInput, coroutine=get_equipment, handle_tool_error=True),
         StructuredTool(name="count_equipment_for_cds_api_equipment",
-            description="Get the total count of Equipment entities matching a $filter.",
+            description="Get the total count of Equipment entities matching a $filter. Plant field: MaintenancePlant.",
             args_schema=CountFilterInput,
             coroutine=count_equipment, handle_tool_error=True),
         StructuredTool(name="list_equipmentlongtext_for_cds_api_equipment",
             description="Retrieve a list of EquipmentLongText entities.",
             args_schema=ODataListInput, coroutine=list_equipmentlongtext, handle_tool_error=True),
         StructuredTool(name="get_equipmentlongtext_for_cds_api_equipment",
-            description="Retrieve a single EquipmentLongText by equipment number and language key.",
+            description="Retrieve a single EquipmentLongText by equipment number and language key (e.g. 'EN').",
             args_schema=GetEquipLongtextInput,
             coroutine=get_equipmentlongtext, handle_tool_error=True),
         StructuredTool(name="list_equipmentwarranty_for_cds_api_equipment",
@@ -776,30 +794,43 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             args_schema=GetEquipWarrantyInput,
             coroutine=get_equipmentwarranty, handle_tool_error=True),
         StructuredTool(name="get_to_longtext_in_equipment_for_cds_api_equipment",
-            description="Navigate from an Equipment entity to its LongText.",
+            description="Navigate from an Equipment entity to its LongText (uses composite key internally).",
             args_schema=NavEquipInput,
             coroutine=get_to_longtext_in_equipment, handle_tool_error=True),
 
         # FunctionalLocation
         StructuredTool(name="get_metadata_cds_api_functionallocation",
-            description="Get the OData metadata (XML) for the API_FUNCTIONALLOCATION service. Call this first if you are unsure of property names.",
+            description=(
+                "Get the OData metadata (XML) for the API_FUNCTIONALLOCATION service. "
+                "Confirmed OData v2 field names on FunctionalLocation: "
+                "FunctionalLocation (key), FunctionalLocationName, FunctionalLocationCategory, "
+                "MaintenancePlant (plant filter, e.g. '0001'), MaintenancePlanningPlant, "
+                "SuperiorFunctionalLocation, CostCenter, CompanyCode, ABCIndicator, PlantSection, "
+                "LastChangeDateTime, FunctionalLocationIsActive, FuncnlLocIsMarkedForDeletion. "
+                "Navigation: to_LongText, to_Warranty, to_Partner, to_Classification."
+            ),
             args_schema=NoInput,
             coroutine=get_metadata_functionallocation, handle_tool_error=True),
         StructuredTool(name="list_functionallocation_for_cds_api_functionallocation",
-            description="Retrieve a list of FunctionalLocation entities from SAP.",
+            description=(
+                "Retrieve a list of FunctionalLocation entities. Supports $filter, $select, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
+                "CONFIRMED field names: MaintenancePlant eq '0001' (plant filter), "
+                "MaintenancePlanningPlant, FunctionalLocationCategory, FunctionalLocationName, SuperiorFunctionalLocation. "
+                "Date fields use datetime'YYYY-MM-DDTHH:MM:SS' format."
+            ),
             args_schema=ODataListInput, coroutine=list_functionallocation, handle_tool_error=True),
         StructuredTool(name="get_functionallocation_for_cds_api_functionallocation",
-            description="Retrieve a single FunctionalLocation entity by its identifier.",
+            description="Retrieve a single FunctionalLocation entity by its identifier (e.g. 'TEST-ANK-AA').",
             args_schema=GetFlocInput, coroutine=get_functionallocation, handle_tool_error=True),
         StructuredTool(name="count_functionallocation_for_cds_api_functionallocation",
-            description="Get the total count of FunctionalLocation entities matching a $filter.",
+            description="Get the total count of FunctionalLocation entities matching a $filter. Plant field: MaintenancePlant.",
             args_schema=CountFilterInput,
             coroutine=count_functionallocation, handle_tool_error=True),
         StructuredTool(name="list_functionallocationlongtext_for_cds_api_functionallocation",
             description="Retrieve a list of FunctionalLocationLongText entities.",
             args_schema=ODataListInput, coroutine=list_functionallocationlongtext, handle_tool_error=True),
         StructuredTool(name="get_functionallocationlongtext_for_cds_api_functionallocation",
-            description="Retrieve a single FunctionalLocationLongText by location and language.",
+            description="Retrieve a single FunctionalLocationLongText by location identifier and language (e.g. 'EN').",
             args_schema=GetFlocLongtextInput, coroutine=get_functionallocationlongtext, handle_tool_error=True),
         StructuredTool(name="get_to_longtext_in_functionallocation",
             description="Navigate from a FunctionalLocation entity to its LongText.",
