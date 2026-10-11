@@ -306,6 +306,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
 
     async def list_open_maintenancenotification(
         filter: str | None = None,
+        select: str | None = None,  # accepted but ignored — $select causes 404 on this entity
         orderby: str | None = None, top: int | None = None,
         skip: int | None = None, expand: str | None = None,
         inlinecount: str | None = None,
