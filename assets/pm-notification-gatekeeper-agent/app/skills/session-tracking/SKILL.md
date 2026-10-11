@@ -15,19 +15,24 @@ description: Rules for maintaining and displaying a session progress table after
 
 ## Table Format
 
+The table ALWAYS has EXACTLY these 6 columns — never add, remove, or rename any column:
+
 | Notification | Description | Priority | Recommendation | Action | SAP Status |
 |---|---|---|---|---|---|
 | 10000526 | Mechanical Inspection for Pump | High | Approve | ✅ Approved | APOK NOPR |
-| 10000522 | Electrical fault in panel | Medium | — | ⏳ Pending | OSNO |
+| 10000522 | Electrical fault in panel | — | — | ⏳ Pending | OSNO |
 
 ## Column Rules
 
-- **Notification**: 8-digit notification number
-- **Description**: `NotificationText` short description (truncate to ~40 chars if needed)
-- **Priority**: `MaintPriorityDesc` or the priority code
-- **Recommendation**: Approve / Rework / Reject / — (if not yet reviewed)
-- **Action**: one of the emoji values below
-- **SAP Status**: `ConcatenatedActiveSystStsName` from the last known fetch; leave blank if unknown
+- **Notification**: 8-digit notification number — always present
+- **Description**: `NotificationText` short description (truncate to ~40 chars if needed); use `—` if empty
+- **Priority**: `MaintPriorityDesc` if available, else the priority code; use `—` if not set
+- **Recommendation**: Approve / Rework / Reject / `—` (if not yet reviewed)
+- **Action**: one of the emoji values below — always present, default `⏳ Pending`
+- **SAP Status**: `ConcatenatedActiveSystStsName` from the last known fetch; use `—` if unknown
+
+**NEVER add extra columns** (no Technical Object, no Plant, no Type, no Equipment, no dates).
+**NEVER remove columns** even if a value is unknown — use `—` as a placeholder.
 
 ## Action Emoji Values
 
@@ -52,3 +57,31 @@ description: Rules for maintaining and displaying a session progress table after
 Always add one line immediately after the table:
 
 **Proposed next action:** <one concise suggestion for what the gatekeeper should do next>
+
+---
+
+## APPROVE ACTION — exact two-step sequence
+
+When the gatekeeper confirms approval of a notification, execute these two steps IN ORDER. Do not skip or reorder them.
+
+**Step 1 — Call `function_approvemaintworkrequest`**
+- Input: `MaintenanceNotification` (the notification number, e.g. `10000522`)
+- On success (200 OK): the response contains the full notification entity including:
+  - `ConcatenatedActiveSystStsName` → new SAP status for the session table (e.g. `APOK NOPR`)
+  - `APOK` = Approval: OK, `NOPR` = Notification in process
+  - `EAMProcessSubPhaseCodeDesc` → confirms the new phase (e.g. `Accepted (Request)`)
+- If error: stop immediately, report the error verbatim, do NOT proceed to Step 2.
+
+**Step 2 — Call `add_notification_comment`**
+- Input:
+  - `MaintenanceNotification`: same notification number
+  - `Action`: `"Approved"`
+  - `Comment`: your full recommendation reasoning, priority assessment, and any gatekeeper notes
+- On success: the SAP notification long text is permanently updated with an audit trail entry.
+- If error: report it, but still update the session table (the status change in Step 1 already succeeded).
+
+**After both steps:**
+- Update session table: Action = ✅ Approved, SAP Status = value from Step 1 response (e.g. `APOK NOPR`)
+- Report success confirming both: SAP status changed and comment logged.
+
+**Rule 4 — Always log after every action.** After EVERY status action (approve, reject, complete, set to info required, set to in process), MUST call `add_notification_comment` to log the gatekeeper decision. This is mandatory — never skip it.

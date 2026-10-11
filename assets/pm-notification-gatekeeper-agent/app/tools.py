@@ -192,6 +192,12 @@ class SetMaintNotifToInProcessInput(BaseModel):
     MaintenanceNotification: str = Field(description="Maintenance Notification number to set in-process")
 
 
+class AddNotificationCommentInput(BaseModel):
+    MaintenanceNotification: str = Field(description="Notification number")
+    Action: str = Field(description="Action just taken, e.g. Approved, Rejected, Info Required, In Process, Completed")
+    Comment: str = Field(description="Gatekeeper's full reasoning and decision notes to append to the notification")
+
+
 # ---------------------------------------------------------------------------
 # Equipment
 # ---------------------------------------------------------------------------
@@ -296,7 +302,10 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         # $select causes 404 on this entity — silently ignored
         phase_filter = "NotifProcessingPhase eq '1' and MaintenanceOrder eq ''"
         combined_filter = f"({filter}) and {phase_filter}" if filter else phase_filter
-        params = _odata_params(combined_filter, None, orderby, top, skip, expand, inlinecount)
+        # Default ordering: newest records first so recently-created notifications are never
+        # pushed off the page by older ones when no explicit orderby is given.
+        effective_orderby = orderby or "CreationDate desc"
+        params = _odata_params(combined_filter, None, effective_orderby, top, skip, expand, inlinecount)
         return _rj(await client.get(f"{NOTIF_ROOT}/MaintenanceNotification", params=params))
 
     async def get_maintenancenotification(
@@ -538,6 +547,33 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         )
         return _rj(result)
 
+    async def add_notification_comment(
+        MaintenanceNotification: str,
+        Action: str,
+        Comment: str,
+    ) -> str:
+        """Append a structured gatekeeper audit comment to the notification long text via PATCH.
+        Must be called after every status action to create a permanent audit trail in SAP."""
+        import asyncio
+        from datetime import datetime, timezone
+        date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        formatted = f"[Gatekeeper / {date_str} – {Action}]: {Comment}"
+        # Retry with backoff — the preceding action (e.g. ApproveMaintWorkRequest) may hold
+        # a lock on the entity for a short time after returning, causing the PATCH to fail.
+        last_result: dict = {}
+        for attempt in range(3):
+            if attempt > 0:
+                await asyncio.sleep(2)
+            last_result = await client.patch(
+                f"{NOTIF_ROOT}/MaintenanceNotification('{MaintenanceNotification}')",
+                body={"MaintNotifLongTextForEdit": formatted},
+                service_root=NOTIF_ROOT,
+                fetch_etag=True,
+            )
+            if not last_result.get("error"):
+                break
+        return _rj(last_result)
+
     # ---- Equipment ----
 
     async def list_equipment(
@@ -714,8 +750,8 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
                 "CONFIRMED OData v2 filter fields: "
                 "(1) Planning plant: MaintenancePlanningPlant eq '1710' "
                 "(NOT 'Plant', NOT 'MaintPlanningPlant', NOT 'MaintenancePlant'). "
-                "(2) Date: NotificationCreationDate ge datetime'YYYY-MM-DDTHH:MM:SS' — "
-                "always use datetime'...' format, never bare ISO dates. "
+                "(2) Date: NotificationCreationDate ge datetime'YYYY-MM-DDT23:23:23' — "
+                "always use datetime'...' format with time T23:23:23, never bare ISO dates or T00:00:00. "
                 "(3) Type: NotificationType. Priority: MaintPriority. "
                 "NotifProcessingPhase values for reference: "
                 "1=Outstanding, 2=Postponed, 3=In Process, 4=Completed, 5=Deletion Flag. "
@@ -728,7 +764,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             description="Retrieve a single MaintenanceNotification by its notification number.",
             args_schema=GetNotifInput, coroutine=get_maintenancenotification, handle_tool_error=True),
         StructuredTool(name="count_maintenancenotification_for_cds_api_maintnotification",
-            description="Get the total count of MaintenanceNotification entities matching a $filter. MaintenanceOrder eq '' is automatically injected — counts only notifications not yet assigned to a maintenance order. Plant field: MaintenancePlanningPlant. Date fields: NotificationCreationDate — use datetime'YYYY-MM-DDTHH:MM:SS' format.",
+            description="Get the total count of MaintenanceNotification entities matching a $filter. MaintenanceOrder eq '' is automatically injected — counts only notifications not yet assigned to a maintenance order. Plant field: MaintenancePlanningPlant. Date fields: NotificationCreationDate — use datetime'YYYY-MM-DDT23:23:23' format (always T23:23:23, never T00:00:00).",
             args_schema=CountFilterInput,
             coroutine=count_maintenancenotification, handle_tool_error=True),
 
@@ -804,6 +840,13 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         StructuredTool(name="function_setmaintnotiftoinprocess_for_cds_api_maintnotification",
             description="Set a maintenance notification status to 'In Process'. Only call after explicit user confirmation.",
             args_schema=SetMaintNotifToInProcessInput, coroutine=function_setmaintnotiftoinprocess, handle_tool_error=True),
+        StructuredTool(name="add_notification_comment",
+            description=(
+                "Append a structured gatekeeper audit comment to the notification long text via PATCH. "
+                "MUST be called after every status action (approve, reject, complete, set to info required, "
+                "set to in process) to log the decision permanently in SAP."
+            ),
+            args_schema=AddNotificationCommentInput, coroutine=add_notification_comment, handle_tool_error=True),
 
         # Equipment
         StructuredTool(name="get_metadata_cds_api_equipment",
@@ -824,7 +867,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
                 "Retrieve a list of Equipment entities. Supports $filter, $select, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
                 "CONFIRMED field names: MaintenancePlant eq '0001' (plant filter), "
                 "MaintenancePlanningPlant, FunctionalLocation, EquipmentCategory, EquipmentName, ABCIndicator. "
-                "Date fields use datetime'YYYY-MM-DDTHH:MM:SS' format."
+                "Date fields use datetime'YYYY-MM-DDT23:23:23' format (always T23:23:23)."
             ),
             args_schema=ODataListInput, coroutine=list_equipment, handle_tool_error=True),
         StructuredTool(name="get_equipment_for_cds_api_equipment",
@@ -871,7 +914,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
                 "Retrieve a list of FunctionalLocation entities. Supports $filter, $select, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
                 "CONFIRMED field names: MaintenancePlant eq '0001' (plant filter), "
                 "MaintenancePlanningPlant, FunctionalLocationCategory, FunctionalLocationName, SuperiorFunctionalLocation. "
-                "Date fields use datetime'YYYY-MM-DDTHH:MM:SS' format."
+                "Date fields use datetime'YYYY-MM-DDT23:23:23' format (always T23:23:23)."
             ),
             args_schema=ODataListInput, coroutine=list_functionallocation, handle_tool_error=True),
         StructuredTool(name="get_functionallocation_for_cds_api_functionallocation",

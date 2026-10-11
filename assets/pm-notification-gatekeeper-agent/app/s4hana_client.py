@@ -325,6 +325,7 @@ class Client:
         service_path: str,
         body: dict[str, Any],
         service_root: str,
+        fetch_etag: bool = False,
     ) -> dict[str, Any]:
         dest = await self.destination()
         client_kwargs, extra = await self._client_kwargs(dest)
@@ -338,6 +339,25 @@ class Client:
             if CSRF_REQUIRED:
                 headers["x-csrf-token"] = csrf
             headers.update(extra)
+            if fetch_etag:
+                etag_headers = {**self._base_headers(), **extra}
+                etag_params: dict[str, Any] = {}
+                self._inject_mandatory_params(dest, etag_params)
+                etag_params["$format"] = "json"
+                etag_r = await client.get(
+                    self._build_url(dest.url, service_path),
+                    auth=self._auth(dest),
+                    headers=etag_headers,
+                    params=etag_params,
+                )
+                etag = etag_r.headers.get("ETag") or etag_r.headers.get("etag") or ""
+                if not etag:
+                    try:
+                        etag = (etag_r.json().get("d", {}).get("__metadata") or {}).get("etag") or ""
+                    except Exception:
+                        etag = ""
+                if etag:
+                    headers["If-Match"] = etag
             params: dict[str, Any] = {}
             self._inject_mandatory_params(dest, params)
             r = await client.patch(
@@ -347,14 +367,18 @@ class Client:
                 headers=headers,
                 params=params,
             )
+        sap_msg = r.headers.get("sap-message") or r.headers.get("SAP-Message") or ""
         if r.status_code == 204:
-            return {"success": True, "status_code": 204}
+            return {"success": True, "status_code": 204, "sap_message": sap_msg}
         if r.status_code >= 400:
             return {"error": True, "status_code": r.status_code, "message": r.text}
         try:
-            return r.json()
+            body = r.json()
+            if sap_msg:
+                body["sap_message"] = sap_msg
+            return body
         except Exception:
-            return {"status_code": r.status_code, "raw": r.text}
+            return {"status_code": r.status_code, "raw": r.text, "sap_message": sap_msg}
 
     async def function_import(
         self,
