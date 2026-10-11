@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import json
 import logging
-import sys
 from typing import Any, Optional
 
 from langchain_core.tools import BaseTool, StructuredTool
@@ -90,7 +89,7 @@ class ODataListInput(BaseModel):
     inlinecount: Optional[str] = Field(default=None, description="OData $inlinecount (allpages or none)")
 
 
-# No override — OSNO filter is always applied by list_maintenancenotification
+# No extra fields — NotifProcessingPhase eq '1' is injected automatically by list_maintenancenotification
 ODataListMaintenanceNotificationInput = ODataListInput
 
 
@@ -291,16 +290,11 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         skip: int | None = None, expand: str | None = None,
         inlinecount: str | None = None,
     ) -> str:
-        params = _odata_params(filter, select, orderby, top, skip, expand, inlinecount)
-        result = await client.get(f"{NOTIF_ROOT}/MaintenanceNotification", params=params)
-        if isinstance(result, dict) and "results" in result:
-            records = result.get("results", [])
-            filtered = [r for r in records if "OSNO" in (r.get("ConcatenatedActiveSystStsName") or "")]
-            print(f"OSNO_DEBUG total={len(records)} kept={len(filtered)} sample_statuses={[r.get('ConcatenatedActiveSystStsName') for r in records[:3]]}", file=sys.stderr, flush=True)
-            result["results"] = filtered
-        else:
-            print(f"OSNO_DEBUG unexpected result type={type(result)} keys={list(result.keys()) if isinstance(result, dict) else 'N/A'}", file=sys.stderr, flush=True)
-        return _rj(result)
+        # $select causes 404 on this entity — silently ignored
+        phase_filter = "NotifProcessingPhase eq '1'"
+        combined_filter = f"({filter}) and {phase_filter}" if filter else phase_filter
+        params = _odata_params(combined_filter, None, orderby, top, skip, expand, inlinecount)
+        return _rj(await client.get(f"{NOTIF_ROOT}/MaintenanceNotification", params=params))
 
     async def get_maintenancenotification(
         MaintenanceNotification: str,
@@ -670,7 +664,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
                 "ConcatenatedActiveSystStsName (read-only, NOT filterable, NOT selectable — returned automatically "
                 "in results; space-separated SAP system status codes e.g. 'OSNO'=Outstanding Open, "
                 "'NOCO'=Not Completed, 'APRF'=Approved, 'AENC'=Awaiting Completion, 'OAFF'=Order Follow-up). "
-                "NotifProcessingPhase (phase number, NOT a reliable open/pending indicator — do not filter on it). "
+                "NotifProcessingPhase (filterable: 1=Outstanding, 2=Postponed, 3=In Process, 4=Completed, 5=Deletion Flag). "
                 "NotificationCreationDate, NotificationCreationDateTime, "
                 "CreationDate, MalfunctionStartDate, MalfunctionEndDate, "
                 "TechnicalObject, PlantSection, CatalogProfile."
@@ -680,21 +674,22 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         StructuredTool(name="list_maintenancenotification_for_cds_api_maintnotification",
             description=(
                 "Retrieve MaintenanceNotification entities. "
-                "OSNO (Outstanding Open) filtering is applied AUTOMATICALLY by this tool in Python after fetching — "
-                "do NOT include ConcatenatedActiveSystStsName in the $filter parameter (the backend rejects it with a 501 error). "
-                "Only pass plant and date filters. AENC, OAFF, NOCO, APRF records are excluded automatically from the returned list. "
-                "Supports $filter, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
-                "DO NOT use $select — omit it entirely; SAP interprets field names like 'Equipment' and 'FunctionalLocation' as navigation segments and returns a 404 error. "
-                "CONFIRMED OData v2 filter fields — use exactly these: "
-                "(1) Planning plant: MaintenancePlanningPlant eq '1710' (NOT 'Plant', NOT 'MaintPlanningPlant', NOT 'MaintenancePlant'). "
-                "(2) Date fields use OData v2 datetime literal: "
-                "NotificationCreationDate ge datetime'2025-01-01T00:00:00' and NotificationCreationDate le datetime'2025-12-31T23:59:59'. "
-                "(3) System status: ConcatenatedActiveSystStsName is returned in results — display it as status. NOT filterable, must NOT appear in $filter or $select. "
-                "Always display ConcatenatedActiveSystStsName as the status — NEVER use NotifProcessingPhase as a status label. "
-                "Decode status codes: OSNO=Outstanding Open, NOCO=Not Completed, AENC=Awaiting Completion, OAFF=Order Follow-up, APRF=Approved. "
-                "If the result list is empty, reply 'No open notifications found for this period'. "
-                "(4) Type: NotificationType. Priority: MaintPriority. "
-                "Never use bare ISO dates — always use datetime'YYYY-MM-DDTHH:MM:SS' format."
+                "Always returns ONLY Outstanding (phase 1) notifications — "
+                "NotifProcessingPhase eq '1' is automatically injected into every request; "
+                "do NOT add NotifProcessingPhase to the $filter yourself. "
+                "Supports additional $filter, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
+                "DO NOT pass $select — it causes a 404 on this entity and is silently ignored. "
+                "CONFIRMED OData v2 filter fields: "
+                "(1) Planning plant: MaintenancePlanningPlant eq '1710' "
+                "(NOT 'Plant', NOT 'MaintPlanningPlant', NOT 'MaintenancePlant'). "
+                "(2) Date: NotificationCreationDate ge datetime'YYYY-MM-DDTHH:MM:SS' — "
+                "always use datetime'...' format, never bare ISO dates. "
+                "(3) Type: NotificationType. Priority: MaintPriority. "
+                "NotifProcessingPhase values for reference: "
+                "1=Outstanding, 2=Postponed, 3=In Process, 4=Completed, 5=Deletion Flag. "
+                "ConcatenatedActiveSystStsName is returned in results as an informational field — "
+                "display it when showing notification details but do NOT use it for filtering. "
+                "If the result list is empty, reply 'No outstanding notifications found for this period'."
             ),
             args_schema=ODataListMaintenanceNotificationInput, coroutine=list_maintenancenotification, handle_tool_error=True),
         StructuredTool(name="get_maintenancenotification_for_cds_api_maintnotification",
