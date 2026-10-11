@@ -343,6 +343,8 @@
     .notif-table th, .notif-table td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; vertical-align: middle; }
     .notif-table th { background: #F0F4F8; font-weight: 600; }
     .notif-table tr:nth-child(even) td { background: #FAFBFC; }
+    .notif-link { color: var(--blue); text-decoration: none; font-weight: 500; }
+    .notif-link:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -491,6 +493,9 @@ function mdToHtml(raw) {
     }
     return out.join('\n');
   })(s);
+  // Linkify notification numbers in table cells → clicking sends a Review prompt
+  s = s.replace(/<td>(1\d{7})<\/td>/g,
+    '<td><a href="#" class="notif-link" onclick="quickSend(\'Review notification $1 and give me your recommendation\');return false;">$1</a></td>');
   // Paragraphs
   s = s.replace(/\n{2,}/g, '</p><p>');
   s = s.replace(/\n/g, '<br>');
