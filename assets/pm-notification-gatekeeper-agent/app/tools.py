@@ -291,7 +291,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         inlinecount: str | None = None,
     ) -> str:
         # $select causes 404 on this entity — silently ignored
-        phase_filter = "NotifProcessingPhase eq '1'"
+        phase_filter = "NotifProcessingPhase eq '1' and MaintenanceOrder eq ''"
         combined_filter = f"({filter}) and {phase_filter}" if filter else phase_filter
         params = _odata_params(combined_filter, None, orderby, top, skip, expand, inlinecount)
         return _rj(await client.get(f"{NOTIF_ROOT}/MaintenanceNotification", params=params))
@@ -309,8 +309,11 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         ))
 
     async def count_maintenancenotification(filter: str | None = None) -> str:
+        order_constraint = "MaintenanceOrder eq ''"
+        combined = f"({filter}) and {order_constraint}" if filter else order_constraint
         params: dict[str, Any] = {}
-        if filter: params["$filter"] = filter
+        if combined:
+            params["$filter"] = combined
         result = await client.get(f"{NOTIF_ROOT}/MaintenanceNotification/$count", params=params)
         return _rj(result)
 
@@ -665,6 +668,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
                 "in results; space-separated SAP system status codes e.g. 'OSNO'=Outstanding Open, "
                 "'NOCO'=Not Completed, 'APRF'=Approved, 'AENC'=Awaiting Completion, 'OAFF'=Order Follow-up). "
                 "NotifProcessingPhase (filterable: 1=Outstanding, 2=Postponed, 3=In Process, 4=Completed, 5=Deletion Flag). "
+                "MaintenanceOrder (string, empty when no order is assigned — auto-filtered). "
                 "NotificationCreationDate, NotificationCreationDateTime, "
                 "CreationDate, MalfunctionStartDate, MalfunctionEndDate, "
                 "TechnicalObject, PlantSection, CatalogProfile."
@@ -674,9 +678,11 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         StructuredTool(name="list_maintenancenotification_for_cds_api_maintnotification",
             description=(
                 "Retrieve MaintenanceNotification entities. "
-                "Always returns ONLY Outstanding (phase 1) notifications — "
-                "NotifProcessingPhase eq '1' is automatically injected into every request; "
-                "do NOT add NotifProcessingPhase to the $filter yourself. "
+                "Returns ONLY Outstanding (phase 1) notifications with NO maintenance order assigned "
+                "(MaintenanceOrder eq ''). Notifications already linked to an order are excluded — "
+                "they are outside gatekeeper scope. "
+                "NotifProcessingPhase eq '1' and MaintenanceOrder eq '' are automatically injected "
+                "into every request; do NOT add these fields to the $filter yourself. "
                 "Supports additional $filter, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
                 "DO NOT pass $select — it causes a 404 on this entity and is silently ignored. "
                 "CONFIRMED OData v2 filter fields: "
@@ -696,7 +702,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             description="Retrieve a single MaintenanceNotification by its notification number.",
             args_schema=GetNotifInput, coroutine=get_maintenancenotification, handle_tool_error=True),
         StructuredTool(name="count_maintenancenotification_for_cds_api_maintnotification",
-            description="Get the total count of MaintenanceNotification entities matching a $filter. Plant field: MaintenancePlanningPlant. Date fields: NotificationCreationDate — use datetime'YYYY-MM-DDTHH:MM:SS' format.",
+            description="Get the total count of MaintenanceNotification entities matching a $filter. MaintenanceOrder eq '' is automatically injected — counts only notifications not yet assigned to a maintenance order. Plant field: MaintenancePlanningPlant. Date fields: NotificationCreationDate — use datetime'YYYY-MM-DDTHH:MM:SS' format.",
             args_schema=CountFilterInput,
             coroutine=count_maintenancenotification, handle_tool_error=True),
 

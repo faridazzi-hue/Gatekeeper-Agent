@@ -10,6 +10,7 @@ description: Rules for detecting duplicate SAP maintenance notifications. Covers
 - Query open notifications for the same equipment using the Maintenance Notification MCP.
 - Include notifications with status **OSNO** (outstanding) and **NOPR** (in process/released).
 - **Exclude** notifications with status **NOCO** (completed) — they must never be treated as open duplicates.
+- **Exclude** notifications that already have a maintenance order assigned — these are outside gatekeeper scope. Add `MaintenanceOrder eq ''` to the $filter when querying duplicate candidates.
 - Limit results to a maximum of 100 per query.
 
 ## Comparison Dimensions
