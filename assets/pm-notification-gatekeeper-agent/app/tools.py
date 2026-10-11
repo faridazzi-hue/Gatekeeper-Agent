@@ -242,6 +242,10 @@ class NavFlocInput(BaseModel):
     expand: Optional[str] = Field(default=None, description="OData $expand expression")
 
 
+class NoInput(BaseModel):
+    pass
+
+
 # ---------------------------------------------------------------------------
 # Tool builder
 # ---------------------------------------------------------------------------
@@ -249,6 +253,26 @@ class NavFlocInput(BaseModel):
 def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
     """Build all PM domain tools wired to the given S4Client."""
     client = s4 or S4Client()
+
+    # ---- Metadata ----
+
+    async def get_metadata_maintnotification() -> str:
+        result = await client.get(f"{NOTIF_ROOT}/$metadata", params={})
+        if isinstance(result, dict) and result.get("error"):
+            return _rj(result)
+        return str(result)
+
+    async def get_metadata_equipment() -> str:
+        result = await client.get(f"{EQUIP_ROOT}/$metadata", params={})
+        if isinstance(result, dict) and result.get("error"):
+            return _rj(result)
+        return str(result)
+
+    async def get_metadata_functionallocation() -> str:
+        result = await client.get(f"{FLOC_ROOT}/$metadata", params={})
+        if isinstance(result, dict) and result.get("error"):
+            return _rj(result)
+        return str(result)
 
     # ---- MaintenanceNotification ----
 
@@ -616,8 +640,12 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
 
     return [
         # MaintenanceNotification
+        StructuredTool(name="get_metadata_cds_api_maintnotification",
+            description="Get the OData metadata (XML) for the API_MAINTNOTIFICATION service. Call this first if you are unsure of property names. Key filter fields on MaintenanceNotification: MaintPlanningPlant (plant), NotificationType, MaintPriority, FunctionalLocation, Equipment, MaintNotifProcessPhase, NotificationCreationDate.",
+            args_schema=NoInput,
+            coroutine=get_metadata_maintnotification, handle_tool_error=True),
         StructuredTool(name="list_maintenancenotification_for_cds_api_maintnotification",
-            description="Retrieve a list of MaintenanceNotification entities. Supports $filter, $select, $orderby, $top (max 100), $skip, $expand, $inlinecount.",
+            description="Retrieve a list of MaintenanceNotification entities. Supports $filter, $select, $orderby, $top (max 100), $skip, $expand, $inlinecount. IMPORTANT: filter by plant using MaintPlanningPlant (not 'Plant'), e.g. MaintPlanningPlant eq '1710'.",
             args_schema=ODataListInput, coroutine=list_maintenancenotification, handle_tool_error=True),
         StructuredTool(name="get_maintenancenotification_for_cds_api_maintnotification",
             description="Retrieve a single MaintenanceNotification by its notification number.",
@@ -701,6 +729,10 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             args_schema=SetMaintNotifToInProcessInput, coroutine=function_setmaintnotiftoinprocess, handle_tool_error=True),
 
         # Equipment
+        StructuredTool(name="get_metadata_cds_api_equipment",
+            description="Get the OData metadata (XML) for the API_EQUIPMENT service. Call this first if you are unsure of property names.",
+            args_schema=NoInput,
+            coroutine=get_metadata_equipment, handle_tool_error=True),
         StructuredTool(name="list_equipment_for_cds_api_equipment",
             description="Retrieve a list of Equipment entities from SAP.",
             args_schema=ODataListInput, coroutine=list_equipment, handle_tool_error=True),
@@ -731,6 +763,10 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             coroutine=get_to_longtext_in_equipment, handle_tool_error=True),
 
         # FunctionalLocation
+        StructuredTool(name="get_metadata_cds_api_functionallocation",
+            description="Get the OData metadata (XML) for the API_FUNCTIONALLOCATION service. Call this first if you are unsure of property names.",
+            args_schema=NoInput,
+            coroutine=get_metadata_functionallocation, handle_tool_error=True),
         StructuredTool(name="list_functionallocation_for_cds_api_functionallocation",
             description="Retrieve a list of FunctionalLocation entities from SAP.",
             args_schema=ODataListInput, coroutine=list_functionallocation, handle_tool_error=True),
