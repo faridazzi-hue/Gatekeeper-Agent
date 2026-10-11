@@ -337,6 +337,12 @@
     .btn-override{ background: #FFF3E0; color: var(--orange); border: 1px solid #FFCC80; }
     .btn-info    { background: var(--blue-light); color: var(--blue); border: 1px solid #C5DCF9; }
     .btn-review  { background: var(--surface); color: var(--blue); border: 1px solid var(--border); font-weight: 400; }
+
+    /* ── Notification progress table ── */
+    .notif-table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 13px; }
+    .notif-table th, .notif-table td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; vertical-align: middle; }
+    .notif-table th { background: #F0F4F8; font-weight: 600; }
+    .notif-table tr:nth-child(even) td { background: #FAFBFC; }
   </style>
 </head>
 <body>
@@ -460,13 +466,38 @@ function mdToHtml(raw) {
   s = s.replace(/\[APPROVE\]/gi, '<span class="badge badge-approve">Approve</span>');
   s = s.replace(/\[REWORK\]/gi,  '<span class="badge badge-rework">Rework</span>');
   s = s.replace(/\[REJECT\]/gi,  '<span class="badge badge-reject">Reject</span>');
+  // Tables — detect pipe-separated blocks, convert before paragraph wrapping
+  s = (function renderTables(text) {
+    const lines = text.split('\n');
+    const out = [];
+    let i = 0;
+    while (i < lines.length) {
+      // A table block starts when two or more consecutive lines each contain '|'
+      if (lines[i].includes('|') && i + 1 < lines.length && lines[i + 1].includes('|')) {
+        const tableLines = [];
+        while (i < lines.length && lines[i].includes('|')) { tableLines.push(lines[i++]); }
+        // tableLines[0] = header, tableLines[1] = separator (---)
+        const parseCells = row => row.split('|').map(c => c.trim()).filter((c, idx, arr) => idx > 0 && idx < arr.length - 1);
+        const headers = parseCells(tableLines[0]);
+        const thead = '<thead><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr></thead>';
+        const rows = tableLines.slice(2).map(row => {
+          const cells = parseCells(row);
+          return '<tr>' + cells.map(c => `<td>${c}</td>`).join('') + '</tr>';
+        }).join('');
+        out.push(`<table class="notif-table">${thead}<tbody>${rows}</tbody></table>`);
+      } else {
+        out.push(lines[i++]);
+      }
+    }
+    return out.join('\n');
+  })(s);
   // Paragraphs
   s = s.replace(/\n{2,}/g, '</p><p>');
   s = s.replace(/\n/g, '<br>');
   s = `<p>${s}</p>`;
   // Clean up paragraph wrapping around block elements
-  s = s.replace(/<p>(<(?:ul|ol|pre|h\d|hr)[^>]*>)/g, '$1');
-  s = s.replace(/(<\/(?:ul|ol|pre|h\d|hr)>)<\/p>/g, '$1');
+  s = s.replace(/<p>(<(?:ul|ol|pre|h\d|hr|table)[^>]*>)/g, '$1');
+  s = s.replace(/(<\/(?:ul|ol|pre|h\d|hr|table)>)<\/p>/g, '$1');
   s = s.replace(/<p><\/p>/g, '');
 
   return s;

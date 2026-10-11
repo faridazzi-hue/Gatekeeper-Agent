@@ -178,11 +178,14 @@ class CompleteMaintNotificationInput(BaseModel):
 
 class RejectMaintWorkRequestInput(BaseModel):
     MaintenanceNotification: str = Field(description="Maintenance Notification number to reject")
-    MaintNotifLongTextForRejection: Optional[str] = Field(default=None, description="Rejection reason text")
+    MaintNotifRejectionReasonCode: str = Field(description="Rejection reason code (see V_EAM_REASONCODE in SM30 for valid entries, e.g. Y02)")
+    MaintNotifLongTextForEdit: Optional[str] = Field(default=None, description="Explanation text for the rejection")
 
 
 class SetMaintNotifToInfoRequiredInput(BaseModel):
     MaintenanceNotification: str = Field(description="Maintenance Notification number")
+    MaintNotifRejectionReasonCode: str = Field(description="Reason code explaining what information is required (see V_EAM_REASONCODE)")
+    MaintNotifLongTextForEdit: Optional[str] = Field(default=None, description="Explanation of what additional information is needed")
 
 
 class SetMaintNotifToInProcessInput(BaseModel):
