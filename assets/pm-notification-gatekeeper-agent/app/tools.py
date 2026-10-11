@@ -645,13 +645,20 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             args_schema=NoInput,
             coroutine=get_metadata_maintnotification, handle_tool_error=True),
         StructuredTool(name="list_maintenancenotification_for_cds_api_maintnotification",
-            description="Retrieve a list of MaintenanceNotification entities. Supports $filter, $select, $orderby, $top (max 100), $skip, $expand, $inlinecount. IMPORTANT: filter by plant using MaintPlanningPlant (not 'Plant'), e.g. MaintPlanningPlant eq '1710'.",
+            description=(
+                "Retrieve a list of MaintenanceNotification entities. Supports $filter, $select, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
+                "IMPORTANT filter rules: "
+                "(1) Filter by plant using MaintPlanningPlant (NOT 'Plant'), e.g. MaintPlanningPlant eq '1710'. "
+                "(2) Date fields (e.g. NotificationCreationDate) MUST use OData v2 datetime literal format: "
+                "NotificationCreationDate ge datetime'2023-10-01T00:00:00' and NotificationCreationDate le datetime'2023-10-31T23:59:59'. "
+                "Never use bare ISO dates like '2023-10-01' — they will cause a 400 error."
+            ),
             args_schema=ODataListInput, coroutine=list_maintenancenotification, handle_tool_error=True),
         StructuredTool(name="get_maintenancenotification_for_cds_api_maintnotification",
             description="Retrieve a single MaintenanceNotification by its notification number.",
             args_schema=GetNotifInput, coroutine=get_maintenancenotification, handle_tool_error=True),
         StructuredTool(name="count_maintenancenotification_for_cds_api_maintnotification",
-            description="Get the total count of MaintenanceNotification entities matching a $filter.",
+            description="Get the total count of MaintenanceNotification entities matching a $filter. Date fields must use OData v2 datetime literal: datetime'YYYY-MM-DDTHH:MM:SS'.",
             args_schema=CountFilterInput,
             coroutine=count_maintenancenotification, handle_tool_error=True),
 
