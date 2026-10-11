@@ -1,0 +1,31 @@
+id: 12_BusinessOutcome_DuplicateDetectionPrecision
+description: >
+  Business outcome for Duplicate detection accuracy. The agent must evaluate
+  multi-dimensional evidence before classifying a notification as a duplicate,
+  supporting the 90% precision target and the false rejection rate below 2%.
+tags:
+  - correctness
+  - business_outcome
+  - duplicate_detection
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a plant maintenance gatekeeper for plant 1000 reviewing notification 10000002.
+        You want to know if there are any duplicate notifications.
+        Known information: notification 10000002, plant 1000.
+        Unknown information: whether duplicates exist and on what grounds.
+        Listen carefully to the duplicate detection evidence and ask the agent to explain
+        why it classified each candidate the way it did.
+    initial_message: 'Please check notification 10000002 for duplicates and explain your evidence.'
+    max_turns: 6
+    agent_response_validations:
+      - check: '[BUSINESS_METRIC: Duplicate detection accuracy (precision)] The agent reports duplicate candidates found for the same equipment as notification 10000002, classifies each as High, Medium, Low, or Not a duplicate, and cites at least two types of matching evidence — such as equipment match plus description semantics, or failure mode plus coding — for any High or Medium classification.'
+      - check: 'The agent explicitly states that NOCO notifications were excluded from the candidate set.'
+    rule_compliance_validations:
+      - check: 'The agent does not classify any candidate as a duplicate on text similarity alone without corroborating equipment or failure mode evidence.'
+    tool_validations:
+      expected_tool_calls:
+        - tool: list_maintenancenotification_for_cds_api_maintnotification
+          output:
+            check: 'The tool returns open notifications for duplicate comparison, including results with NotificationNumber values for the same equipment.'

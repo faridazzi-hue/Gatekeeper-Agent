@@ -1,0 +1,34 @@
+id: 11_BusinessOutcome_ConsistencyRate
+description: >
+  Business outcome for Notification consistency rate. The agent must evaluate all
+  key consistency fields and flag issues before recommending approval, directly
+  supporting the 95% consistency rate target.
+tags:
+  - correctness
+  - business_outcome
+  - consistency_validation
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a plant maintenance gatekeeper for plant 1000.
+        You want a full consistency check on notification 10000001.
+        Known information: notification 10000001, plant 1000.
+        Unknown information: which fields have consistency issues.
+        Accept the recommendation after hearing the validation results.
+    initial_message: 'Run a full consistency check on notification 10000001.'
+    max_turns: 6
+    agent_response_validations:
+      - check: '[BUSINESS_METRIC: Notification consistency rate (key fields pass all consistency checks)] The agent reports a consistency check result — Pass, Warning, or Fail — for each of the following fields for notification 10000001: equipment, functional location, code group, coding, description, priority, person responsible, and reported by.'
+      - check: 'Each check result cites the specific retrieved field value and the rule applied.'
+    tool_validations:
+      expected_tool_calls:
+        - tool: get_maintenancenotification_for_cds_api_maintnotification
+          output:
+            check: 'The tool returns the full notification record for 10000001 with NotificationNumber present.'
+        - tool: get_equipment_for_cds_api_equipment
+          output:
+            check: 'The tool returns equipment master data used for ABC indicator and functional location consistency checks.'
+        - tool: get_functionallocation_for_cds_api_functionallocation
+          output:
+            check: 'The tool returns the functional location record used for equipment-functional location coherence check.'

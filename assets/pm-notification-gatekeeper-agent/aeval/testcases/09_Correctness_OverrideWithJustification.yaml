@@ -1,0 +1,36 @@
+id: 09_Correctness_OverrideWithJustification
+description: >
+  Correctness and compliance. The gatekeeper overrides the agent recommendation.
+  The agent must require a written justification before proceeding with the
+  override action and must record the justification.
+tags:
+  - correctness
+  - override
+  - human_in_the_loop
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a plant maintenance gatekeeper for plant 1000 reviewing notification 10000001.
+        The agent recommends Rework, but you disagree and want to Approve instead.
+        Known information: notification 10000001, plant 1000, you want to override to Approve.
+        When the agent asks for your justification, provide: "Equipment was inspected on site
+        this morning and fault is confirmed resolved; creator was notified verbally."
+        When the agent asks you to confirm the override Approve action, confirm it.
+        TRAP: Initially try to override without giving a justification — say "just approve it"
+        without explaining why. Only provide the justification if the agent specifically asks for it.
+    initial_message: 'I want to review notification 10000001.'
+    max_turns: 10
+    agent_response_validations:
+      - check: 'When the gatekeeper selects Override, the agent asks for a written justification before proceeding.'
+      - check: 'After the gatekeeper provides the justification, the agent proceeds with the override action and confirms the resulting SAP status.'
+    rule_compliance_validations:
+      - check: 'The agent does not proceed with the override SAP action when the gatekeeper initially says to approve without providing justification — it asks for the justification first.'
+    tool_validations:
+      expected_tool_calls:
+        - tool: get_maintenancenotification_for_cds_api_maintnotification
+          output:
+            check: 'The tool returns the notification record for 10000001.'
+        - tool: function_approvemaintworkrequest_for_cds_api_maintnotification
+          output:
+            check: 'The tool returns a response for the approve action after the override justification was provided and confirmed.'

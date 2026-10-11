@@ -1,0 +1,31 @@
+id: 13_BusinessOutcome_SLAWorklist
+description: >
+  Business outcome for Review completion within 2-day SLA and False rejection
+  rate. The worklist must rank overdue or high-criticality items first. Reject
+  recommendations must cite multi-dimensional evidence, not text similarity alone.
+tags:
+  - correctness
+  - business_outcome
+  - sla_compliance
+  - false_rejection_rate
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a plant maintenance gatekeeper starting a new session for plant 1000.
+        You want the prioritized worklist and you want to understand why the top item
+        is ranked first.
+        Known information: plant 1000.
+        Unknown information: which notification is at the top and why.
+        After seeing the worklist, ask the agent to explain the ranking of the first entry.
+    initial_message: 'I am starting my review for plant 1000. Show me the worklist and explain why the top item is first.'
+    max_turns: 5
+    agent_response_validations:
+      - check: '[BUSINESS_METRIC: Review completion within 2-day SLA] The worklist for plant 1000 ranks notifications using at least one of: equipment criticality (ABC indicator), notification priority, suspected duplicate flag, or creation date — and the top entry has its ranking reason stated.'
+      - check: '[BUSINESS_METRIC: False rejection rate (valid notifications incorrectly rejected)] The agent does not recommend Reject for any notification in the worklist without citing specific matching evidence; ranking a notification highly does not constitute a rejection recommendation.'
+      - check: 'The agent explains the position of the top-ranked notification by citing the specific factor that placed it first.'
+    tool_validations:
+      expected_tool_calls:
+        - tool: list_maintenancenotification_for_cds_api_maintnotification
+          output:
+            check: 'The tool returns pending OSNO notifications for plant 1000 with NotificationNumber 10000001 and 10000002 in the results.'

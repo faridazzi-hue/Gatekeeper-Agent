@@ -1,0 +1,6635 @@
+[
+  {
+    "name": "get_metadata_cds_api_maintnotification",
+    "title": "get_metadata_cds_api_maintnotification",
+    "description": "Get metadata of the OData service with optional filtering to reduce token consumption.\nReturns the metadata in XML format, which can be used to discover available entities and their properties.\nCall this endpoint every time before you call other tools to ensure understanding of the schema.\nBased on the metadata, you can dynamically create an OData request.\n\nUse filtering parameters to get specific metadata sections. Without parameters, this tool returns the complete XML metadata (which might be huge).\nOnly use the specified enum values for the filtering parameters.\n",
+    "odataType": {
+      "metadataRequest": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "batch_for_cds_api_maintnotification",
+    "title": "batch_for_cds_api_maintnotification",
+    "description": "Execute multiple OData operations in a single batch request using the $batch endpoint. This allows you to combine multiple tool calls into one HTTP request, improving efficiency when performing multiple operations.",
+    "odataType": {
+      "batchRequest": {},
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "list_linearassetmanagementdata_for_cds_api_maintnotification",
+    "title": "list_LinearAssetManagementData_for_cds_api_maintnotification",
+    "description": "Retrieve a list of entities from the LinearAssetManagementData collection in the cds_api_maintnotification service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "LinearAssetManagementData",
+        "crudOperation": "read",
+        "parameters": [
+          {
+            "name": "filter"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "orderby"
+          },
+          {
+            "name": "top"
+          },
+          {
+            "name": "skip"
+          },
+          {
+            "name": "expand"
+          },
+          {
+            "name": "inlinecount"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_linearassetmanagementdata_for_cds_api_maintnotification",
+    "title": "get_LinearAssetManagementData_for_cds_api_maintnotification",
+    "description": "Retrieve a single entity by its key from the LinearAssetManagementData collection in the cds_api_maintnotification service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "LinearAssetManagementData",
+        "crudOperation": "readByKey",
+        "parameters": [
+          {
+            "name": "LinearDataObjectType",
+            "newParameterName": "lineardataobjecttype"
+          },
+          {
+            "name": "LinearDataObjectKey",
+            "newParameterName": "lineardataobjectkey"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "expand"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "count_linearassetmanagementdata_for_cds_api_maintnotification",
+    "title": "count_LinearAssetManagementData_for_cds_api_maintnotification",
+    "description": "Get the total count of entities in the LinearAssetManagementData collection in the cds_api_maintnotification service. Supports OData $filter to count only entities matching specific criteria. Use this when you need to determine the total number of entities without retrieving the actual data. If you need to understand the available filter properties, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "LinearAssetManagementData",
+        "crudOperation": "count",
+        "parameters": [
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "list_maintenancenotification_for_cds_api_maintnotification",
+    "title": "list_MaintenanceNotification_for_cds_api_maintnotification",
+    "description": "Retrieve a list of entities from the MaintenanceNotification collection in the cds_api_maintnotification service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotification",
+        "crudOperation": "read",
+        "parameters": [
+          {
+            "name": "filter"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "orderby"
+          },
+          {
+            "name": "top"
+          },
+          {
+            "name": "skip"
+          },
+          {
+            "name": "expand"
+          },
+          {
+            "name": "inlinecount"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "create_maintenancenotification_for_cds_api_maintnotification",
+    "title": "create_MaintenanceNotification_for_cds_api_maintnotification",
+    "description": "Create a new instance of the MaintenanceNotification EntitySet in the cds_api_maintnotification service. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotification",
+        "crudOperation": "create",
+        "parameters": [
+          {
+            "name": "NotificationText",
+            "newParameterName": "notificationtext"
+          },
+          {
+            "name": "MaintPriority",
+            "newParameterName": "maintpriority"
+          },
+          {
+            "name": "NotificationType",
+            "newParameterName": "notificationtype"
+          },
+          {
+            "name": "ReportedByUser",
+            "newParameterName": "reportedbyuser"
+          },
+          {
+            "name": "PersonResponsible",
+            "newParameterName": "personresponsible"
+          },
+          {
+            "name": "MalfunctionEffect",
+            "newParameterName": "malfunctioneffect"
+          },
+          {
+            "name": "MalfunctionStartDate",
+            "newParameterName": "malfunctionstartdate"
+          },
+          {
+            "name": "MalfunctionStartTime",
+            "newParameterName": "malfunctionstarttime"
+          },
+          {
+            "name": "MalfunctionEndDate",
+            "newParameterName": "malfunctionenddate"
+          },
+          {
+            "name": "MalfunctionEndTime",
+            "newParameterName": "malfunctionendtime"
+          },
+          {
+            "name": "MaintNotificationCode",
+            "newParameterName": "maintnotificationcode"
+          },
+          {
+            "name": "MaintNotificationCodeGroup",
+            "newParameterName": "maintnotificationcodegroup"
+          },
+          {
+            "name": "NotificationCreationDate",
+            "newParameterName": "notificationcreationdate"
+          },
+          {
+            "name": "NotificationCreationTime",
+            "newParameterName": "notificationcreationtime"
+          },
+          {
+            "name": "RequiredStartDate",
+            "newParameterName": "requiredstartdate"
+          },
+          {
+            "name": "RequiredStartTime",
+            "newParameterName": "requiredstarttime"
+          },
+          {
+            "name": "RequiredEndDate",
+            "newParameterName": "requiredenddate"
+          },
+          {
+            "name": "RequiredEndTime",
+            "newParameterName": "requiredendtime"
+          },
+          {
+            "name": "LatestAcceptableCompletionDate",
+            "newParameterName": "latestacceptablecompletiondate"
+          },
+          {
+            "name": "MaintenanceObjectIsDown",
+            "newParameterName": "maintenanceobjectisdown"
+          },
+          {
+            "name": "MaintNotifLongTextForEdit",
+            "newParameterName": "maintnotiflongtextforedit"
+          },
+          {
+            "name": "MaintRequestEditableLongText",
+            "newParameterName": "maintrequesteditablelongtext"
+          },
+          {
+            "name": "TechnicalObject",
+            "newParameterName": "technicalobject"
+          },
+          {
+            "name": "TechObjIsEquipOrFuncnlLoc",
+            "newParameterName": "techobjisequiporfuncnlloc"
+          },
+          {
+            "name": "MaintenancePlanningPlant",
+            "newParameterName": "maintenanceplanningplant"
+          },
+          {
+            "name": "MaintenancePlannerGroup",
+            "newParameterName": "maintenanceplannergroup"
+          },
+          {
+            "name": "PlantSection",
+            "newParameterName": "plantsection"
+          },
+          {
+            "name": "AssetLocation",
+            "newParameterName": "assetlocation"
+          },
+          {
+            "name": "MainWorkCenterPlant",
+            "newParameterName": "mainworkcenterplant"
+          },
+          {
+            "name": "MainWorkCenter",
+            "newParameterName": "mainworkcenter"
+          },
+          {
+            "name": "MaintenancePlant",
+            "newParameterName": "maintenanceplant"
+          },
+          {
+            "name": "LocationDescription",
+            "newParameterName": "locationdescription"
+          },
+          {
+            "name": "MaintenanceOrder",
+            "newParameterName": "maintenanceorder"
+          },
+          {
+            "name": "MaintNotifProcessingContext",
+            "newParameterName": "maintnotifprocessingcontext"
+          },
+          {
+            "name": "MaintenanceActivityType",
+            "newParameterName": "maintenanceactivitytype"
+          },
+          {
+            "name": "MaintObjDowntimeDurationUnit",
+            "newParameterName": "maintobjdowntimedurationunit"
+          },
+          {
+            "name": "MaintObjectDowntimeDuration",
+            "newParameterName": "maintobjectdowntimeduration"
+          },
+          {
+            "name": "TaskList",
+            "newParameterName": "tasklist"
+          },
+          {
+            "name": "NotificationReferenceDate",
+            "newParameterName": "notificationreferencedate"
+          },
+          {
+            "name": "NotificationReferenceTime",
+            "newParameterName": "notificationreferencetime"
+          },
+          {
+            "name": "AssetRoom",
+            "newParameterName": "assetroom"
+          },
+          {
+            "name": "MaintNotifExtReferenceNumber",
+            "newParameterName": "maintnotifextreferencenumber"
+          },
+          {
+            "name": "MaintNotifDetectionCode",
+            "newParameterName": "maintnotifdetectioncode"
+          },
+          {
+            "name": "MaintNotifDetectionCodeGroup",
+            "newParameterName": "maintnotifdetectioncodegroup"
+          },
+          {
+            "name": "MaintNotifRqdEndDateTime",
+            "newParameterName": "maintnotifrqdenddatetime"
+          },
+          {
+            "name": "MaintenanceRevision",
+            "newParameterName": "maintenancerevision"
+          },
+          {
+            "name": "to_FailureEffect",
+            "newParameterName": "to_failureeffect"
+          },
+          {
+            "name": "to_Item",
+            "newParameterName": "to_item"
+          },
+          {
+            "name": "to_LinearAssetManagementData",
+            "newParameterName": "to_linearassetmanagementdata"
+          },
+          {
+            "name": "to_Partner",
+            "newParameterName": "to_partner"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "content-id"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "update_maintenancenotification_for_cds_api_maintnotification",
+    "title": "update_MaintenanceNotification_for_cds_api_maintnotification",
+    "description": "Update an entity in MaintenanceNotification EntitySet in the cds_api_maintnotification service. Provide the key properties to identify the entity and the properties to update in the request body. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotification",
+        "crudOperation": "update",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "NotificationText",
+            "newParameterName": "notificationtext"
+          },
+          {
+            "name": "MaintPriority",
+            "newParameterName": "maintpriority"
+          },
+          {
+            "name": "NotificationType",
+            "newParameterName": "notificationtype"
+          },
+          {
+            "name": "ReportedByUser",
+            "newParameterName": "reportedbyuser"
+          },
+          {
+            "name": "PersonResponsible",
+            "newParameterName": "personresponsible"
+          },
+          {
+            "name": "MalfunctionEffect",
+            "newParameterName": "malfunctioneffect"
+          },
+          {
+            "name": "MalfunctionStartDate",
+            "newParameterName": "malfunctionstartdate"
+          },
+          {
+            "name": "MalfunctionStartTime",
+            "newParameterName": "malfunctionstarttime"
+          },
+          {
+            "name": "MalfunctionEndDate",
+            "newParameterName": "malfunctionenddate"
+          },
+          {
+            "name": "MalfunctionEndTime",
+            "newParameterName": "malfunctionendtime"
+          },
+          {
+            "name": "MaintNotificationCode",
+            "newParameterName": "maintnotificationcode"
+          },
+          {
+            "name": "MaintNotificationCodeGroup",
+            "newParameterName": "maintnotificationcodegroup"
+          },
+          {
+            "name": "NotificationCreationDate",
+            "newParameterName": "notificationcreationdate"
+          },
+          {
+            "name": "NotificationCreationTime",
+            "newParameterName": "notificationcreationtime"
+          },
+          {
+            "name": "RequiredStartDate",
+            "newParameterName": "requiredstartdate"
+          },
+          {
+            "name": "RequiredStartTime",
+            "newParameterName": "requiredstarttime"
+          },
+          {
+            "name": "RequiredEndDate",
+            "newParameterName": "requiredenddate"
+          },
+          {
+            "name": "RequiredEndTime",
+            "newParameterName": "requiredendtime"
+          },
+          {
+            "name": "LatestAcceptableCompletionDate",
+            "newParameterName": "latestacceptablecompletiondate"
+          },
+          {
+            "name": "MaintenanceObjectIsDown",
+            "newParameterName": "maintenanceobjectisdown"
+          },
+          {
+            "name": "MaintNotifLongTextForEdit",
+            "newParameterName": "maintnotiflongtextforedit"
+          },
+          {
+            "name": "MaintRequestEditableLongText",
+            "newParameterName": "maintrequesteditablelongtext"
+          },
+          {
+            "name": "TechnicalObject",
+            "newParameterName": "technicalobject"
+          },
+          {
+            "name": "TechObjIsEquipOrFuncnlLoc",
+            "newParameterName": "techobjisequiporfuncnlloc"
+          },
+          {
+            "name": "MaintenancePlanningPlant",
+            "newParameterName": "maintenanceplanningplant"
+          },
+          {
+            "name": "MaintenancePlannerGroup",
+            "newParameterName": "maintenanceplannergroup"
+          },
+          {
+            "name": "PlantSection",
+            "newParameterName": "plantsection"
+          },
+          {
+            "name": "AssetLocation",
+            "newParameterName": "assetlocation"
+          },
+          {
+            "name": "MainWorkCenterPlant",
+            "newParameterName": "mainworkcenterplant"
+          },
+          {
+            "name": "MainWorkCenter",
+            "newParameterName": "mainworkcenter"
+          },
+          {
+            "name": "MaintenancePlant",
+            "newParameterName": "maintenanceplant"
+          },
+          {
+            "name": "LocationDescription",
+            "newParameterName": "locationdescription"
+          },
+          {
+            "name": "MaintenanceOrder",
+            "newParameterName": "maintenanceorder"
+          },
+          {
+            "name": "MaintNotifProcessingContext",
+            "newParameterName": "maintnotifprocessingcontext"
+          },
+          {
+            "name": "MaintenanceActivityType",
+            "newParameterName": "maintenanceactivitytype"
+          },
+          {
+            "name": "MaintObjDowntimeDurationUnit",
+            "newParameterName": "maintobjdowntimedurationunit"
+          },
+          {
+            "name": "MaintObjectDowntimeDuration",
+            "newParameterName": "maintobjectdowntimeduration"
+          },
+          {
+            "name": "TaskList",
+            "newParameterName": "tasklist"
+          },
+          {
+            "name": "NotificationReferenceDate",
+            "newParameterName": "notificationreferencedate"
+          },
+          {
+            "name": "NotificationReferenceTime",
+            "newParameterName": "notificationreferencetime"
+          },
+          {
+            "name": "AssetRoom",
+            "newParameterName": "assetroom"
+          },
+          {
+            "name": "MaintNotifExtReferenceNumber",
+            "newParameterName": "maintnotifextreferencenumber"
+          },
+          {
+            "name": "MaintNotifDetectionCode",
+            "newParameterName": "maintnotifdetectioncode"
+          },
+          {
+            "name": "MaintNotifDetectionCodeGroup",
+            "newParameterName": "maintnotifdetectioncodegroup"
+          },
+          {
+            "name": "MaintNotifRqdEndDateTime",
+            "newParameterName": "maintnotifrqdenddatetime"
+          },
+          {
+            "name": "MaintenanceRevision",
+            "newParameterName": "maintenancerevision"
+          },
+          {
+            "name": "if_match"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_maintenancenotification_for_cds_api_maintnotification",
+    "title": "get_MaintenanceNotification_for_cds_api_maintnotification",
+    "description": "Retrieve a single entity by its key from the MaintenanceNotification collection in the cds_api_maintnotification service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotification",
+        "crudOperation": "readByKey",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "expand"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "count_maintenancenotification_for_cds_api_maintnotification",
+    "title": "count_MaintenanceNotification_for_cds_api_maintnotification",
+    "description": "Get the total count of entities in the MaintenanceNotification collection in the cds_api_maintnotification service. Supports OData $filter to count only entities matching specific criteria. Use this when you need to determine the total number of entities without retrieving the actual data. If you need to understand the available filter properties, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotification",
+        "crudOperation": "count",
+        "parameters": [
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "list_maintnotificationeffectcode_for_cds_api_maintnotification",
+    "title": "list_MaintNotificationEffectCode_for_cds_api_maintnotification",
+    "description": "Retrieve a list of entities from the MaintNotificationEffectCode collection in the cds_api_maintnotification service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationEffectCode",
+        "crudOperation": "read",
+        "parameters": [
+          {
+            "name": "filter"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "orderby"
+          },
+          {
+            "name": "top"
+          },
+          {
+            "name": "skip"
+          },
+          {
+            "name": "expand"
+          },
+          {
+            "name": "inlinecount"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "create_maintnotificationeffectcode_for_cds_api_maintnotification",
+    "title": "create_MaintNotificationEffectCode_for_cds_api_maintnotification",
+    "description": "Create a new instance of the MaintNotificationEffectCode EntitySet in the cds_api_maintnotification service. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationEffectCode",
+        "crudOperation": "create",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationEffect",
+            "newParameterName": "maintenancenotificationeffect"
+          },
+          {
+            "name": "MaintNotifEffectCodeGroup",
+            "newParameterName": "maintnotifeffectcodegroup"
+          },
+          {
+            "name": "MaintNotifEffectCode",
+            "newParameterName": "maintnotifeffectcode"
+          },
+          {
+            "name": "to_Notif",
+            "newParameterName": "to_notif"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "content-id"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "update_maintnotificationeffectcode_for_cds_api_maintnotification",
+    "title": "update_MaintNotificationEffectCode_for_cds_api_maintnotification",
+    "description": "Update an entity in MaintNotificationEffectCode EntitySet in the cds_api_maintnotification service. Provide the key properties to identify the entity and the properties to update in the request body. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationEffectCode",
+        "crudOperation": "update",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationEffect",
+            "newParameterName": "maintenancenotificationeffect"
+          },
+          {
+            "name": "MaintNotifEffectCodeGroup",
+            "newParameterName": "maintnotifeffectcodegroup"
+          },
+          {
+            "name": "MaintNotifEffectCode",
+            "newParameterName": "maintnotifeffectcode"
+          },
+          {
+            "name": "if_match"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "delete_maintnotificationeffectcode_for_cds_api_maintnotification",
+    "title": "delete_MaintNotificationEffectCode_for_cds_api_maintnotification",
+    "description": "Delete an entity from MaintNotificationEffectCode EntitySet in the cds_api_maintnotification service.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationEffectCode",
+        "crudOperation": "delete",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationEffect",
+            "newParameterName": "maintenancenotificationeffect"
+          },
+          {
+            "name": "if_match"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_maintnotificationeffectcode_for_cds_api_maintnotification",
+    "title": "get_MaintNotificationEffectCode_for_cds_api_maintnotification",
+    "description": "Retrieve a single entity by its key from the MaintNotificationEffectCode collection in the cds_api_maintnotification service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationEffectCode",
+        "crudOperation": "readByKey",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationEffect",
+            "newParameterName": "maintenancenotificationeffect"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "expand"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "count_maintnotificationeffectcode_for_cds_api_maintnotification",
+    "title": "count_MaintNotificationEffectCode_for_cds_api_maintnotification",
+    "description": "Get the total count of entities in the MaintNotificationEffectCode collection in the cds_api_maintnotification service. Supports OData $filter to count only entities matching specific criteria. Use this when you need to determine the total number of entities without retrieving the actual data. If you need to understand the available filter properties, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationEffectCode",
+        "crudOperation": "count",
+        "parameters": [
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "list_maintenancenotificationitem_for_cds_api_maintnotification",
+    "title": "list_MaintenanceNotificationItem_for_cds_api_maintnotification",
+    "description": "Retrieve a list of entities from the MaintenanceNotificationItem collection in the cds_api_maintnotification service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationItem",
+        "crudOperation": "read",
+        "parameters": [
+          {
+            "name": "filter"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "orderby"
+          },
+          {
+            "name": "top"
+          },
+          {
+            "name": "skip"
+          },
+          {
+            "name": "expand"
+          },
+          {
+            "name": "inlinecount"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "create_maintenancenotificationitem_for_cds_api_maintnotification",
+    "title": "create_MaintenanceNotificationItem_for_cds_api_maintnotification",
+    "description": "Create a new instance of the MaintenanceNotificationItem EntitySet in the cds_api_maintnotification service. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationItem",
+        "crudOperation": "create",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          },
+          {
+            "name": "MaintNotifItemText",
+            "newParameterName": "maintnotifitemtext"
+          },
+          {
+            "name": "MaintNotifDamageCodeGroup",
+            "newParameterName": "maintnotifdamagecodegroup"
+          },
+          {
+            "name": "MaintNotificationDamageCode",
+            "newParameterName": "maintnotificationdamagecode"
+          },
+          {
+            "name": "MaintNotifObjPrtCodeGroup",
+            "newParameterName": "maintnotifobjprtcodegroup"
+          },
+          {
+            "name": "MaintNotifObjPrtCode",
+            "newParameterName": "maintnotifobjprtcode"
+          },
+          {
+            "name": "to_Notif",
+            "newParameterName": "to_notif"
+          },
+          {
+            "name": "to_ItemActivity",
+            "newParameterName": "to_itemactivity"
+          },
+          {
+            "name": "to_ItemCause",
+            "newParameterName": "to_itemcause"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "content-id"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "update_maintenancenotificationitem_for_cds_api_maintnotification",
+    "title": "update_MaintenanceNotificationItem_for_cds_api_maintnotification",
+    "description": "Update an entity in MaintenanceNotificationItem EntitySet in the cds_api_maintnotification service. Provide the key properties to identify the entity and the properties to update in the request body. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationItem",
+        "crudOperation": "update",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          },
+          {
+            "name": "MaintNotifItemText",
+            "newParameterName": "maintnotifitemtext"
+          },
+          {
+            "name": "MaintNotifDamageCodeGroup",
+            "newParameterName": "maintnotifdamagecodegroup"
+          },
+          {
+            "name": "MaintNotificationDamageCode",
+            "newParameterName": "maintnotificationdamagecode"
+          },
+          {
+            "name": "MaintNotifObjPrtCodeGroup",
+            "newParameterName": "maintnotifobjprtcodegroup"
+          },
+          {
+            "name": "MaintNotifObjPrtCode",
+            "newParameterName": "maintnotifobjprtcode"
+          },
+          {
+            "name": "if_match"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_maintenancenotificationitem_for_cds_api_maintnotification",
+    "title": "get_MaintenanceNotificationItem_for_cds_api_maintnotification",
+    "description": "Retrieve a single entity by its key from the MaintenanceNotificationItem collection in the cds_api_maintnotification service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationItem",
+        "crudOperation": "readByKey",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "expand"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "count_maintenancenotificationitem_for_cds_api_maintnotification",
+    "title": "count_MaintenanceNotificationItem_for_cds_api_maintnotification",
+    "description": "Get the total count of entities in the MaintenanceNotificationItem collection in the cds_api_maintnotification service. Supports OData $filter to count only entities matching specific criteria. Use this when you need to determine the total number of entities without retrieving the actual data. If you need to understand the available filter properties, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationItem",
+        "crudOperation": "count",
+        "parameters": [
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "list_maintenancenotificationpartner",
+    "title": "list_MaintenanceNotificationPartner_for_cds_api_maintnotification",
+    "description": "Retrieve a list of entities from the MaintenanceNotificationPartner collection in the cds_api_maintnotification service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationPartner",
+        "crudOperation": "read",
+        "parameters": [
+          {
+            "name": "filter"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "orderby"
+          },
+          {
+            "name": "top"
+          },
+          {
+            "name": "skip"
+          },
+          {
+            "name": "expand"
+          },
+          {
+            "name": "inlinecount"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "create_maintenancenotificationpartner",
+    "title": "create_MaintenanceNotificationPartner_for_cds_api_maintnotification",
+    "description": "Create a new instance of the MaintenanceNotificationPartner EntitySet in the cds_api_maintnotification service. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationPartner",
+        "crudOperation": "create",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "PartnerFunction",
+            "newParameterName": "partnerfunction"
+          },
+          {
+            "name": "NotificationPartnerObjectNmbr",
+            "newParameterName": "notificationpartnerobjectnmbr"
+          },
+          {
+            "name": "Partner",
+            "newParameterName": "partner"
+          },
+          {
+            "name": "to_Notif",
+            "newParameterName": "to_notif"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "content-id"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "update_maintenancenotificationpartner",
+    "title": "update_MaintenanceNotificationPartner_for_cds_api_maintnotification",
+    "description": "Update an entity in MaintenanceNotificationPartner EntitySet in the cds_api_maintnotification service. Provide the key properties to identify the entity and the properties to update in the request body. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationPartner",
+        "crudOperation": "update",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "PartnerFunction",
+            "newParameterName": "partnerfunction"
+          },
+          {
+            "name": "NotificationPartnerObjectNmbr",
+            "newParameterName": "notificationpartnerobjectnmbr"
+          },
+          {
+            "name": "Partner",
+            "newParameterName": "partner"
+          },
+          {
+            "name": "if_match"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_maintenancenotificationpartner_for_cds_api_maintnotification",
+    "title": "get_MaintenanceNotificationPartner_for_cds_api_maintnotification",
+    "description": "Retrieve a single entity by its key from the MaintenanceNotificationPartner collection in the cds_api_maintnotification service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationPartner",
+        "crudOperation": "readByKey",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "PartnerFunction",
+            "newParameterName": "partnerfunction"
+          },
+          {
+            "name": "NotificationPartnerObjectNmbr",
+            "newParameterName": "notificationpartnerobjectnmbr"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "expand"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "count_maintenancenotificationpartner",
+    "title": "count_MaintenanceNotificationPartner_for_cds_api_maintnotification",
+    "description": "Get the total count of entities in the MaintenanceNotificationPartner collection in the cds_api_maintnotification service. Supports OData $filter to count only entities matching specific criteria. Use this when you need to determine the total number of entities without retrieving the actual data. If you need to understand the available filter properties, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationPartner",
+        "crudOperation": "count",
+        "parameters": [
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "list_maintnotificationitemactivity_for_cds_api_maintnotification",
+    "title": "list_MaintNotificationItemActivity_for_cds_api_maintnotification",
+    "description": "Retrieve a list of entities from the MaintNotificationItemActivity collection in the cds_api_maintnotification service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemActivity",
+        "crudOperation": "read",
+        "parameters": [
+          {
+            "name": "filter"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "orderby"
+          },
+          {
+            "name": "top"
+          },
+          {
+            "name": "skip"
+          },
+          {
+            "name": "expand"
+          },
+          {
+            "name": "inlinecount"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "create_maintnotificationitemactivity",
+    "title": "create_MaintNotificationItemActivity_for_cds_api_maintnotification",
+    "description": "Create a new instance of the MaintNotificationItemActivity EntitySet in the cds_api_maintnotification service. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemActivity",
+        "crudOperation": "create",
+        "parameters": [
+          {
+            "name": "MaintNotificationActivity",
+            "newParameterName": "maintnotificationactivity"
+          },
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          },
+          {
+            "name": "MaintNotifActivitySortNumber",
+            "newParameterName": "maintnotifactivitysortnumber"
+          },
+          {
+            "name": "MaintNotifActyTxt",
+            "newParameterName": "maintnotifactytxt"
+          },
+          {
+            "name": "MaintNotifActivityCodeGroup",
+            "newParameterName": "maintnotifactivitycodegroup"
+          },
+          {
+            "name": "MaintNotificationActivityCode",
+            "newParameterName": "maintnotificationactivitycode"
+          },
+          {
+            "name": "PlannedStartDate",
+            "newParameterName": "plannedstartdate"
+          },
+          {
+            "name": "PlannedStartTime",
+            "newParameterName": "plannedstarttime"
+          },
+          {
+            "name": "PlannedEndDate",
+            "newParameterName": "plannedenddate"
+          },
+          {
+            "name": "PlannedEndTime",
+            "newParameterName": "plannedendtime"
+          },
+          {
+            "name": "to_Item",
+            "newParameterName": "to_item"
+          },
+          {
+            "name": "to_Notif",
+            "newParameterName": "to_notif"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "content-id"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "update_maintnotificationitemactivity",
+    "title": "update_MaintNotificationItemActivity_for_cds_api_maintnotification",
+    "description": "Update an entity in MaintNotificationItemActivity EntitySet in the cds_api_maintnotification service. Provide the key properties to identify the entity and the properties to update in the request body. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemActivity",
+        "crudOperation": "update",
+        "parameters": [
+          {
+            "name": "MaintNotificationActivity",
+            "newParameterName": "maintnotificationactivity"
+          },
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          },
+          {
+            "name": "MaintNotifActivitySortNumber",
+            "newParameterName": "maintnotifactivitysortnumber"
+          },
+          {
+            "name": "MaintNotifActyTxt",
+            "newParameterName": "maintnotifactytxt"
+          },
+          {
+            "name": "MaintNotifActivityCodeGroup",
+            "newParameterName": "maintnotifactivitycodegroup"
+          },
+          {
+            "name": "MaintNotificationActivityCode",
+            "newParameterName": "maintnotificationactivitycode"
+          },
+          {
+            "name": "PlannedStartDate",
+            "newParameterName": "plannedstartdate"
+          },
+          {
+            "name": "PlannedStartTime",
+            "newParameterName": "plannedstarttime"
+          },
+          {
+            "name": "PlannedEndDate",
+            "newParameterName": "plannedenddate"
+          },
+          {
+            "name": "PlannedEndTime",
+            "newParameterName": "plannedendtime"
+          },
+          {
+            "name": "if_match"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_maintnotificationitemactivity_for_cds_api_maintnotification",
+    "title": "get_MaintNotificationItemActivity_for_cds_api_maintnotification",
+    "description": "Retrieve a single entity by its key from the MaintNotificationItemActivity collection in the cds_api_maintnotification service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemActivity",
+        "crudOperation": "readByKey",
+        "parameters": [
+          {
+            "name": "MaintNotificationActivity",
+            "newParameterName": "maintnotificationactivity"
+          },
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "expand"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "count_maintnotificationitemactivity",
+    "title": "count_MaintNotificationItemActivity_for_cds_api_maintnotification",
+    "description": "Get the total count of entities in the MaintNotificationItemActivity collection in the cds_api_maintnotification service. Supports OData $filter to count only entities matching specific criteria. Use this when you need to determine the total number of entities without retrieving the actual data. If you need to understand the available filter properties, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemActivity",
+        "crudOperation": "count",
+        "parameters": [
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "list_maintnotificationitemcause_for_cds_api_maintnotification",
+    "title": "list_MaintNotificationItemCause_for_cds_api_maintnotification",
+    "description": "Retrieve a list of entities from the MaintNotificationItemCause collection in the cds_api_maintnotification service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemCause",
+        "crudOperation": "read",
+        "parameters": [
+          {
+            "name": "filter"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "orderby"
+          },
+          {
+            "name": "top"
+          },
+          {
+            "name": "skip"
+          },
+          {
+            "name": "expand"
+          },
+          {
+            "name": "inlinecount"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "create_maintnotificationitemcause_for_cds_api_maintnotification",
+    "title": "create_MaintNotificationItemCause_for_cds_api_maintnotification",
+    "description": "Create a new instance of the MaintNotificationItemCause EntitySet in the cds_api_maintnotification service. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemCause",
+        "crudOperation": "create",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          },
+          {
+            "name": "MaintenanceNotificationCause",
+            "newParameterName": "maintenancenotificationcause"
+          },
+          {
+            "name": "MaintNotifCauseText",
+            "newParameterName": "maintnotifcausetext"
+          },
+          {
+            "name": "MaintNotifCauseCodeGroup",
+            "newParameterName": "maintnotifcausecodegroup"
+          },
+          {
+            "name": "MaintNotificationCauseCode",
+            "newParameterName": "maintnotificationcausecode"
+          },
+          {
+            "name": "MaintNotificationRootCause",
+            "newParameterName": "maintnotificationrootcause"
+          },
+          {
+            "name": "to_Item",
+            "newParameterName": "to_item"
+          },
+          {
+            "name": "to_Notif",
+            "newParameterName": "to_notif"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "content-id"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "update_maintnotificationitemcause_for_cds_api_maintnotification",
+    "title": "update_MaintNotificationItemCause_for_cds_api_maintnotification",
+    "description": "Update an entity in MaintNotificationItemCause EntitySet in the cds_api_maintnotification service. Provide the key properties to identify the entity and the properties to update in the request body. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemCause",
+        "crudOperation": "update",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          },
+          {
+            "name": "MaintenanceNotificationCause",
+            "newParameterName": "maintenancenotificationcause"
+          },
+          {
+            "name": "MaintNotifCauseText",
+            "newParameterName": "maintnotifcausetext"
+          },
+          {
+            "name": "MaintNotifCauseCodeGroup",
+            "newParameterName": "maintnotifcausecodegroup"
+          },
+          {
+            "name": "MaintNotificationCauseCode",
+            "newParameterName": "maintnotificationcausecode"
+          },
+          {
+            "name": "MaintNotificationRootCause",
+            "newParameterName": "maintnotificationrootcause"
+          },
+          {
+            "name": "if_match"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_maintnotificationitemcause_for_cds_api_maintnotification",
+    "title": "get_MaintNotificationItemCause_for_cds_api_maintnotification",
+    "description": "Retrieve a single entity by its key from the MaintNotificationItemCause collection in the cds_api_maintnotification service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemCause",
+        "crudOperation": "readByKey",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          },
+          {
+            "name": "MaintenanceNotificationCause",
+            "newParameterName": "maintenancenotificationcause"
+          },
+          {
+            "name": "select"
+          },
+          {
+            "name": "expand"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "count_maintnotificationitemcause_for_cds_api_maintnotification",
+    "title": "count_MaintNotificationItemCause_for_cds_api_maintnotification",
+    "description": "Get the total count of entities in the MaintNotificationItemCause collection in the cds_api_maintnotification service. Supports OData $filter to count only entities matching specific criteria. Use this when you need to determine the total number of entities without retrieving the actual data. If you need to understand the available filter properties, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemCause",
+        "crudOperation": "count",
+        "parameters": [
+          {
+            "name": "filter"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_to_failureeffect_in_maintenancenotification",
+    "title": "get_to_FailureEffect_in_MaintenanceNotification_for_cds_api_maintnotification",
+    "description": "Navigate from MaintenanceNotification to the related MaintNotifEffectCode_Type entity via the 'to_FailureEffect' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotification",
+        "navigationProperty": {
+          "name": "to_FailureEffect",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "update_to_failureeffect_in_maintenancenotification",
+    "title": "update_to_FailureEffect_in_MaintenanceNotification_for_cds_api_maintnotification",
+    "description": "Update the MaintNotifEffectCode_Type entity navigated from MaintenanceNotification via the 'to_FailureEffect' navigation property (HTTP PATCH). Provide the parent key and the properties to update. If the structure is unknown, call get_metadata_cds_api_maintnotification tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotification",
+        "navigationProperty": {
+          "name": "to_FailureEffect",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "MaintNotifEffectCodeGroup",
+              "newParameterName": "maintnotifeffectcodegroup"
+            },
+            {
+              "name": "MaintNotifEffectCode",
+              "newParameterName": "maintnotifeffectcode"
+            },
+            {
+              "name": "if_match"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "list_to_item_in_maintenancenotification",
+    "title": "list_to_Item_in_MaintenanceNotification_for_cds_api_maintnotification",
+    "description": "Navigate from MaintenanceNotification to related MaintenanceNotificationItemType entities via the 'to_Item' navigation property. Supports OData query options for filtering, sorting, paging, expanding, counting, and selecting specific properties. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotification",
+        "navigationProperty": {
+          "name": "to_Item",
+          "crudOperation": "read",
+          "parameters": [
+            {
+              "name": "filter"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "orderby"
+            },
+            {
+              "name": "top"
+            },
+            {
+              "name": "skip"
+            },
+            {
+              "name": "expand"
+            },
+            {
+              "name": "inlinecount"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "create_to_item_in_maintenancenotification",
+    "title": "create_to_Item_in_MaintenanceNotification_for_cds_api_maintnotification",
+    "description": "Create a new MaintenanceNotificationItemType entity via the 'to_Item' navigation property of MaintenanceNotification. Provide the parent key and the properties of the new entity. If the structure is unknown, call get_metadata_cds_api_maintnotification tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotification",
+        "navigationProperty": {
+          "name": "to_Item",
+          "crudOperation": "create",
+          "parameters": [
+            {
+              "name": "MaintenanceNotification",
+              "newParameterName": "maintenancenotification_2"
+            },
+            {
+              "name": "MaintenanceNotificationItem",
+              "newParameterName": "maintenancenotificationitem"
+            },
+            {
+              "name": "MaintNotifItemText",
+              "newParameterName": "maintnotifitemtext"
+            },
+            {
+              "name": "MaintNotifDamageCodeGroup",
+              "newParameterName": "maintnotifdamagecodegroup"
+            },
+            {
+              "name": "MaintNotificationDamageCode",
+              "newParameterName": "maintnotificationdamagecode"
+            },
+            {
+              "name": "MaintNotifObjPrtCodeGroup",
+              "newParameterName": "maintnotifobjprtcodegroup"
+            },
+            {
+              "name": "MaintNotifObjPrtCode",
+              "newParameterName": "maintnotifobjprtcode"
+            },
+            {
+              "name": "to_Notif",
+              "newParameterName": "to_notif"
+            },
+            {
+              "name": "to_ItemActivity",
+              "newParameterName": "to_itemactivity"
+            },
+            {
+              "name": "to_ItemCause",
+              "newParameterName": "to_itemcause"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "content-id"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "count_to_item_in_maintenancenotification",
+    "title": "count_to_Item_in_MaintenanceNotification_for_cds_api_maintnotification",
+    "description": "Count MaintenanceNotificationItemType entities accessible via the 'to_Item' navigation property of MaintenanceNotification in the cds_api_maintnotification service. Returns the total number of matching entities.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotification",
+        "navigationProperty": {
+          "name": "to_Item",
+          "crudOperation": "count",
+          "parameters": [
+            {
+              "name": "filter"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_to_linearassetmanagementdata_in_maintenancenotification",
+    "title": "get_to_LinearAssetManagementData_in_MaintenanceNotification_for_cds_api_maintnotification",
+    "description": "Navigate from MaintenanceNotification to the related LinearAssetManagementData_Type entity via the 'to_LinearAssetManagementData' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotification",
+        "navigationProperty": {
+          "name": "to_LinearAssetManagementData",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "update_to_linearassetmanagementdata_in_maintenancenotification",
+    "title": "update_to_LinearAssetManagementData_in_MaintenanceNotification_for_cds_api_maintnotification",
+    "description": "Update the LinearAssetManagementData_Type entity navigated from MaintenanceNotification via the 'to_LinearAssetManagementData' navigation property (HTTP PATCH). Provide the parent key and the properties to update. If the structure is unknown, call get_metadata_cds_api_maintnotification tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotification",
+        "navigationProperty": {
+          "name": "to_LinearAssetManagementData",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "LinearDataObjectTypeText",
+              "newParameterName": "lineardataobjecttypetext"
+            },
+            {
+              "name": "LinearReferencePattern",
+              "newParameterName": "linearreferencepattern"
+            },
+            {
+              "name": "LinearDataStartPoint",
+              "newParameterName": "lineardatastartpoint"
+            },
+            {
+              "name": "LinearDataStartMarker",
+              "newParameterName": "lineardatastartmarker"
+            },
+            {
+              "name": "LinearDataStartMarkerDistance",
+              "newParameterName": "lineardatastartmarkerdistance"
+            },
+            {
+              "name": "LinearDataEndPoint",
+              "newParameterName": "lineardataendpoint"
+            },
+            {
+              "name": "LinearDataEndMarker",
+              "newParameterName": "lineardataendmarker"
+            },
+            {
+              "name": "LinearDataEndMarkerDistance",
+              "newParameterName": "lineardataendmarkerdistance"
+            },
+            {
+              "name": "LinearDataMarkerDistanceUnit",
+              "newParameterName": "lineardatamarkerdistanceunit"
+            },
+            {
+              "name": "LinearDataLength",
+              "newParameterName": "lineardatalength"
+            },
+            {
+              "name": "LinearDataUnitOfMeasure",
+              "newParameterName": "lineardataunitofmeasure"
+            },
+            {
+              "name": "LinearDataFirstOffsetType",
+              "newParameterName": "lineardatafirstoffsettype"
+            },
+            {
+              "name": "LinearDataFirstOffsetDistance",
+              "newParameterName": "lineardatafirstoffsetdistance"
+            },
+            {
+              "name": "LinearDataFirstOffsetUnit",
+              "newParameterName": "lineardatafirstoffsetunit"
+            },
+            {
+              "name": "LinearDataSecondOffsetType",
+              "newParameterName": "lineardatasecondoffsettype"
+            },
+            {
+              "name": "LinearDataSecondOffsetDistance",
+              "newParameterName": "lineardatasecondoffsetdistance"
+            },
+            {
+              "name": "LinearDataSecondOffsetUnit",
+              "newParameterName": "lineardatasecondoffsetunit"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "list_to_partner_in_maintenancenotification",
+    "title": "list_to_Partner_in_MaintenanceNotification_for_cds_api_maintnotification",
+    "description": "Navigate from MaintenanceNotification to related MaintenanceNotificationPartnerType entities via the 'to_Partner' navigation property. Supports OData query options for filtering, sorting, paging, expanding, counting, and selecting specific properties. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotification",
+        "navigationProperty": {
+          "name": "to_Partner",
+          "crudOperation": "read",
+          "parameters": [
+            {
+              "name": "filter"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "orderby"
+            },
+            {
+              "name": "top"
+            },
+            {
+              "name": "skip"
+            },
+            {
+              "name": "expand"
+            },
+            {
+              "name": "inlinecount"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "create_to_partner_in_maintenancenotification",
+    "title": "create_to_Partner_in_MaintenanceNotification_for_cds_api_maintnotification",
+    "description": "Create a new MaintenanceNotificationPartnerType entity via the 'to_Partner' navigation property of MaintenanceNotification. Provide the parent key and the properties of the new entity. If the structure is unknown, call get_metadata_cds_api_maintnotification tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotification",
+        "navigationProperty": {
+          "name": "to_Partner",
+          "crudOperation": "create",
+          "parameters": [
+            {
+              "name": "MaintenanceNotification",
+              "newParameterName": "maintenancenotification_2"
+            },
+            {
+              "name": "PartnerFunction",
+              "newParameterName": "partnerfunction"
+            },
+            {
+              "name": "NotificationPartnerObjectNmbr",
+              "newParameterName": "notificationpartnerobjectnmbr"
+            },
+            {
+              "name": "Partner",
+              "newParameterName": "partner"
+            },
+            {
+              "name": "to_Notif",
+              "newParameterName": "to_notif"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "content-id"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "count_to_partner_in_maintenancenotification",
+    "title": "count_to_Partner_in_MaintenanceNotification_for_cds_api_maintnotification",
+    "description": "Count MaintenanceNotificationPartnerType entities accessible via the 'to_Partner' navigation property of MaintenanceNotification in the cds_api_maintnotification service. Returns the total number of matching entities.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotification",
+        "navigationProperty": {
+          "name": "to_Partner",
+          "crudOperation": "count",
+          "parameters": [
+            {
+              "name": "filter"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_to_notif_in_maintnotificationeffectcode",
+    "title": "get_to_Notif_in_MaintNotificationEffectCode_for_cds_api_maintnotification",
+    "description": "Navigate from MaintNotificationEffectCode to the related MaintenanceNotificationType entity via the 'to_Notif' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationEffectCode",
+        "navigationProperty": {
+          "name": "to_Notif",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationEffect",
+            "newParameterName": "maintenancenotificationeffect"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "update_to_notif_in_maintnotificationeffectcode",
+    "title": "update_to_Notif_in_MaintNotificationEffectCode_for_cds_api_maintnotification",
+    "description": "Update the MaintenanceNotificationType entity navigated from MaintNotificationEffectCode via the 'to_Notif' navigation property (HTTP PATCH). Provide the parent key and the properties to update. If the structure is unknown, call get_metadata_cds_api_maintnotification tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationEffectCode",
+        "navigationProperty": {
+          "name": "to_Notif",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "NotificationText",
+              "newParameterName": "notificationtext"
+            },
+            {
+              "name": "MaintPriority",
+              "newParameterName": "maintpriority"
+            },
+            {
+              "name": "NotificationType",
+              "newParameterName": "notificationtype"
+            },
+            {
+              "name": "ReportedByUser",
+              "newParameterName": "reportedbyuser"
+            },
+            {
+              "name": "PersonResponsible",
+              "newParameterName": "personresponsible"
+            },
+            {
+              "name": "MalfunctionEffect",
+              "newParameterName": "malfunctioneffect"
+            },
+            {
+              "name": "MalfunctionStartDate",
+              "newParameterName": "malfunctionstartdate"
+            },
+            {
+              "name": "MalfunctionStartTime",
+              "newParameterName": "malfunctionstarttime"
+            },
+            {
+              "name": "MalfunctionEndDate",
+              "newParameterName": "malfunctionenddate"
+            },
+            {
+              "name": "MalfunctionEndTime",
+              "newParameterName": "malfunctionendtime"
+            },
+            {
+              "name": "MaintNotificationCode",
+              "newParameterName": "maintnotificationcode"
+            },
+            {
+              "name": "MaintNotificationCodeGroup",
+              "newParameterName": "maintnotificationcodegroup"
+            },
+            {
+              "name": "NotificationCreationDate",
+              "newParameterName": "notificationcreationdate"
+            },
+            {
+              "name": "NotificationCreationTime",
+              "newParameterName": "notificationcreationtime"
+            },
+            {
+              "name": "RequiredStartDate",
+              "newParameterName": "requiredstartdate"
+            },
+            {
+              "name": "RequiredStartTime",
+              "newParameterName": "requiredstarttime"
+            },
+            {
+              "name": "RequiredEndDate",
+              "newParameterName": "requiredenddate"
+            },
+            {
+              "name": "RequiredEndTime",
+              "newParameterName": "requiredendtime"
+            },
+            {
+              "name": "LatestAcceptableCompletionDate",
+              "newParameterName": "latestacceptablecompletiondate"
+            },
+            {
+              "name": "MaintenanceObjectIsDown",
+              "newParameterName": "maintenanceobjectisdown"
+            },
+            {
+              "name": "MaintNotifLongTextForEdit",
+              "newParameterName": "maintnotiflongtextforedit"
+            },
+            {
+              "name": "MaintRequestEditableLongText",
+              "newParameterName": "maintrequesteditablelongtext"
+            },
+            {
+              "name": "TechnicalObject",
+              "newParameterName": "technicalobject"
+            },
+            {
+              "name": "TechObjIsEquipOrFuncnlLoc",
+              "newParameterName": "techobjisequiporfuncnlloc"
+            },
+            {
+              "name": "MaintenancePlanningPlant",
+              "newParameterName": "maintenanceplanningplant"
+            },
+            {
+              "name": "MaintenancePlannerGroup",
+              "newParameterName": "maintenanceplannergroup"
+            },
+            {
+              "name": "PlantSection",
+              "newParameterName": "plantsection"
+            },
+            {
+              "name": "AssetLocation",
+              "newParameterName": "assetlocation"
+            },
+            {
+              "name": "MainWorkCenterPlant",
+              "newParameterName": "mainworkcenterplant"
+            },
+            {
+              "name": "MainWorkCenter",
+              "newParameterName": "mainworkcenter"
+            },
+            {
+              "name": "MaintenancePlant",
+              "newParameterName": "maintenanceplant"
+            },
+            {
+              "name": "LocationDescription",
+              "newParameterName": "locationdescription"
+            },
+            {
+              "name": "MaintenanceOrder",
+              "newParameterName": "maintenanceorder"
+            },
+            {
+              "name": "MaintNotifProcessingContext",
+              "newParameterName": "maintnotifprocessingcontext"
+            },
+            {
+              "name": "MaintenanceActivityType",
+              "newParameterName": "maintenanceactivitytype"
+            },
+            {
+              "name": "MaintObjDowntimeDurationUnit",
+              "newParameterName": "maintobjdowntimedurationunit"
+            },
+            {
+              "name": "MaintObjectDowntimeDuration",
+              "newParameterName": "maintobjectdowntimeduration"
+            },
+            {
+              "name": "TaskList",
+              "newParameterName": "tasklist"
+            },
+            {
+              "name": "NotificationReferenceDate",
+              "newParameterName": "notificationreferencedate"
+            },
+            {
+              "name": "NotificationReferenceTime",
+              "newParameterName": "notificationreferencetime"
+            },
+            {
+              "name": "AssetRoom",
+              "newParameterName": "assetroom"
+            },
+            {
+              "name": "MaintNotifExtReferenceNumber",
+              "newParameterName": "maintnotifextreferencenumber"
+            },
+            {
+              "name": "MaintNotifDetectionCode",
+              "newParameterName": "maintnotifdetectioncode"
+            },
+            {
+              "name": "MaintNotifDetectionCodeGroup",
+              "newParameterName": "maintnotifdetectioncodegroup"
+            },
+            {
+              "name": "MaintNotifRqdEndDateTime",
+              "newParameterName": "maintnotifrqdenddatetime"
+            },
+            {
+              "name": "MaintenanceRevision",
+              "newParameterName": "maintenancerevision"
+            },
+            {
+              "name": "if_match"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationEffect",
+            "newParameterName": "maintenancenotificationeffect"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_to_notif_in_maintenancenotificationitem",
+    "title": "get_to_Notif_in_MaintenanceNotificationItem_for_cds_api_maintnotification",
+    "description": "Navigate from MaintenanceNotificationItem to the related MaintenanceNotificationType entity via the 'to_Notif' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationItem",
+        "navigationProperty": {
+          "name": "to_Notif",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "update_to_notif_in_maintenancenotificationitem",
+    "title": "update_to_Notif_in_MaintenanceNotificationItem_for_cds_api_maintnotification",
+    "description": "Update the MaintenanceNotificationType entity navigated from MaintenanceNotificationItem via the 'to_Notif' navigation property (HTTP PATCH). Provide the parent key and the properties to update. If the structure is unknown, call get_metadata_cds_api_maintnotification tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationItem",
+        "navigationProperty": {
+          "name": "to_Notif",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "NotificationText",
+              "newParameterName": "notificationtext"
+            },
+            {
+              "name": "MaintPriority",
+              "newParameterName": "maintpriority"
+            },
+            {
+              "name": "NotificationType",
+              "newParameterName": "notificationtype"
+            },
+            {
+              "name": "ReportedByUser",
+              "newParameterName": "reportedbyuser"
+            },
+            {
+              "name": "PersonResponsible",
+              "newParameterName": "personresponsible"
+            },
+            {
+              "name": "MalfunctionEffect",
+              "newParameterName": "malfunctioneffect"
+            },
+            {
+              "name": "MalfunctionStartDate",
+              "newParameterName": "malfunctionstartdate"
+            },
+            {
+              "name": "MalfunctionStartTime",
+              "newParameterName": "malfunctionstarttime"
+            },
+            {
+              "name": "MalfunctionEndDate",
+              "newParameterName": "malfunctionenddate"
+            },
+            {
+              "name": "MalfunctionEndTime",
+              "newParameterName": "malfunctionendtime"
+            },
+            {
+              "name": "MaintNotificationCode",
+              "newParameterName": "maintnotificationcode"
+            },
+            {
+              "name": "MaintNotificationCodeGroup",
+              "newParameterName": "maintnotificationcodegroup"
+            },
+            {
+              "name": "NotificationCreationDate",
+              "newParameterName": "notificationcreationdate"
+            },
+            {
+              "name": "NotificationCreationTime",
+              "newParameterName": "notificationcreationtime"
+            },
+            {
+              "name": "RequiredStartDate",
+              "newParameterName": "requiredstartdate"
+            },
+            {
+              "name": "RequiredStartTime",
+              "newParameterName": "requiredstarttime"
+            },
+            {
+              "name": "RequiredEndDate",
+              "newParameterName": "requiredenddate"
+            },
+            {
+              "name": "RequiredEndTime",
+              "newParameterName": "requiredendtime"
+            },
+            {
+              "name": "LatestAcceptableCompletionDate",
+              "newParameterName": "latestacceptablecompletiondate"
+            },
+            {
+              "name": "MaintenanceObjectIsDown",
+              "newParameterName": "maintenanceobjectisdown"
+            },
+            {
+              "name": "MaintNotifLongTextForEdit",
+              "newParameterName": "maintnotiflongtextforedit"
+            },
+            {
+              "name": "MaintRequestEditableLongText",
+              "newParameterName": "maintrequesteditablelongtext"
+            },
+            {
+              "name": "TechnicalObject",
+              "newParameterName": "technicalobject"
+            },
+            {
+              "name": "TechObjIsEquipOrFuncnlLoc",
+              "newParameterName": "techobjisequiporfuncnlloc"
+            },
+            {
+              "name": "MaintenancePlanningPlant",
+              "newParameterName": "maintenanceplanningplant"
+            },
+            {
+              "name": "MaintenancePlannerGroup",
+              "newParameterName": "maintenanceplannergroup"
+            },
+            {
+              "name": "PlantSection",
+              "newParameterName": "plantsection"
+            },
+            {
+              "name": "AssetLocation",
+              "newParameterName": "assetlocation"
+            },
+            {
+              "name": "MainWorkCenterPlant",
+              "newParameterName": "mainworkcenterplant"
+            },
+            {
+              "name": "MainWorkCenter",
+              "newParameterName": "mainworkcenter"
+            },
+            {
+              "name": "MaintenancePlant",
+              "newParameterName": "maintenanceplant"
+            },
+            {
+              "name": "LocationDescription",
+              "newParameterName": "locationdescription"
+            },
+            {
+              "name": "MaintenanceOrder",
+              "newParameterName": "maintenanceorder"
+            },
+            {
+              "name": "MaintNotifProcessingContext",
+              "newParameterName": "maintnotifprocessingcontext"
+            },
+            {
+              "name": "MaintenanceActivityType",
+              "newParameterName": "maintenanceactivitytype"
+            },
+            {
+              "name": "MaintObjDowntimeDurationUnit",
+              "newParameterName": "maintobjdowntimedurationunit"
+            },
+            {
+              "name": "MaintObjectDowntimeDuration",
+              "newParameterName": "maintobjectdowntimeduration"
+            },
+            {
+              "name": "TaskList",
+              "newParameterName": "tasklist"
+            },
+            {
+              "name": "NotificationReferenceDate",
+              "newParameterName": "notificationreferencedate"
+            },
+            {
+              "name": "NotificationReferenceTime",
+              "newParameterName": "notificationreferencetime"
+            },
+            {
+              "name": "AssetRoom",
+              "newParameterName": "assetroom"
+            },
+            {
+              "name": "MaintNotifExtReferenceNumber",
+              "newParameterName": "maintnotifextreferencenumber"
+            },
+            {
+              "name": "MaintNotifDetectionCode",
+              "newParameterName": "maintnotifdetectioncode"
+            },
+            {
+              "name": "MaintNotifDetectionCodeGroup",
+              "newParameterName": "maintnotifdetectioncodegroup"
+            },
+            {
+              "name": "MaintNotifRqdEndDateTime",
+              "newParameterName": "maintnotifrqdenddatetime"
+            },
+            {
+              "name": "MaintenanceRevision",
+              "newParameterName": "maintenancerevision"
+            },
+            {
+              "name": "if_match"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "list_to_itemactivity_in_maintenancenotificationitem",
+    "title": "list_to_ItemActivity_in_MaintenanceNotificationItem_for_cds_api_maintnotification",
+    "description": "Navigate from MaintenanceNotificationItem to related MaintNotificationItemActivityType entities via the 'to_ItemActivity' navigation property. Supports OData query options for filtering, sorting, paging, expanding, counting, and selecting specific properties. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationItem",
+        "navigationProperty": {
+          "name": "to_ItemActivity",
+          "crudOperation": "read",
+          "parameters": [
+            {
+              "name": "filter"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "orderby"
+            },
+            {
+              "name": "top"
+            },
+            {
+              "name": "skip"
+            },
+            {
+              "name": "expand"
+            },
+            {
+              "name": "inlinecount"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "create_to_itemactivity_in_maintenancenotificationitem",
+    "title": "create_to_ItemActivity_in_MaintenanceNotificationItem_for_cds_api_maintnotification",
+    "description": "Create a new MaintNotificationItemActivityType entity via the 'to_ItemActivity' navigation property of MaintenanceNotificationItem. Provide the parent key and the properties of the new entity. If the structure is unknown, call get_metadata_cds_api_maintnotification tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationItem",
+        "navigationProperty": {
+          "name": "to_ItemActivity",
+          "crudOperation": "create",
+          "parameters": [
+            {
+              "name": "MaintNotificationActivity",
+              "newParameterName": "maintnotificationactivity"
+            },
+            {
+              "name": "MaintenanceNotification",
+              "newParameterName": "maintenancenotification_2"
+            },
+            {
+              "name": "MaintenanceNotificationItem",
+              "newParameterName": "maintenancenotificationitem_2"
+            },
+            {
+              "name": "MaintNotifActivitySortNumber",
+              "newParameterName": "maintnotifactivitysortnumber"
+            },
+            {
+              "name": "MaintNotifActyTxt",
+              "newParameterName": "maintnotifactytxt"
+            },
+            {
+              "name": "MaintNotifActivityCodeGroup",
+              "newParameterName": "maintnotifactivitycodegroup"
+            },
+            {
+              "name": "MaintNotificationActivityCode",
+              "newParameterName": "maintnotificationactivitycode"
+            },
+            {
+              "name": "PlannedStartDate",
+              "newParameterName": "plannedstartdate"
+            },
+            {
+              "name": "PlannedStartTime",
+              "newParameterName": "plannedstarttime"
+            },
+            {
+              "name": "PlannedEndDate",
+              "newParameterName": "plannedenddate"
+            },
+            {
+              "name": "PlannedEndTime",
+              "newParameterName": "plannedendtime"
+            },
+            {
+              "name": "to_Item",
+              "newParameterName": "to_item"
+            },
+            {
+              "name": "to_Notif",
+              "newParameterName": "to_notif"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "content-id"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "count_to_itemactivity_in_maintenancenotificationitem",
+    "title": "count_to_ItemActivity_in_MaintenanceNotificationItem_for_cds_api_maintnotification",
+    "description": "Count MaintNotificationItemActivityType entities accessible via the 'to_ItemActivity' navigation property of MaintenanceNotificationItem in the cds_api_maintnotification service. Returns the total number of matching entities.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationItem",
+        "navigationProperty": {
+          "name": "to_ItemActivity",
+          "crudOperation": "count",
+          "parameters": [
+            {
+              "name": "filter"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "list_to_itemcause_in_maintenancenotificationitem",
+    "title": "list_to_ItemCause_in_MaintenanceNotificationItem_for_cds_api_maintnotification",
+    "description": "Navigate from MaintenanceNotificationItem to related MaintNotificationItemCauseType entities via the 'to_ItemCause' navigation property. Supports OData query options for filtering, sorting, paging, expanding, counting, and selecting specific properties. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationItem",
+        "navigationProperty": {
+          "name": "to_ItemCause",
+          "crudOperation": "read",
+          "parameters": [
+            {
+              "name": "filter"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "orderby"
+            },
+            {
+              "name": "top"
+            },
+            {
+              "name": "skip"
+            },
+            {
+              "name": "expand"
+            },
+            {
+              "name": "inlinecount"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "create_to_itemcause_in_maintenancenotificationitem",
+    "title": "create_to_ItemCause_in_MaintenanceNotificationItem_for_cds_api_maintnotification",
+    "description": "Create a new MaintNotificationItemCauseType entity via the 'to_ItemCause' navigation property of MaintenanceNotificationItem. Provide the parent key and the properties of the new entity. If the structure is unknown, call get_metadata_cds_api_maintnotification tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationItem",
+        "navigationProperty": {
+          "name": "to_ItemCause",
+          "crudOperation": "create",
+          "parameters": [
+            {
+              "name": "MaintenanceNotification",
+              "newParameterName": "maintenancenotification_2"
+            },
+            {
+              "name": "MaintenanceNotificationItem",
+              "newParameterName": "maintenancenotificationitem_2"
+            },
+            {
+              "name": "MaintenanceNotificationCause",
+              "newParameterName": "maintenancenotificationcause"
+            },
+            {
+              "name": "MaintNotifCauseText",
+              "newParameterName": "maintnotifcausetext"
+            },
+            {
+              "name": "MaintNotifCauseCodeGroup",
+              "newParameterName": "maintnotifcausecodegroup"
+            },
+            {
+              "name": "MaintNotificationCauseCode",
+              "newParameterName": "maintnotificationcausecode"
+            },
+            {
+              "name": "MaintNotificationRootCause",
+              "newParameterName": "maintnotificationrootcause"
+            },
+            {
+              "name": "to_Item",
+              "newParameterName": "to_item"
+            },
+            {
+              "name": "to_Notif",
+              "newParameterName": "to_notif"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "location"
+        },
+        {
+          "name": "content-id"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "count_to_itemcause_in_maintenancenotificationitem",
+    "title": "count_to_ItemCause_in_MaintenanceNotificationItem_for_cds_api_maintnotification",
+    "description": "Count MaintNotificationItemCauseType entities accessible via the 'to_ItemCause' navigation property of MaintenanceNotificationItem in the cds_api_maintnotification service. Returns the total number of matching entities.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationItem",
+        "navigationProperty": {
+          "name": "to_ItemCause",
+          "crudOperation": "count",
+          "parameters": [
+            {
+              "name": "filter"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_to_notif_in_maintenancenotificationpartner",
+    "title": "get_to_Notif_in_MaintenanceNotificationPartner_for_cds_api_maintnotification",
+    "description": "Navigate from MaintenanceNotificationPartner to the related MaintenanceNotificationType entity via the 'to_Notif' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationPartner",
+        "navigationProperty": {
+          "name": "to_Notif",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "PartnerFunction",
+            "newParameterName": "partnerfunction"
+          },
+          {
+            "name": "NotificationPartnerObjectNmbr",
+            "newParameterName": "notificationpartnerobjectnmbr"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "update_to_notif_in_maintenancenotificationpartner",
+    "title": "update_to_Notif_in_MaintenanceNotificationPartner_for_cds_api_maintnotification",
+    "description": "Update the MaintenanceNotificationType entity navigated from MaintenanceNotificationPartner via the 'to_Notif' navigation property (HTTP PATCH). Provide the parent key and the properties to update. If the structure is unknown, call get_metadata_cds_api_maintnotification tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintenanceNotificationPartner",
+        "navigationProperty": {
+          "name": "to_Notif",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "NotificationText",
+              "newParameterName": "notificationtext"
+            },
+            {
+              "name": "MaintPriority",
+              "newParameterName": "maintpriority"
+            },
+            {
+              "name": "NotificationType",
+              "newParameterName": "notificationtype"
+            },
+            {
+              "name": "ReportedByUser",
+              "newParameterName": "reportedbyuser"
+            },
+            {
+              "name": "PersonResponsible",
+              "newParameterName": "personresponsible"
+            },
+            {
+              "name": "MalfunctionEffect",
+              "newParameterName": "malfunctioneffect"
+            },
+            {
+              "name": "MalfunctionStartDate",
+              "newParameterName": "malfunctionstartdate"
+            },
+            {
+              "name": "MalfunctionStartTime",
+              "newParameterName": "malfunctionstarttime"
+            },
+            {
+              "name": "MalfunctionEndDate",
+              "newParameterName": "malfunctionenddate"
+            },
+            {
+              "name": "MalfunctionEndTime",
+              "newParameterName": "malfunctionendtime"
+            },
+            {
+              "name": "MaintNotificationCode",
+              "newParameterName": "maintnotificationcode"
+            },
+            {
+              "name": "MaintNotificationCodeGroup",
+              "newParameterName": "maintnotificationcodegroup"
+            },
+            {
+              "name": "NotificationCreationDate",
+              "newParameterName": "notificationcreationdate"
+            },
+            {
+              "name": "NotificationCreationTime",
+              "newParameterName": "notificationcreationtime"
+            },
+            {
+              "name": "RequiredStartDate",
+              "newParameterName": "requiredstartdate"
+            },
+            {
+              "name": "RequiredStartTime",
+              "newParameterName": "requiredstarttime"
+            },
+            {
+              "name": "RequiredEndDate",
+              "newParameterName": "requiredenddate"
+            },
+            {
+              "name": "RequiredEndTime",
+              "newParameterName": "requiredendtime"
+            },
+            {
+              "name": "LatestAcceptableCompletionDate",
+              "newParameterName": "latestacceptablecompletiondate"
+            },
+            {
+              "name": "MaintenanceObjectIsDown",
+              "newParameterName": "maintenanceobjectisdown"
+            },
+            {
+              "name": "MaintNotifLongTextForEdit",
+              "newParameterName": "maintnotiflongtextforedit"
+            },
+            {
+              "name": "MaintRequestEditableLongText",
+              "newParameterName": "maintrequesteditablelongtext"
+            },
+            {
+              "name": "TechnicalObject",
+              "newParameterName": "technicalobject"
+            },
+            {
+              "name": "TechObjIsEquipOrFuncnlLoc",
+              "newParameterName": "techobjisequiporfuncnlloc"
+            },
+            {
+              "name": "MaintenancePlanningPlant",
+              "newParameterName": "maintenanceplanningplant"
+            },
+            {
+              "name": "MaintenancePlannerGroup",
+              "newParameterName": "maintenanceplannergroup"
+            },
+            {
+              "name": "PlantSection",
+              "newParameterName": "plantsection"
+            },
+            {
+              "name": "AssetLocation",
+              "newParameterName": "assetlocation"
+            },
+            {
+              "name": "MainWorkCenterPlant",
+              "newParameterName": "mainworkcenterplant"
+            },
+            {
+              "name": "MainWorkCenter",
+              "newParameterName": "mainworkcenter"
+            },
+            {
+              "name": "MaintenancePlant",
+              "newParameterName": "maintenanceplant"
+            },
+            {
+              "name": "LocationDescription",
+              "newParameterName": "locationdescription"
+            },
+            {
+              "name": "MaintenanceOrder",
+              "newParameterName": "maintenanceorder"
+            },
+            {
+              "name": "MaintNotifProcessingContext",
+              "newParameterName": "maintnotifprocessingcontext"
+            },
+            {
+              "name": "MaintenanceActivityType",
+              "newParameterName": "maintenanceactivitytype"
+            },
+            {
+              "name": "MaintObjDowntimeDurationUnit",
+              "newParameterName": "maintobjdowntimedurationunit"
+            },
+            {
+              "name": "MaintObjectDowntimeDuration",
+              "newParameterName": "maintobjectdowntimeduration"
+            },
+            {
+              "name": "TaskList",
+              "newParameterName": "tasklist"
+            },
+            {
+              "name": "NotificationReferenceDate",
+              "newParameterName": "notificationreferencedate"
+            },
+            {
+              "name": "NotificationReferenceTime",
+              "newParameterName": "notificationreferencetime"
+            },
+            {
+              "name": "AssetRoom",
+              "newParameterName": "assetroom"
+            },
+            {
+              "name": "MaintNotifExtReferenceNumber",
+              "newParameterName": "maintnotifextreferencenumber"
+            },
+            {
+              "name": "MaintNotifDetectionCode",
+              "newParameterName": "maintnotifdetectioncode"
+            },
+            {
+              "name": "MaintNotifDetectionCodeGroup",
+              "newParameterName": "maintnotifdetectioncodegroup"
+            },
+            {
+              "name": "MaintNotifRqdEndDateTime",
+              "newParameterName": "maintnotifrqdenddatetime"
+            },
+            {
+              "name": "MaintenanceRevision",
+              "newParameterName": "maintenancerevision"
+            },
+            {
+              "name": "if_match"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "PartnerFunction",
+            "newParameterName": "partnerfunction"
+          },
+          {
+            "name": "NotificationPartnerObjectNmbr",
+            "newParameterName": "notificationpartnerobjectnmbr"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_to_item_in_maintnotificationitemactivity",
+    "title": "get_to_Item_in_MaintNotificationItemActivity_for_cds_api_maintnotification",
+    "description": "Navigate from MaintNotificationItemActivity to the related MaintenanceNotificationItemType entity via the 'to_Item' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemActivity",
+        "navigationProperty": {
+          "name": "to_Item",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintNotificationActivity",
+            "newParameterName": "maintnotificationactivity"
+          },
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "update_to_item_in_maintnotificationitemactivity",
+    "title": "update_to_Item_in_MaintNotificationItemActivity_for_cds_api_maintnotification",
+    "description": "Update the MaintenanceNotificationItemType entity navigated from MaintNotificationItemActivity via the 'to_Item' navigation property (HTTP PATCH). Provide the parent key and the properties to update. If the structure is unknown, call get_metadata_cds_api_maintnotification tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemActivity",
+        "navigationProperty": {
+          "name": "to_Item",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "MaintNotifItemText",
+              "newParameterName": "maintnotifitemtext"
+            },
+            {
+              "name": "MaintNotifDamageCodeGroup",
+              "newParameterName": "maintnotifdamagecodegroup"
+            },
+            {
+              "name": "MaintNotificationDamageCode",
+              "newParameterName": "maintnotificationdamagecode"
+            },
+            {
+              "name": "MaintNotifObjPrtCodeGroup",
+              "newParameterName": "maintnotifobjprtcodegroup"
+            },
+            {
+              "name": "MaintNotifObjPrtCode",
+              "newParameterName": "maintnotifobjprtcode"
+            },
+            {
+              "name": "if_match"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintNotificationActivity",
+            "newParameterName": "maintnotificationactivity"
+          },
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_to_notif_in_maintnotificationitemactivity",
+    "title": "get_to_Notif_in_MaintNotificationItemActivity_for_cds_api_maintnotification",
+    "description": "Navigate from MaintNotificationItemActivity to the related MaintenanceNotificationType entity via the 'to_Notif' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemActivity",
+        "navigationProperty": {
+          "name": "to_Notif",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintNotificationActivity",
+            "newParameterName": "maintnotificationactivity"
+          },
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "update_to_notif_in_maintnotificationitemactivity",
+    "title": "update_to_Notif_in_MaintNotificationItemActivity_for_cds_api_maintnotification",
+    "description": "Update the MaintenanceNotificationType entity navigated from MaintNotificationItemActivity via the 'to_Notif' navigation property (HTTP PATCH). Provide the parent key and the properties to update. If the structure is unknown, call get_metadata_cds_api_maintnotification tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemActivity",
+        "navigationProperty": {
+          "name": "to_Notif",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "NotificationText",
+              "newParameterName": "notificationtext"
+            },
+            {
+              "name": "MaintPriority",
+              "newParameterName": "maintpriority"
+            },
+            {
+              "name": "NotificationType",
+              "newParameterName": "notificationtype"
+            },
+            {
+              "name": "ReportedByUser",
+              "newParameterName": "reportedbyuser"
+            },
+            {
+              "name": "PersonResponsible",
+              "newParameterName": "personresponsible"
+            },
+            {
+              "name": "MalfunctionEffect",
+              "newParameterName": "malfunctioneffect"
+            },
+            {
+              "name": "MalfunctionStartDate",
+              "newParameterName": "malfunctionstartdate"
+            },
+            {
+              "name": "MalfunctionStartTime",
+              "newParameterName": "malfunctionstarttime"
+            },
+            {
+              "name": "MalfunctionEndDate",
+              "newParameterName": "malfunctionenddate"
+            },
+            {
+              "name": "MalfunctionEndTime",
+              "newParameterName": "malfunctionendtime"
+            },
+            {
+              "name": "MaintNotificationCode",
+              "newParameterName": "maintnotificationcode"
+            },
+            {
+              "name": "MaintNotificationCodeGroup",
+              "newParameterName": "maintnotificationcodegroup"
+            },
+            {
+              "name": "NotificationCreationDate",
+              "newParameterName": "notificationcreationdate"
+            },
+            {
+              "name": "NotificationCreationTime",
+              "newParameterName": "notificationcreationtime"
+            },
+            {
+              "name": "RequiredStartDate",
+              "newParameterName": "requiredstartdate"
+            },
+            {
+              "name": "RequiredStartTime",
+              "newParameterName": "requiredstarttime"
+            },
+            {
+              "name": "RequiredEndDate",
+              "newParameterName": "requiredenddate"
+            },
+            {
+              "name": "RequiredEndTime",
+              "newParameterName": "requiredendtime"
+            },
+            {
+              "name": "LatestAcceptableCompletionDate",
+              "newParameterName": "latestacceptablecompletiondate"
+            },
+            {
+              "name": "MaintenanceObjectIsDown",
+              "newParameterName": "maintenanceobjectisdown"
+            },
+            {
+              "name": "MaintNotifLongTextForEdit",
+              "newParameterName": "maintnotiflongtextforedit"
+            },
+            {
+              "name": "MaintRequestEditableLongText",
+              "newParameterName": "maintrequesteditablelongtext"
+            },
+            {
+              "name": "TechnicalObject",
+              "newParameterName": "technicalobject"
+            },
+            {
+              "name": "TechObjIsEquipOrFuncnlLoc",
+              "newParameterName": "techobjisequiporfuncnlloc"
+            },
+            {
+              "name": "MaintenancePlanningPlant",
+              "newParameterName": "maintenanceplanningplant"
+            },
+            {
+              "name": "MaintenancePlannerGroup",
+              "newParameterName": "maintenanceplannergroup"
+            },
+            {
+              "name": "PlantSection",
+              "newParameterName": "plantsection"
+            },
+            {
+              "name": "AssetLocation",
+              "newParameterName": "assetlocation"
+            },
+            {
+              "name": "MainWorkCenterPlant",
+              "newParameterName": "mainworkcenterplant"
+            },
+            {
+              "name": "MainWorkCenter",
+              "newParameterName": "mainworkcenter"
+            },
+            {
+              "name": "MaintenancePlant",
+              "newParameterName": "maintenanceplant"
+            },
+            {
+              "name": "LocationDescription",
+              "newParameterName": "locationdescription"
+            },
+            {
+              "name": "MaintenanceOrder",
+              "newParameterName": "maintenanceorder"
+            },
+            {
+              "name": "MaintNotifProcessingContext",
+              "newParameterName": "maintnotifprocessingcontext"
+            },
+            {
+              "name": "MaintenanceActivityType",
+              "newParameterName": "maintenanceactivitytype"
+            },
+            {
+              "name": "MaintObjDowntimeDurationUnit",
+              "newParameterName": "maintobjdowntimedurationunit"
+            },
+            {
+              "name": "MaintObjectDowntimeDuration",
+              "newParameterName": "maintobjectdowntimeduration"
+            },
+            {
+              "name": "TaskList",
+              "newParameterName": "tasklist"
+            },
+            {
+              "name": "NotificationReferenceDate",
+              "newParameterName": "notificationreferencedate"
+            },
+            {
+              "name": "NotificationReferenceTime",
+              "newParameterName": "notificationreferencetime"
+            },
+            {
+              "name": "AssetRoom",
+              "newParameterName": "assetroom"
+            },
+            {
+              "name": "MaintNotifExtReferenceNumber",
+              "newParameterName": "maintnotifextreferencenumber"
+            },
+            {
+              "name": "MaintNotifDetectionCode",
+              "newParameterName": "maintnotifdetectioncode"
+            },
+            {
+              "name": "MaintNotifDetectionCodeGroup",
+              "newParameterName": "maintnotifdetectioncodegroup"
+            },
+            {
+              "name": "MaintNotifRqdEndDateTime",
+              "newParameterName": "maintnotifrqdenddatetime"
+            },
+            {
+              "name": "MaintenanceRevision",
+              "newParameterName": "maintenancerevision"
+            },
+            {
+              "name": "if_match"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintNotificationActivity",
+            "newParameterName": "maintnotificationactivity"
+          },
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_to_item_in_maintnotificationitemcause",
+    "title": "get_to_Item_in_MaintNotificationItemCause_for_cds_api_maintnotification",
+    "description": "Navigate from MaintNotificationItemCause to the related MaintenanceNotificationItemType entity via the 'to_Item' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemCause",
+        "navigationProperty": {
+          "name": "to_Item",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          },
+          {
+            "name": "MaintenanceNotificationCause",
+            "newParameterName": "maintenancenotificationcause"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "update_to_item_in_maintnotificationitemcause",
+    "title": "update_to_Item_in_MaintNotificationItemCause_for_cds_api_maintnotification",
+    "description": "Update the MaintenanceNotificationItemType entity navigated from MaintNotificationItemCause via the 'to_Item' navigation property (HTTP PATCH). Provide the parent key and the properties to update. If the structure is unknown, call get_metadata_cds_api_maintnotification tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemCause",
+        "navigationProperty": {
+          "name": "to_Item",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "MaintNotifItemText",
+              "newParameterName": "maintnotifitemtext"
+            },
+            {
+              "name": "MaintNotifDamageCodeGroup",
+              "newParameterName": "maintnotifdamagecodegroup"
+            },
+            {
+              "name": "MaintNotificationDamageCode",
+              "newParameterName": "maintnotificationdamagecode"
+            },
+            {
+              "name": "MaintNotifObjPrtCodeGroup",
+              "newParameterName": "maintnotifobjprtcodegroup"
+            },
+            {
+              "name": "MaintNotifObjPrtCode",
+              "newParameterName": "maintnotifobjprtcode"
+            },
+            {
+              "name": "if_match"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          },
+          {
+            "name": "MaintenanceNotificationCause",
+            "newParameterName": "maintenancenotificationcause"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "get_to_notif_in_maintnotificationitemcause",
+    "title": "get_to_Notif_in_MaintNotificationItemCause_for_cds_api_maintnotification",
+    "description": "Navigate from MaintNotificationItemCause to the related MaintenanceNotificationType entity via the 'to_Notif' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_cds_api_maintnotification tool first to get the metadata.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemCause",
+        "navigationProperty": {
+          "name": "to_Notif",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          },
+          {
+            "name": "MaintenanceNotificationCause",
+            "newParameterName": "maintenancenotificationcause"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "update_to_notif_in_maintnotificationitemcause",
+    "title": "update_to_Notif_in_MaintNotificationItemCause_for_cds_api_maintnotification",
+    "description": "Update the MaintenanceNotificationType entity navigated from MaintNotificationItemCause via the 'to_Notif' navigation property (HTTP PATCH). Provide the parent key and the properties to update. If the structure is unknown, call get_metadata_cds_api_maintnotification tool first.",
+    "odataType": {
+      "entitySet": {
+        "name": "MaintNotificationItemCause",
+        "navigationProperty": {
+          "name": "to_Notif",
+          "crudOperation": "update",
+          "parameters": [
+            {
+              "name": "NotificationText",
+              "newParameterName": "notificationtext"
+            },
+            {
+              "name": "MaintPriority",
+              "newParameterName": "maintpriority"
+            },
+            {
+              "name": "NotificationType",
+              "newParameterName": "notificationtype"
+            },
+            {
+              "name": "ReportedByUser",
+              "newParameterName": "reportedbyuser"
+            },
+            {
+              "name": "PersonResponsible",
+              "newParameterName": "personresponsible"
+            },
+            {
+              "name": "MalfunctionEffect",
+              "newParameterName": "malfunctioneffect"
+            },
+            {
+              "name": "MalfunctionStartDate",
+              "newParameterName": "malfunctionstartdate"
+            },
+            {
+              "name": "MalfunctionStartTime",
+              "newParameterName": "malfunctionstarttime"
+            },
+            {
+              "name": "MalfunctionEndDate",
+              "newParameterName": "malfunctionenddate"
+            },
+            {
+              "name": "MalfunctionEndTime",
+              "newParameterName": "malfunctionendtime"
+            },
+            {
+              "name": "MaintNotificationCode",
+              "newParameterName": "maintnotificationcode"
+            },
+            {
+              "name": "MaintNotificationCodeGroup",
+              "newParameterName": "maintnotificationcodegroup"
+            },
+            {
+              "name": "NotificationCreationDate",
+              "newParameterName": "notificationcreationdate"
+            },
+            {
+              "name": "NotificationCreationTime",
+              "newParameterName": "notificationcreationtime"
+            },
+            {
+              "name": "RequiredStartDate",
+              "newParameterName": "requiredstartdate"
+            },
+            {
+              "name": "RequiredStartTime",
+              "newParameterName": "requiredstarttime"
+            },
+            {
+              "name": "RequiredEndDate",
+              "newParameterName": "requiredenddate"
+            },
+            {
+              "name": "RequiredEndTime",
+              "newParameterName": "requiredendtime"
+            },
+            {
+              "name": "LatestAcceptableCompletionDate",
+              "newParameterName": "latestacceptablecompletiondate"
+            },
+            {
+              "name": "MaintenanceObjectIsDown",
+              "newParameterName": "maintenanceobjectisdown"
+            },
+            {
+              "name": "MaintNotifLongTextForEdit",
+              "newParameterName": "maintnotiflongtextforedit"
+            },
+            {
+              "name": "MaintRequestEditableLongText",
+              "newParameterName": "maintrequesteditablelongtext"
+            },
+            {
+              "name": "TechnicalObject",
+              "newParameterName": "technicalobject"
+            },
+            {
+              "name": "TechObjIsEquipOrFuncnlLoc",
+              "newParameterName": "techobjisequiporfuncnlloc"
+            },
+            {
+              "name": "MaintenancePlanningPlant",
+              "newParameterName": "maintenanceplanningplant"
+            },
+            {
+              "name": "MaintenancePlannerGroup",
+              "newParameterName": "maintenanceplannergroup"
+            },
+            {
+              "name": "PlantSection",
+              "newParameterName": "plantsection"
+            },
+            {
+              "name": "AssetLocation",
+              "newParameterName": "assetlocation"
+            },
+            {
+              "name": "MainWorkCenterPlant",
+              "newParameterName": "mainworkcenterplant"
+            },
+            {
+              "name": "MainWorkCenter",
+              "newParameterName": "mainworkcenter"
+            },
+            {
+              "name": "MaintenancePlant",
+              "newParameterName": "maintenanceplant"
+            },
+            {
+              "name": "LocationDescription",
+              "newParameterName": "locationdescription"
+            },
+            {
+              "name": "MaintenanceOrder",
+              "newParameterName": "maintenanceorder"
+            },
+            {
+              "name": "MaintNotifProcessingContext",
+              "newParameterName": "maintnotifprocessingcontext"
+            },
+            {
+              "name": "MaintenanceActivityType",
+              "newParameterName": "maintenanceactivitytype"
+            },
+            {
+              "name": "MaintObjDowntimeDurationUnit",
+              "newParameterName": "maintobjdowntimedurationunit"
+            },
+            {
+              "name": "MaintObjectDowntimeDuration",
+              "newParameterName": "maintobjectdowntimeduration"
+            },
+            {
+              "name": "TaskList",
+              "newParameterName": "tasklist"
+            },
+            {
+              "name": "NotificationReferenceDate",
+              "newParameterName": "notificationreferencedate"
+            },
+            {
+              "name": "NotificationReferenceTime",
+              "newParameterName": "notificationreferencetime"
+            },
+            {
+              "name": "AssetRoom",
+              "newParameterName": "assetroom"
+            },
+            {
+              "name": "MaintNotifExtReferenceNumber",
+              "newParameterName": "maintnotifextreferencenumber"
+            },
+            {
+              "name": "MaintNotifDetectionCode",
+              "newParameterName": "maintnotifdetectioncode"
+            },
+            {
+              "name": "MaintNotifDetectionCodeGroup",
+              "newParameterName": "maintnotifdetectioncodegroup"
+            },
+            {
+              "name": "MaintNotifRqdEndDateTime",
+              "newParameterName": "maintnotifrqdenddatetime"
+            },
+            {
+              "name": "MaintenanceRevision",
+              "newParameterName": "maintenancerevision"
+            },
+            {
+              "name": "if_match"
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintenanceNotificationItem",
+            "newParameterName": "maintenancenotificationitem"
+          },
+          {
+            "name": "MaintenanceNotificationCause",
+            "newParameterName": "maintenancenotificationcause"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "etag"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "function_approvemaintworkrequest_for_cds_api_maintnotification",
+    "title": "function_ApproveMaintWorkRequest_for_cds_api_maintnotification",
+    "description": "OData function: ApproveMaintWorkRequest in the cds_api_maintnotification service. Returns: cds_api_maintnotification.MaintenanceNotificationType",
+    "odataType": {
+      "operation": {
+        "name": "ApproveMaintWorkRequest",
+        "type": "function",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "function_completemaintnotification_for_cds_api_maintnotification",
+    "title": "function_CompleteMaintNotification_for_cds_api_maintnotification",
+    "description": "OData function: CompleteMaintNotification in the cds_api_maintnotification service. Returns: cds_api_maintnotification.MaintenanceNotificationType",
+    "odataType": {
+      "operation": {
+        "name": "CompleteMaintNotification",
+        "type": "function",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintNotifReferenceDateTime",
+            "newParameterName": "maintnotifreferencedatetime"
+          },
+          {
+            "name": "NotificationReferenceDate",
+            "newParameterName": "notificationreferencedate"
+          },
+          {
+            "name": "NotificationReferenceTime",
+            "newParameterName": "notificationreferencetime"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "function_rejectmaintworkrequest_for_cds_api_maintnotification",
+    "title": "function_RejectMaintWorkRequest_for_cds_api_maintnotification",
+    "description": "OData function: RejectMaintWorkRequest in the cds_api_maintnotification service. Returns: cds_api_maintnotification.MaintenanceNotificationType",
+    "odataType": {
+      "operation": {
+        "name": "RejectMaintWorkRequest",
+        "type": "function",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintNotifRejectionReasonCode",
+            "newParameterName": "maintnotifrejectionreasoncode"
+          },
+          {
+            "name": "MaintNotifLongTextForEdit",
+            "newParameterName": "maintnotiflongtextforedit"
+          },
+          {
+            "name": "TextObjectCategory",
+            "newParameterName": "textobjectcategory"
+          },
+          {
+            "name": "NotificationType",
+            "newParameterName": "notificationtype"
+          },
+          {
+            "name": "MaintRequestEditableLongText",
+            "newParameterName": "maintrequesteditablelongtext"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "function_setmaintnotiftoinforequired",
+    "title": "function_SetMaintNotifToInfoRequired_for_cds_api_maintnotification",
+    "description": "OData function: SetMaintNotifToInfoRequired in the cds_api_maintnotification service. Returns: cds_api_maintnotification.MaintenanceNotificationType",
+    "odataType": {
+      "operation": {
+        "name": "SetMaintNotifToInfoRequired",
+        "type": "function",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          },
+          {
+            "name": "MaintNotifRejectionReasonCode",
+            "newParameterName": "maintnotifrejectionreasoncode"
+          },
+          {
+            "name": "MaintNotifLongTextForEdit",
+            "newParameterName": "maintnotiflongtextforedit"
+          },
+          {
+            "name": "MaintRequestEditableLongText",
+            "newParameterName": "maintrequesteditablelongtext"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  },
+  {
+    "name": "function_setmaintnotiftoinprocess_for_cds_api_maintnotification",
+    "title": "function_SetMaintNotifToInProcess_for_cds_api_maintnotification",
+    "description": "OData function: SetMaintNotifToInProcess in the cds_api_maintnotification service. Returns: cds_api_maintnotification.MaintenanceNotificationType",
+    "odataType": {
+      "operation": {
+        "name": "SetMaintNotifToInProcess",
+        "type": "function",
+        "parameters": [
+          {
+            "name": "MaintenanceNotification",
+            "newParameterName": "maintenancenotification"
+          }
+        ]
+      },
+      "responseHeaders": [
+        {
+          "name": "age"
+        },
+        {
+          "name": "cache-control"
+        },
+        {
+          "name": "expires"
+        },
+        {
+          "name": "last-modified"
+        },
+        {
+          "name": "x-request-id"
+        },
+        {
+          "name": "x-correlation-id"
+        },
+        {
+          "name": "content-type"
+        },
+        {
+          "name": "content-encoding"
+        },
+        {
+          "name": "content-language"
+        },
+        {
+          "name": "content-length"
+        },
+        {
+          "name": "dataserviceversion"
+        },
+        {
+          "name": "sap-message"
+        }
+      ]
+    }
+  }
+]

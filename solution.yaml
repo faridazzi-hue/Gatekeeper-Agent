@@ -1,0 +1,13 @@
+apiVersion: solution.sap/v1
+kind: Solution
+
+metadata:
+  name: pm-notification-gatekeeper-4fe41
+  version: "1.0.0"
+  description: "Plant Maintenance Notification Gatekeeper — AI agent that screens SAP maintenance notifications for consistency, duplicate detection, and human-in-the-loop Approve/Rework/Reject routing."
+
+assets:
+  - ref: ./assets/pm-notification-gatekeeper-agent/asset.yaml
+  - ref: ./assets/sap-s4-maintnotification-mcp-server/asset.yaml
+  - ref: ./assets/sap-s4-equipment-mcp-server/asset.yaml
+  - ref: ./assets/sap-s4-functionallocation-mcp-server/asset.yaml

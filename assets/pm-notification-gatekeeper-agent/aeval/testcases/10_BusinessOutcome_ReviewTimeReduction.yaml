@@ -1,0 +1,25 @@
+id: 10_BusinessOutcome_ReviewTimeReduction
+description: >
+  Business outcome for Gatekeeper manual review time per notification. The agent
+  must structure the review response so the gatekeeper can act without additional
+  lookups, directly supporting the 50% review time reduction target.
+tags:
+  - correctness
+  - business_outcome
+  - review_efficiency
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a plant maintenance gatekeeper for plant 1000 with a high workload.
+        You want a complete review of notification 10000001 and expect to be able to
+        make your decision immediately after the response without needing to ask follow-up
+        questions.
+        Known information: notification 10000001, plant 1000.
+        If the agent presents a complete review, make your decision immediately.
+        If the agent asks for confirmation, confirm.
+    initial_message: 'Full review of notification 10000001 please — I need to be able to decide straight away.'
+    max_turns: 6
+    agent_response_validations:
+      - check: '[BUSINESS_METRIC: Gatekeeper manual review time per notification] The review response for notification 10000001 includes: validation findings, duplicate detection outcome, recommendation with confidence level and rationale, and the three explicit next-step choices — all in a single structured response without requiring follow-up questions.'
+      - check: 'The response separates SAP data, agent analysis, and recommendation into clearly distinguishable sections.'

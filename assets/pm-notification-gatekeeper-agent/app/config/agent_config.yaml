@@ -1,0 +1,132 @@
+# Plant Maintenance Notification Gatekeeper Agent — Configuration
+# All values in this file are loaded at runtime. Changes take effect on the next agent invocation
+# without requiring a code deployment.
+
+# ---------------------------------------------------------------------------
+# SAP Backend Destination
+# ---------------------------------------------------------------------------
+# BTP destination name used by all three MCP servers to connect to the SAP S/4HANA system.
+sap_destination: S4HANA_QUALITY
+
+# ---------------------------------------------------------------------------
+# SAP Action-to-Status Mapping
+# ---------------------------------------------------------------------------
+# Maps gatekeeper-confirmed decisions to SAP Maintenance Notification API actions
+# and the expected resulting SAP status after each action.
+action_to_status_mapping:
+  approve:
+    api_action: ApproveMaintWorkRequest
+    expected_status: NOPR       # Notification in process / released
+  reject:
+    api_action: RejectMaintWorkRequest
+    expected_status: REJA       # TODO: confirm rejection status code with SAP team
+  rework:
+    api_action: SetMaintNotifToInfoRequired
+    expected_status: NOPO       # Notification postponed (rework in pilot configuration)
+  in_process:
+    api_action: SetMaintNotifToInProcess
+    expected_status: NOPR
+  complete:
+    api_action: CompleteMaintNotification
+    expected_status: NOCO       # Notification completed
+
+# ---------------------------------------------------------------------------
+# Notification Scope
+# ---------------------------------------------------------------------------
+# Notification types included in scope for this agent.
+notification_types_in_scope:
+  - M1
+  - M2
+
+# Initial screening status — only notifications with this status are retrieved.
+screening_status: OSNO
+
+# Open statuses considered for duplicate detection (NOCO excluded).
+open_statuses_for_duplicate_detection:
+  - OSNO
+  - NOPR
+
+# ---------------------------------------------------------------------------
+# Valid Code Groups and Codes
+# ---------------------------------------------------------------------------
+# Provide the complete list of valid code groups and codes applicable to the
+# plants and notification types in scope.
+# Format: each entry has a group name, description, applicable notification types,
+# and a list of valid codes.
+#
+# TODO: Replace placeholder entries with the actual code groups and codes
+#       extracted from the SAP system for the target plants.
+valid_code_groups:
+  - group: "TODO_GROUP_1"
+    description: "Placeholder — replace with actual code group"
+    notification_types:
+      - M1
+      - M2
+    codes:
+      - code: "TODO_CODE_1"
+        description: "Placeholder — replace with actual code"
+      - code: "TODO_CODE_2"
+        description: "Placeholder — replace with actual code"
+
+# ---------------------------------------------------------------------------
+# Failure Groups and Failure Codes
+# ---------------------------------------------------------------------------
+# TODO: Replace placeholder entries with the actual failure groups and codes
+#       from the SAP system.
+failure_groups:
+  - group: "TODO_FAILURE_GROUP_1"
+    description: "Placeholder — replace with actual failure group"
+    codes:
+      - code: "TODO_FAILURE_CODE_1"
+        description: "Placeholder — replace with actual failure code"
+
+# ---------------------------------------------------------------------------
+# Attachment Requirement Rules
+# ---------------------------------------------------------------------------
+# Define which notification types or equipment classes require an attachment
+# before the notification can be approved.
+# Set required: false for all initially; update when attachment rules are confirmed.
+attachment_requirements:
+  - notification_type: M1
+    required: false
+    notes: "TODO: confirm whether M1 breakdown notifications require a photo attachment"
+  - notification_type: M2
+    required: false
+    notes: "TODO: confirm attachment requirements for M2"
+
+# ---------------------------------------------------------------------------
+# Worklist Prioritization Weights
+# ---------------------------------------------------------------------------
+# Weights used to rank pending OSNO notifications in the gatekeeper worklist.
+# Higher weight = higher priority in the list.
+worklist_prioritization:
+  abc_a_equipment: 30           # High-critical equipment
+  abc_b_equipment: 20           # Medium-critical equipment
+  abc_c_equipment: 10           # Low-critical equipment
+  priority_very_high: 25
+  priority_high: 20
+  priority_medium: 10
+  priority_low: 5
+  m1_breakdown_yes: 20          # M1 with breakdown indicator = Yes
+  suspected_duplicate: -15      # Lower priority if already suspected duplicate
+  missing_required_info: 15     # Raise priority if key fields are inconsistent
+  low_confidence: 10            # Raise priority for manual attention
+
+# ---------------------------------------------------------------------------
+# Audit Storage
+# ---------------------------------------------------------------------------
+# Destination for structured audit records written after each notification review.
+# Supported types: file (write JSON lines to a local file), stdout (print to stdout).
+# TODO: Update to the production audit destination before pilot go-live.
+audit_storage:
+  type: file
+  path: /tmp/pm_gatekeeper_audit.jsonl   # TODO: replace with production path
+
+# ---------------------------------------------------------------------------
+# Email Draft Settings
+# ---------------------------------------------------------------------------
+# Controls how email drafts are presented. Currently text-only (copy-paste).
+# Set outlook_integration: true once Outlook draft API is configured.
+email_draft:
+  outlook_integration: false    # TODO: enable when Outlook integration is configured
+  language: en

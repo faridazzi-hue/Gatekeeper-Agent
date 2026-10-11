@@ -1,0 +1,38 @@
+id: 03_Correctness_M1ReworkFlow
+description: >
+  Goal completion UJ-03. The gatekeeper reviews an M1 notification where the
+  breakdown indicator is Yes but no duration is provided — a mandatory M1 cross-field
+  failure. The agent issues a Rework recommendation and produces an email draft
+  after confirmation.
+tags:
+  - correctness
+  - m1_validation
+  - rework
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a plant maintenance gatekeeper for plant 1000.
+        You want a full review of notification 10000002, which is an M1 malfunction report.
+        Known information: notification number is 10000002, plant is 1000, notification type is M1.
+        Unknown information: the specific validation findings and recommendation.
+        If the agent recommends Rework, accept the recommendation.
+        If the agent asks you to confirm sending the email draft, say you want to see it first, then approve it.
+    initial_message: 'Review notification 10000002 please — it is an M1 type.'
+    max_turns: 8
+    agent_response_validations:
+      - check: 'The agent validates the M1-specific fields for notification 10000002 and reports results for breakdown indicator, malfunction start date, and breakdown duration.'
+      - check: 'The agent presents the recommendation with a rationale that references the M1 cross-field consistency findings.'
+      - check: 'After the gatekeeper confirms a Rework decision, the agent presents an unsent email draft addressed to the notification creator, citing the specific correction required.'
+      - check: 'The email draft specifies the notification number 10000002 and the nature of the correction needed.'
+    rule_compliance_validations:
+      - check: 'The agent presents the email draft as unsent and does not claim it was delivered.'
+      - check: 'The agent does not execute the SetMaintNotifToInfoRequired action before the gatekeeper confirms it.'
+    tool_validations:
+      expected_tool_calls:
+        - tool: get_maintenancenotification_for_cds_api_maintnotification
+          output:
+            check: 'The tool returns a notification record with NotificationNumber 10000002.'
+        - tool: get_equipment_for_cds_api_equipment
+          output:
+            check: 'The tool returns equipment master data for the equipment referenced in notification 10000002.'

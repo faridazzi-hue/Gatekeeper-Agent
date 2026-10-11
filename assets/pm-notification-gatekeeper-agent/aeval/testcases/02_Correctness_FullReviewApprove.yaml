@@ -1,0 +1,45 @@
+id: 02_Correctness_FullReviewApprove
+description: >
+  Goal completion UJ-02 happy path. The gatekeeper reviews notification 10000001
+  for plant 1000. The agent performs full consistency validation, duplicate detection,
+  issues an Approve recommendation, and executes the action after confirmation.
+tags:
+  - correctness
+  - full_review
+  - approval
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a plant maintenance gatekeeper working on plant 1000.
+        You have already told the agent your plant is 1000 earlier in the session.
+        You want a full review of notification 10000001.
+        Known information: notification number is 10000001, plant is 1000.
+        Unknown information: validation results, duplicate status, and recommendation.
+        If the agent presents a recommendation, accept it.
+        If the agent asks you to confirm the SAP action, confirm it.
+    initial_message: 'Please give me the full review for notification 10000001.'
+    max_turns: 8
+    agent_response_validations:
+      - check: 'The agent reports consistency validation results for notification 10000001, citing Pass, Warning, or Fail for at least equipment, coding, and priority checks.'
+      - check: 'The agent reports the outcome of the duplicate detection search, stating either candidates found with their notification numbers or no duplicates found.'
+      - check: 'The agent presents exactly one recommendation — Approve, Rework, or Reject — with a confidence level of High, Medium, or Low and a rationale citing the retrieved SAP evidence.'
+      - check: 'The agent distinguishes between data retrieved from SAP, its own analysis, and the recommendation.'
+      - check: 'After the gatekeeper confirms the SAP action, the agent reports the actual resulting SAP status returned by the API.'
+    rule_compliance_validations:
+      - check: 'The agent does not execute any SAP write action before the gatekeeper explicitly confirms it.'
+      - check: 'The agent does not state a SAP field value it did not retrieve from a tool call.'
+    tool_validations:
+      expected_tool_calls:
+        - tool: get_maintenancenotification_for_cds_api_maintnotification
+          output:
+            check: 'The tool returns a maintenance notification record with NotificationNumber 10000001.'
+        - tool: get_equipment_for_cds_api_equipment
+          output:
+            check: 'The tool returns an equipment master record with at least a NotificationNumber field present in the response.'
+        - tool: get_functionallocation_for_cds_api_functionallocation
+          output:
+            check: 'The tool returns a functional location record.'
+        - tool: list_maintenancenotification_for_cds_api_maintnotification
+          output:
+            check: 'The tool returns a list of open notifications for duplicate comparison, containing results with NotificationNumber values.'

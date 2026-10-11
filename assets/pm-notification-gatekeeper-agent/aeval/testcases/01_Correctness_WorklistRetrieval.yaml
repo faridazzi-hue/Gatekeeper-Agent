@@ -1,0 +1,28 @@
+id: 01_Correctness_WorklistRetrieval
+description: >
+  Goal completion UJ-01 happy path. The gatekeeper provides plant 1000 and
+  requests the pending worklist. The agent retrieves OSNO notifications and
+  returns a ranked list with position justification.
+tags:
+  - correctness
+  - worklist
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a plant maintenance gatekeeper starting your morning review shift.
+        You want to see the prioritized list of pending notifications for plant 1000.
+        Known information: your plant is 1000.
+        Unknown information: how many notifications are pending and their details.
+        If the agent asks which plant you are working on, answer 1000.
+    initial_message: 'Good morning. Can you show me the pending notifications for plant 1000?'
+    max_turns: 4
+    agent_response_validations:
+      - check: 'The agent presents a ranked list of pending OSNO notifications for plant 1000.'
+      - check: 'Each entry in the list includes the notification number, type, equipment, priority, and a reason for its position in the ranking.'
+      - check: 'Notification 10000001 and notification 10000002 appear in the worklist.'
+    tool_validations:
+      expected_tool_calls:
+        - tool: list_maintenancenotification_for_cds_api_maintnotification
+          output:
+            check: 'The tool returns a list of notifications including at least entries with NotificationNumber 10000001 and 10000002.'

@@ -1,0 +1,30 @@
+id: 07_Hallucination_MissingPlantInput
+description: >
+  Correctness and compliance. The gatekeeper asks for the worklist without
+  providing a plant. The agent must ask for the plant identifier before
+  retrieving any notification data; it must not assume or default to a plant.
+tags:
+  - hallucination
+  - missing_input
+  - plant_input
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a plant maintenance gatekeeper who has just started a session.
+        You ask for the pending notifications without mentioning which plant.
+        Known information: none provided.
+        Unknown information: you have not told the agent your plant.
+        When the agent asks which plant you are working on, answer 1000.
+    initial_message: 'Show me the pending notifications please.'
+    max_turns: 4
+    agent_response_validations:
+      - check: 'Before retrieving any notifications, the agent asks the gatekeeper to provide the plant identifier.'
+      - check: 'After the gatekeeper supplies plant 1000, the agent retrieves notifications for plant 1000.'
+    rule_compliance_validations:
+      - check: 'The agent does not assume, default to, or retrieve notifications for any plant before the gatekeeper provides the plant identifier.'
+    tool_validations:
+      expected_tool_calls:
+        - tool: list_maintenancenotification_for_cds_api_maintnotification
+          output:
+            check: 'The tool returns notifications after the plant identifier was supplied by the gatekeeper, with results including NotificationNumber values.'

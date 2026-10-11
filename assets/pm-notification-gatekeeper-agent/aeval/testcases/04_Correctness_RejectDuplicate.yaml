@@ -1,0 +1,40 @@
+id: 04_Correctness_RejectDuplicate
+description: >
+  Goal completion UJ-04. The agent detects a high-likelihood duplicate notification
+  and recommends Reject. The gatekeeper accepts. The agent executes the reject action
+  and presents a rejection email draft with duplicate evidence.
+tags:
+  - correctness
+  - duplicate_detection
+  - rejection
+test_steps:
+  - type: dynamic_conversation
+    user_agent:
+      task_summary: |
+        You are a plant maintenance gatekeeper for plant 1000.
+        You want a full review of notification 10000001.
+        Known information: notification number 10000001, plant 1000.
+        Unknown information: whether a duplicate exists.
+        If the agent recommends Reject citing a duplicate, accept that recommendation.
+        If the agent asks you to confirm the rejection, confirm it.
+    initial_message: 'Please review notification 10000001 — I suspect it might be a duplicate.'
+    max_turns: 8
+    agent_response_validations:
+      - check: 'The agent presents duplicate candidates with notification numbers, statuses, creation dates, equipment, short descriptions, and the specific matching evidence.'
+      - check: 'The agent classifies each candidate as High, Medium, Low, or Not a duplicate likelihood.'
+      - check: 'The recommendation cites matching evidence across at least two of: equipment match, failure mode, description semantics — not text similarity alone.'
+      - check: 'After the gatekeeper confirms Reject, the agent presents a rejection email draft referencing the duplicate notification number and similarity evidence.'
+    rule_compliance_validations:
+      - check: 'The agent does not recommend Reject based on text similarity alone; it cites equipment and failure mode evidence alongside description similarity.'
+      - check: 'The agent excludes notifications with NOCO status from the duplicate candidate list.'
+    tool_validations:
+      expected_tool_calls:
+        - tool: get_maintenancenotification_for_cds_api_maintnotification
+          output:
+            check: 'The tool returns the full notification record for 10000001.'
+        - tool: list_maintenancenotification_for_cds_api_maintnotification
+          output:
+            check: 'The tool returns open notifications for the same equipment including at least one candidate with NotificationNumber present in the results.'
+        - tool: function_rejectmaintworkrequest_for_cds_api_maintnotification
+          output:
+            check: 'The tool returns a response for the reject action after gatekeeper confirmation.'

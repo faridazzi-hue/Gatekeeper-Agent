@@ -1,0 +1,804 @@
+{
+  "mcpTranslationVersion": "0.6",
+  "target": {
+    "ordId": "sap.s4:apiResource:API_EQUIPMENT:v1",
+    "type": "edmx"
+  },
+  "serverInfo": {
+    "name": "sap.mcp/cds_api_equipment",
+    "title": "cds_api_equipment",
+    "version": "1.0.0",
+    "description": "MCP server for the cds_api_equipment service."
+  },
+  "tools": [
+    {
+      "name": "get_metadata_cds_api_equipment",
+      "title": "get_metadata_cds_api_equipment",
+      "description": "Get metadata of the OData service with optional filtering to reduce token consumption.\nReturns the metadata in XML format, which can be used to discover available entities and their properties.\nCall this endpoint every time before you call other tools to ensure understanding of the schema.\nBased on the metadata, you can dynamically create an OData request.\n\nUse filtering parameters to get specific metadata sections. Without parameters, this tool returns the complete XML metadata (which might be huge).\nOnly use the specified enum values for the filtering parameters.\n",
+      "odataType": {
+        "metadataRequest": {},
+        "responseHeaders": [
+          {
+            "name": "age"
+          },
+          {
+            "name": "cache-control"
+          },
+          {
+            "name": "expires"
+          },
+          {
+            "name": "last-modified"
+          },
+          {
+            "name": "x-request-id"
+          },
+          {
+            "name": "x-correlation-id"
+          },
+          {
+            "name": "content-type"
+          },
+          {
+            "name": "content-encoding"
+          },
+          {
+            "name": "content-language"
+          },
+          {
+            "name": "content-length"
+          },
+          {
+            "name": "dataserviceversion"
+          },
+          {
+            "name": "etag"
+          },
+          {
+            "name": "sap-message"
+          }
+        ]
+      }
+    },
+    {
+      "name": "batch_for_cds_api_equipment",
+      "title": "batch_for_cds_api_equipment",
+      "description": "Execute multiple OData operations in a single batch request using the $batch endpoint. This allows you to combine multiple tool calls into one HTTP request, improving efficiency when performing multiple operations.",
+      "odataType": {
+        "batchRequest": {},
+        "responseHeaders": [
+          {
+            "name": "age"
+          },
+          {
+            "name": "cache-control"
+          },
+          {
+            "name": "expires"
+          },
+          {
+            "name": "last-modified"
+          },
+          {
+            "name": "x-request-id"
+          },
+          {
+            "name": "x-correlation-id"
+          },
+          {
+            "name": "content-type"
+          },
+          {
+            "name": "content-encoding"
+          },
+          {
+            "name": "content-language"
+          },
+          {
+            "name": "content-length"
+          },
+          {
+            "name": "dataserviceversion"
+          },
+          {
+            "name": "sap-message"
+          }
+        ]
+      }
+    },
+    {
+      "name": "list_equipment_for_cds_api_equipment",
+      "title": "list_Equipment_for_cds_api_equipment",
+      "description": "Retrieve a list of entities from the Equipment collection in the cds_api_equipment service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_cds_api_equipment tool first to get the metadata.",
+      "odataType": {
+        "entitySet": {
+          "name": "Equipment",
+          "crudOperation": "read",
+          "parameters": [
+            {
+              "name": "filter"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "orderby"
+            },
+            {
+              "name": "top"
+            },
+            {
+              "name": "skip"
+            },
+            {
+              "name": "expand"
+            },
+            {
+              "name": "inlinecount"
+            }
+          ]
+        },
+        "responseHeaders": [
+          {
+            "name": "age"
+          },
+          {
+            "name": "cache-control"
+          },
+          {
+            "name": "expires"
+          },
+          {
+            "name": "last-modified"
+          },
+          {
+            "name": "x-request-id"
+          },
+          {
+            "name": "x-correlation-id"
+          },
+          {
+            "name": "content-type"
+          },
+          {
+            "name": "content-encoding"
+          },
+          {
+            "name": "content-language"
+          },
+          {
+            "name": "content-length"
+          },
+          {
+            "name": "dataserviceversion"
+          },
+          {
+            "name": "etag"
+          },
+          {
+            "name": "sap-message"
+          }
+        ]
+      }
+    },
+    {
+      "name": "get_equipment_for_cds_api_equipment",
+      "title": "get_Equipment_for_cds_api_equipment",
+      "description": "Retrieve a single entity by its key from the Equipment collection in the cds_api_equipment service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_cds_api_equipment tool first to get the metadata.",
+      "odataType": {
+        "entitySet": {
+          "name": "Equipment",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "Equipment",
+              "newParameterName": "equipment"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "validityenddate"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "responseHeaders": [
+          {
+            "name": "age"
+          },
+          {
+            "name": "cache-control"
+          },
+          {
+            "name": "expires"
+          },
+          {
+            "name": "last-modified"
+          },
+          {
+            "name": "x-request-id"
+          },
+          {
+            "name": "x-correlation-id"
+          },
+          {
+            "name": "content-type"
+          },
+          {
+            "name": "content-encoding"
+          },
+          {
+            "name": "content-language"
+          },
+          {
+            "name": "content-length"
+          },
+          {
+            "name": "dataserviceversion"
+          },
+          {
+            "name": "etag"
+          },
+          {
+            "name": "sap-message"
+          }
+        ]
+      }
+    },
+    {
+      "name": "count_equipment_for_cds_api_equipment",
+      "title": "count_Equipment_for_cds_api_equipment",
+      "description": "Get the total count of entities in the Equipment collection in the cds_api_equipment service. Supports OData $filter to count only entities matching specific criteria. Use this when you need to determine the total number of entities without retrieving the actual data. If you need to understand the available filter properties, call get_metadata_cds_api_equipment tool first to get the metadata.",
+      "odataType": {
+        "entitySet": {
+          "name": "Equipment",
+          "crudOperation": "count",
+          "parameters": [
+            {
+              "name": "filter"
+            }
+          ]
+        },
+        "responseHeaders": [
+          {
+            "name": "age"
+          },
+          {
+            "name": "cache-control"
+          },
+          {
+            "name": "expires"
+          },
+          {
+            "name": "last-modified"
+          },
+          {
+            "name": "x-request-id"
+          },
+          {
+            "name": "x-correlation-id"
+          },
+          {
+            "name": "content-type"
+          },
+          {
+            "name": "content-encoding"
+          },
+          {
+            "name": "content-language"
+          },
+          {
+            "name": "content-length"
+          },
+          {
+            "name": "dataserviceversion"
+          },
+          {
+            "name": "sap-message"
+          }
+        ]
+      }
+    },
+    {
+      "name": "list_equipmentlongtext_for_cds_api_equipment",
+      "title": "list_EquipmentLongText_for_cds_api_equipment",
+      "description": "Retrieve a list of entities from the EquipmentLongText collection in the cds_api_equipment service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_cds_api_equipment tool first to get the metadata.",
+      "odataType": {
+        "entitySet": {
+          "name": "EquipmentLongText",
+          "crudOperation": "read",
+          "parameters": [
+            {
+              "name": "filter"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "orderby"
+            },
+            {
+              "name": "top"
+            },
+            {
+              "name": "skip"
+            },
+            {
+              "name": "expand"
+            },
+            {
+              "name": "inlinecount"
+            }
+          ]
+        },
+        "responseHeaders": [
+          {
+            "name": "age"
+          },
+          {
+            "name": "cache-control"
+          },
+          {
+            "name": "expires"
+          },
+          {
+            "name": "last-modified"
+          },
+          {
+            "name": "x-request-id"
+          },
+          {
+            "name": "x-correlation-id"
+          },
+          {
+            "name": "content-type"
+          },
+          {
+            "name": "content-encoding"
+          },
+          {
+            "name": "content-language"
+          },
+          {
+            "name": "content-length"
+          },
+          {
+            "name": "dataserviceversion"
+          },
+          {
+            "name": "etag"
+          },
+          {
+            "name": "sap-message"
+          }
+        ]
+      }
+    },
+    {
+      "name": "get_equipmentlongtext_for_cds_api_equipment",
+      "title": "get_EquipmentLongText_for_cds_api_equipment",
+      "description": "Retrieve a single entity by its key from the EquipmentLongText collection in the cds_api_equipment service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_cds_api_equipment tool first to get the metadata.",
+      "odataType": {
+        "entitySet": {
+          "name": "EquipmentLongText",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "Equipment",
+              "newParameterName": "equipment"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "responseHeaders": [
+          {
+            "name": "age"
+          },
+          {
+            "name": "cache-control"
+          },
+          {
+            "name": "expires"
+          },
+          {
+            "name": "last-modified"
+          },
+          {
+            "name": "x-request-id"
+          },
+          {
+            "name": "x-correlation-id"
+          },
+          {
+            "name": "content-type"
+          },
+          {
+            "name": "content-encoding"
+          },
+          {
+            "name": "content-language"
+          },
+          {
+            "name": "content-length"
+          },
+          {
+            "name": "dataserviceversion"
+          },
+          {
+            "name": "etag"
+          },
+          {
+            "name": "sap-message"
+          }
+        ]
+      }
+    },
+    {
+      "name": "list_equipmentwarranty_for_cds_api_equipment",
+      "title": "list_EquipmentWarranty_for_cds_api_equipment",
+      "description": "Retrieve a list of entities from the EquipmentWarranty collection in the cds_api_equipment service. Supports OData query options for filtering, sorting, ranking ($top), skipping ($skip), expanding related entities, counting, selecting specific properties. Only use attributes in the query options that are specified in the metadata. If the structure of the entity is not known, call get_metadata_cds_api_equipment tool first to get the metadata.",
+      "odataType": {
+        "entitySet": {
+          "name": "EquipmentWarranty",
+          "crudOperation": "read",
+          "parameters": [
+            {
+              "name": "filter"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "orderby"
+            },
+            {
+              "name": "top"
+            },
+            {
+              "name": "skip"
+            },
+            {
+              "name": "expand"
+            },
+            {
+              "name": "inlinecount"
+            }
+          ]
+        },
+        "responseHeaders": [
+          {
+            "name": "age"
+          },
+          {
+            "name": "cache-control"
+          },
+          {
+            "name": "expires"
+          },
+          {
+            "name": "last-modified"
+          },
+          {
+            "name": "x-request-id"
+          },
+          {
+            "name": "x-correlation-id"
+          },
+          {
+            "name": "content-type"
+          },
+          {
+            "name": "content-encoding"
+          },
+          {
+            "name": "content-language"
+          },
+          {
+            "name": "content-length"
+          },
+          {
+            "name": "dataserviceversion"
+          },
+          {
+            "name": "etag"
+          },
+          {
+            "name": "sap-message"
+          }
+        ]
+      }
+    },
+    {
+      "name": "get_equipmentwarranty_for_cds_api_equipment",
+      "title": "get_EquipmentWarranty_for_cds_api_equipment",
+      "description": "Retrieve a single entity by its key from the EquipmentWarranty collection in the cds_api_equipment service. Provide the key property value(s) to identify the specific entity to retrieve. Supports OData query options for selecting specific properties ($select), expanding related entities ($expand). If the structure of the entity is not known, call get_metadata_cds_api_equipment tool first to get the metadata.",
+      "odataType": {
+        "entitySet": {
+          "name": "EquipmentWarranty",
+          "crudOperation": "readByKey",
+          "parameters": [
+            {
+              "name": "Equipment",
+              "newParameterName": "equipment"
+            },
+            {
+              "name": "WarrantyType",
+              "newParameterName": "warrantytype"
+            },
+            {
+              "name": "select"
+            },
+            {
+              "name": "expand"
+            }
+          ]
+        },
+        "responseHeaders": [
+          {
+            "name": "age"
+          },
+          {
+            "name": "cache-control"
+          },
+          {
+            "name": "expires"
+          },
+          {
+            "name": "last-modified"
+          },
+          {
+            "name": "x-request-id"
+          },
+          {
+            "name": "x-correlation-id"
+          },
+          {
+            "name": "content-type"
+          },
+          {
+            "name": "content-encoding"
+          },
+          {
+            "name": "content-language"
+          },
+          {
+            "name": "content-length"
+          },
+          {
+            "name": "dataserviceversion"
+          },
+          {
+            "name": "etag"
+          },
+          {
+            "name": "sap-message"
+          }
+        ]
+      }
+    },
+    {
+      "name": "get_to_longtext_in_equipment_for_cds_api_equipment",
+      "title": "get_to_LongText_in_Equipment_for_cds_api_equipment",
+      "description": "Navigate from Equipment to the related EquipmentLongTextType entity via the 'to_LongText' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_cds_api_equipment tool first to get the metadata.",
+      "odataType": {
+        "entitySet": {
+          "name": "Equipment",
+          "navigationProperty": {
+            "name": "to_LongText",
+            "crudOperation": "readByKey",
+            "parameters": [
+              {
+                "name": "select"
+              },
+              {
+                "name": "expand"
+              }
+            ]
+          },
+          "parameters": [
+            {
+              "name": "Equipment",
+              "newParameterName": "equipment"
+            },
+            {
+              "name": "ValidityEndDate",
+              "newParameterName": "validityenddate"
+            }
+          ]
+        },
+        "responseHeaders": [
+          {
+            "name": "age"
+          },
+          {
+            "name": "cache-control"
+          },
+          {
+            "name": "expires"
+          },
+          {
+            "name": "last-modified"
+          },
+          {
+            "name": "x-request-id"
+          },
+          {
+            "name": "x-correlation-id"
+          },
+          {
+            "name": "content-type"
+          },
+          {
+            "name": "content-encoding"
+          },
+          {
+            "name": "content-language"
+          },
+          {
+            "name": "content-length"
+          },
+          {
+            "name": "dataserviceversion"
+          },
+          {
+            "name": "etag"
+          },
+          {
+            "name": "sap-message"
+          }
+        ]
+      }
+    },
+    {
+      "name": "get_to_equipment_in_equipmentlongtext_for_cds_api_equipment",
+      "title": "get_to_Equipment_in_EquipmentLongText_for_cds_api_equipment",
+      "description": "Navigate from EquipmentLongText to the related EquipmentType entity via the 'to_Equipment' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_cds_api_equipment tool first to get the metadata.",
+      "odataType": {
+        "entitySet": {
+          "name": "EquipmentLongText",
+          "navigationProperty": {
+            "name": "to_Equipment",
+            "crudOperation": "readByKey",
+            "parameters": [
+              {
+                "name": "select"
+              },
+              {
+                "name": "expand"
+              }
+            ]
+          },
+          "parameters": [
+            {
+              "name": "Equipment",
+              "newParameterName": "equipment"
+            }
+          ]
+        },
+        "responseHeaders": [
+          {
+            "name": "age"
+          },
+          {
+            "name": "cache-control"
+          },
+          {
+            "name": "expires"
+          },
+          {
+            "name": "last-modified"
+          },
+          {
+            "name": "x-request-id"
+          },
+          {
+            "name": "x-correlation-id"
+          },
+          {
+            "name": "content-type"
+          },
+          {
+            "name": "content-encoding"
+          },
+          {
+            "name": "content-language"
+          },
+          {
+            "name": "content-length"
+          },
+          {
+            "name": "dataserviceversion"
+          },
+          {
+            "name": "etag"
+          },
+          {
+            "name": "sap-message"
+          }
+        ]
+      }
+    },
+    {
+      "name": "get_to_equipment_in_equipmentwarranty_for_cds_api_equipment",
+      "title": "get_to_Equipment_in_EquipmentWarranty_for_cds_api_equipment",
+      "description": "Navigate from EquipmentWarranty to the related EquipmentType entity via the 'to_Equipment' navigation property. Supports $select and $expand query options. If the structure of the entity is not known, call get_metadata_cds_api_equipment tool first to get the metadata.",
+      "odataType": {
+        "entitySet": {
+          "name": "EquipmentWarranty",
+          "navigationProperty": {
+            "name": "to_Equipment",
+            "crudOperation": "readByKey",
+            "parameters": [
+              {
+                "name": "select"
+              },
+              {
+                "name": "expand"
+              }
+            ]
+          },
+          "parameters": [
+            {
+              "name": "Equipment",
+              "newParameterName": "equipment"
+            },
+            {
+              "name": "WarrantyType",
+              "newParameterName": "warrantytype"
+            }
+          ]
+        },
+        "responseHeaders": [
+          {
+            "name": "age"
+          },
+          {
+            "name": "cache-control"
+          },
+          {
+            "name": "expires"
+          },
+          {
+            "name": "last-modified"
+          },
+          {
+            "name": "x-request-id"
+          },
+          {
+            "name": "x-correlation-id"
+          },
+          {
+            "name": "content-type"
+          },
+          {
+            "name": "content-encoding"
+          },
+          {
+            "name": "content-language"
+          },
+          {
+            "name": "content-length"
+          },
+          {
+            "name": "dataserviceversion"
+          },
+          {
+            "name": "etag"
+          },
+          {
+            "name": "sap-message"
+          }
+        ]
+      }
+    }
+  ]
+}
