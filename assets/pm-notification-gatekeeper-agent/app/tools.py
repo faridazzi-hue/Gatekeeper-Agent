@@ -85,16 +85,8 @@ class ODataListInput(BaseModel):
     inlinecount: Optional[str] = Field(default=None, description="OData $inlinecount (allpages or none)")
 
 
-class ODataListMaintenanceNotificationInput(ODataListInput):
-    include_all_statuses: bool = Field(
-        default=False,
-        description=(
-            "Set to True to return ALL notifications regardless of status. "
-            "Default (False) returns only OSNO (Outstanding Open) notifications. "
-            "Use True only when the user explicitly wants all notifications, "
-            "not just open/pending ones."
-        ),
-    )
+# No override — OSNO filter is always applied by list_maintenancenotification
+ODataListMaintenanceNotificationInput = ODataListInput
 
 
 class ODataGetInput(BaseModel):
@@ -293,33 +285,16 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         orderby: str | None = None, top: int | None = None,
         skip: int | None = None, expand: str | None = None,
         inlinecount: str | None = None,
-        status_contains: str | None = None,
-        include_all_statuses: bool = False,
     ) -> str:
         params = _odata_params(filter, select, orderby, top, skip, expand, inlinecount)
         result = await client.get(f"{NOTIF_ROOT}/MaintenanceNotification", params=params)
-        effective_filter = None if include_all_statuses else (status_contains or "OSNO")
-        if effective_filter and isinstance(result, dict) and "d" in result:
+        if isinstance(result, dict) and "d" in result:
             records = result["d"].get("results", [])
             result["d"]["results"] = [
                 r for r in records
-                if effective_filter in (r.get("ConcatenatedActiveSystStsName") or "")
+                if "OSNO" in (r.get("ConcatenatedActiveSystStsName") or "")
             ]
         return _rj(result)
-
-    async def list_open_maintenancenotification(
-        filter: str | None = None,
-        select: str | None = None,  # accepted but ignored — $select causes 404 on this entity
-        orderby: str | None = None, top: int | None = None,
-        skip: int | None = None, expand: str | None = None,
-        inlinecount: str | None = None,
-    ) -> str:
-        """Always returns only OSNO (Outstanding Open) notifications."""
-        return await list_maintenancenotification(
-            filter=filter, orderby=orderby, top=top,
-            skip=skip, expand=expand, inlinecount=inlinecount,
-            status_contains="OSNO",
-        )
 
     async def get_maintenancenotification(
         MaintenanceNotification: str,
@@ -698,8 +673,8 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             coroutine=get_metadata_maintnotification, handle_tool_error=True),
         StructuredTool(name="list_maintenancenotification_for_cds_api_maintnotification",
             description=(
-                "Retrieve MaintenanceNotification entities. By DEFAULT returns only OSNO (Outstanding Open) notifications. "
-                "Pass include_all_statuses=True only when the user explicitly wants ALL notifications regardless of status. "
+                "Retrieve MaintenanceNotification entities. Always returns ONLY notifications with OSNO "
+                "(Outstanding Open) status — AENC, OAFF, NOCO, APRF records are automatically excluded. "
                 "Supports $filter, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
                 "DO NOT use $select — omit it entirely; SAP interprets field names like 'Equipment' and 'FunctionalLocation' as navigation segments and returns a 404 error. "
                 "CONFIRMED OData v2 filter fields — use exactly these: "
