@@ -295,7 +295,11 @@ class SampleAgent:
         extra_messages: list | None = None,
     ) -> dict[str, Any]:
         """Walk the model fallback chain, skipping models whose breaker is open."""
-        config = {"configurable": {"thread_id": f"{get_user_sub()}:{context_id}"}}
+        try:
+            user_id = get_user_sub()
+        except ValueError:
+            user_id = "anonymous"
+        config = {"configurable": {"thread_id": f"{user_id}:{context_id}"}}
         messages = {"messages": (extra_messages or []) + [HumanMessage(content=query)]}
 
         async def _run(llm: Any) -> dict[str, Any]:
