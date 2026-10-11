@@ -384,10 +384,11 @@ class Client:
                     etag_params: dict[str, Any] = {}
                     self._inject_mandatory_params(dest, etag_params)
                     etag_params["$format"] = "json"
+                    etag_headers = {**self._base_headers(), **extra}
                     etag_r = await client.get(
                         self._build_url(dest.url, f"{service_root}/MaintenanceNotification('{notif_id}')"),
                         auth=self._auth(dest),
-                        headers=self._base_headers(),
+                        headers=etag_headers,
                         params=etag_params,
                     )
                     etag = etag_r.headers.get("ETag") or etag_r.headers.get("etag")
