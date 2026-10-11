@@ -85,6 +85,17 @@ class ODataListInput(BaseModel):
     inlinecount: Optional[str] = Field(default=None, description="OData $inlinecount (allpages or none)")
 
 
+class ODataListMaintenanceNotificationInput(ODataListInput):
+    status_contains: Optional[str] = Field(
+        default=None,
+        description=(
+            "Client-side status filter: only return notifications where ConcatenatedActiveSystStsName "
+            "contains this value. Pass 'OSNO' when the user asks for open, pending, outstanding, or "
+            "unresolved notifications. Leave empty to return all notifications regardless of status."
+        ),
+    )
+
+
 class ODataGetInput(BaseModel):
     select: Optional[str] = Field(default=None, description="OData $select expression")
     expand: Optional[str] = Field(default=None, description="OData $expand expression")
@@ -281,9 +292,17 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         orderby: str | None = None, top: int | None = None,
         skip: int | None = None, expand: str | None = None,
         inlinecount: str | None = None,
+        status_contains: str | None = None,
     ) -> str:
         params = _odata_params(filter, select, orderby, top, skip, expand, inlinecount)
-        return _rj(await client.get(f"{NOTIF_ROOT}/MaintenanceNotification", params=params))
+        result = await client.get(f"{NOTIF_ROOT}/MaintenanceNotification", params=params)
+        if status_contains and isinstance(result, dict) and "d" in result:
+            records = result["d"].get("results", [])
+            result["d"]["results"] = [
+                r for r in records
+                if status_contains in (r.get("ConcatenatedActiveSystStsName") or "")
+            ]
+        return _rj(result)
 
     async def get_maintenancenotification(
         MaintenanceNotification: str,
@@ -668,22 +687,16 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
                 "(1) Planning plant: MaintenancePlanningPlant eq '1710' (NOT 'Plant', NOT 'MaintPlanningPlant', NOT 'MaintenancePlant'). "
                 "(2) Date fields use OData v2 datetime literal: "
                 "NotificationCreationDate ge datetime'2025-01-01T00:00:00' and NotificationCreationDate le datetime'2025-12-31T23:59:59'. "
-                "(3) System status: ConcatenatedActiveSystStsName is returned in results "
-                "but is NOT filterable and must NOT appear in $select. "
-                "Always display ConcatenatedActiveSystStsName as the status in results — "
-                "NEVER use NotifProcessingPhase as a status label (it is a phase number only, not a status). "
-                "Decode the status codes for the user: OSNO=Outstanding Open, NOCO=Not Completed, "
-                "AENC=Awaiting Completion, OAFF=Order Follow-up, APRF=Approved. "
-                "OSNO is the ONLY status that means outstanding/open/pending. "
-                "AENC, OAFF, NOCO, APRF are NOT open/pending — exclude them when the user asks for open/pending notifications. "
-                "When the user asks for 'open', 'pending', 'outstanding', or 'unresolved' notifications: "
-                "fetch without a status filter, then STRICTLY exclude every result whose "
-                "ConcatenatedActiveSystStsName does NOT contain 'OSNO' — do NOT display or mention excluded notifications. "
-                "If zero results remain after exclusion, reply only 'No open notifications found for this period'. "
+                "(3) System status: ConcatenatedActiveSystStsName is returned in results but is NOT filterable and must NOT appear in $select. "
+                "Always display ConcatenatedActiveSystStsName as the status — NEVER use NotifProcessingPhase as a status label. "
+                "Decode status codes: OSNO=Outstanding Open, NOCO=Not Completed, AENC=Awaiting Completion, OAFF=Order Follow-up, APRF=Approved. "
+                "When the user asks for 'open', 'pending', 'outstanding', or 'unresolved' notifications: pass status_contains='OSNO' — "
+                "the tool will pre-filter results and return only OSNO notifications. "
+                "If the result list is empty, reply 'No open notifications found for this period'. "
                 "(4) Type: NotificationType. Priority: MaintPriority. "
                 "Never use bare ISO dates — always use datetime'YYYY-MM-DDTHH:MM:SS' format."
             ),
-            args_schema=ODataListInput, coroutine=list_maintenancenotification, handle_tool_error=True),
+            args_schema=ODataListMaintenanceNotificationInput, coroutine=list_maintenancenotification, handle_tool_error=True),
         StructuredTool(name="get_maintenancenotification_for_cds_api_maintnotification",
             description="Retrieve a single MaintenanceNotification by its notification number.",
             args_schema=GetNotifInput, coroutine=get_maintenancenotification, handle_tool_error=True),
