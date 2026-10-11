@@ -677,15 +677,17 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             coroutine=get_metadata_maintnotification, handle_tool_error=True),
         StructuredTool(name="list_maintenancenotification_for_cds_api_maintnotification",
             description=(
-                "Retrieve MaintenanceNotification entities. Always returns ONLY notifications with OSNO "
-                "(Outstanding Open) status — AENC, OAFF, NOCO, APRF records are automatically excluded. "
+                "Retrieve MaintenanceNotification entities. "
+                "OSNO (Outstanding Open) filtering is applied AUTOMATICALLY by this tool in Python after fetching — "
+                "do NOT include ConcatenatedActiveSystStsName in the $filter parameter (the backend rejects it with a 501 error). "
+                "Only pass plant and date filters. AENC, OAFF, NOCO, APRF records are excluded automatically from the returned list. "
                 "Supports $filter, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
                 "DO NOT use $select — omit it entirely; SAP interprets field names like 'Equipment' and 'FunctionalLocation' as navigation segments and returns a 404 error. "
                 "CONFIRMED OData v2 filter fields — use exactly these: "
                 "(1) Planning plant: MaintenancePlanningPlant eq '1710' (NOT 'Plant', NOT 'MaintPlanningPlant', NOT 'MaintenancePlant'). "
                 "(2) Date fields use OData v2 datetime literal: "
                 "NotificationCreationDate ge datetime'2025-01-01T00:00:00' and NotificationCreationDate le datetime'2025-12-31T23:59:59'. "
-                "(3) System status: ConcatenatedActiveSystStsName is returned in results but is NOT filterable and must NOT appear in $select. "
+                "(3) System status: ConcatenatedActiveSystStsName is returned in results — display it as status. NOT filterable, must NOT appear in $filter or $select. "
                 "Always display ConcatenatedActiveSystStsName as the status — NEVER use NotifProcessingPhase as a status label. "
                 "Decode status codes: OSNO=Outstanding Open, NOCO=Not Completed, AENC=Awaiting Completion, OAFF=Order Follow-up, APRF=Approved. "
                 "If the result list is empty, reply 'No open notifications found for this period'. "
