@@ -86,12 +86,13 @@ class ODataListInput(BaseModel):
 
 
 class ODataListMaintenanceNotificationInput(ODataListInput):
-    status_contains: Optional[str] = Field(
-        default=None,
+    include_all_statuses: bool = Field(
+        default=False,
         description=(
-            "Client-side status filter: only return notifications where ConcatenatedActiveSystStsName "
-            "contains this value. Pass 'OSNO' when the user asks for open, pending, outstanding, or "
-            "unresolved notifications. Leave empty to return all notifications regardless of status."
+            "Set to True to return ALL notifications regardless of status. "
+            "Default (False) returns only OSNO (Outstanding Open) notifications. "
+            "Use True only when the user explicitly wants all notifications, "
+            "not just open/pending ones."
         ),
     )
 
@@ -293,14 +294,16 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         skip: int | None = None, expand: str | None = None,
         inlinecount: str | None = None,
         status_contains: str | None = None,
+        include_all_statuses: bool = False,
     ) -> str:
         params = _odata_params(filter, select, orderby, top, skip, expand, inlinecount)
         result = await client.get(f"{NOTIF_ROOT}/MaintenanceNotification", params=params)
-        if status_contains and isinstance(result, dict) and "d" in result:
+        effective_filter = None if include_all_statuses else (status_contains or "OSNO")
+        if effective_filter and isinstance(result, dict) and "d" in result:
             records = result["d"].get("results", [])
             result["d"]["results"] = [
                 r for r in records
-                if status_contains in (r.get("ConcatenatedActiveSystStsName") or "")
+                if effective_filter in (r.get("ConcatenatedActiveSystStsName") or "")
             ]
         return _rj(result)
 
@@ -695,9 +698,8 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             coroutine=get_metadata_maintnotification, handle_tool_error=True),
         StructuredTool(name="list_maintenancenotification_for_cds_api_maintnotification",
             description=(
-                "Retrieve ALL MaintenanceNotification entities regardless of status. "
-                "Use this for general queries (e.g. 'show me all notifications', 'how many notifications exist'). "
-                "For open/pending/outstanding/unresolved notifications, use list_open_maintenancenotification instead. "
+                "Retrieve MaintenanceNotification entities. By DEFAULT returns only OSNO (Outstanding Open) notifications. "
+                "Pass include_all_statuses=True only when the user explicitly wants ALL notifications regardless of status. "
                 "Supports $filter, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
                 "DO NOT use $select — omit it entirely; SAP interprets field names like 'Equipment' and 'FunctionalLocation' as navigation segments and returns a 404 error. "
                 "CONFIRMED OData v2 filter fields — use exactly these: "
@@ -707,21 +709,11 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
                 "(3) System status: ConcatenatedActiveSystStsName is returned in results but is NOT filterable and must NOT appear in $select. "
                 "Always display ConcatenatedActiveSystStsName as the status — NEVER use NotifProcessingPhase as a status label. "
                 "Decode status codes: OSNO=Outstanding Open, NOCO=Not Completed, AENC=Awaiting Completion, OAFF=Order Follow-up, APRF=Approved. "
+                "If the result list is empty, reply 'No open notifications found for this period'. "
                 "(4) Type: NotificationType. Priority: MaintPriority. "
                 "Never use bare ISO dates — always use datetime'YYYY-MM-DDTHH:MM:SS' format."
             ),
             args_schema=ODataListMaintenanceNotificationInput, coroutine=list_maintenancenotification, handle_tool_error=True),
-        StructuredTool(name="list_open_maintenancenotification_for_cds_api_maintnotification",
-            description=(
-                "Retrieve only OPEN (Outstanding Open / OSNO) MaintenanceNotification entities. "
-                "Use this tool when the user asks for 'open', 'pending', 'outstanding', or 'unresolved' notifications. "
-                "Results are pre-filtered in Python to only include notifications where ConcatenatedActiveSystStsName contains 'OSNO'. "
-                "If no results are returned, reply 'No open notifications found for this period'. "
-                "Supports $filter, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
-                "DO NOT use $select. "
-                "Filter fields: MaintenancePlanningPlant, NotificationCreationDate (use datetime'YYYY-MM-DDTHH:MM:SS' format), NotificationType, MaintPriority."
-            ),
-            args_schema=ODataListInput, coroutine=list_open_maintenancenotification, handle_tool_error=True),
         StructuredTool(name="get_maintenancenotification_for_cds_api_maintnotification",
             description="Retrieve a single MaintenanceNotification by its notification number.",
             args_schema=GetNotifInput, coroutine=get_maintenancenotification, handle_tool_error=True),
