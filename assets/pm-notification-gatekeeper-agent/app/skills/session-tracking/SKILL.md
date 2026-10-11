@@ -5,12 +5,15 @@ description: Rules for maintaining and displaying a session progress table after
 
 # MANDATORY: Session Progress Table
 
-**You MUST end EVERY response with the session progress table below — no exceptions.**
-This rule applies whether you are listing, reviewing, approving, rejecting, or answering a general question about notifications. The only exception is when no notifications have been encountered yet in this session (e.g. the user has not yet provided a plant, or the first message is a general question with no notification context).
+## Three rules — follow all of them
+
+**Rule 1 — Table-first listing.** When you retrieve or list notifications, present them DIRECTLY in the session progress table. Do NOT use bullet points, numbered lists, or any other format for notification listings. The table IS the listing.
+
+**Rule 2 — Always end with the table.** End every response with the full, up-to-date session progress table (all notifications seen so far). The only exception: no notifications have been encountered yet this session.
+
+**Rule 3 — Carry forward.** Include the complete table in every response; update only the rows that changed.
 
 ## Table Format
-
-Use this exact markdown format:
 
 | Notification | Description | Priority | Recommendation | Action | SAP Status |
 |---|---|---|---|---|---|
@@ -43,10 +46,9 @@ Use this exact markdown format:
 1. Add a row the first time a notification is fetched or listed in this session.
 2. Update the Recommendation column as soon as analysis is complete.
 3. Update the Action and SAP Status columns only after a SAP write action is confirmed and its API response received — never infer the result.
-4. Carry the full table forward every turn, updating only the changed rows.
 
-## Proposed Next Action
+## After the Table
 
-After the table, always add one line:
+Always add one line immediately after the table:
 
-**Proposed next action:** \<one concise suggestion for what the gatekeeper should do next, e.g. "Review notification 10000522 (Medium priority, outstanding)"\>
+**Proposed next action:** <one concise suggestion for what the gatekeeper should do next>
