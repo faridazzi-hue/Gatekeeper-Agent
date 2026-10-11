@@ -30,6 +30,7 @@ EQUIP_ROOT = "/sap/opu/odata/sap/API_EQUIPMENT"
 FLOC_ROOT  = "/sap/opu/odata/sap/API_FUNCTIONALLOCATION"
 
 MAX_PAGE_SIZE = 100
+_MAX_RESULT_CHARS = 30_000
 
 
 # ---------------------------------------------------------------------------
@@ -68,7 +69,10 @@ def _rj(result: Any) -> str:
             "error": result.get("message", "Unknown error"),
             "status_code": result.get("status_code"),
         })
-    return json.dumps(result)
+    s = json.dumps(result)
+    if len(s) > _MAX_RESULT_CHARS:
+        s = s[:_MAX_RESULT_CHARS] + "\n...[response truncated — use $top or $filter to narrow results]"
+    return s
 
 
 # ---------------------------------------------------------------------------

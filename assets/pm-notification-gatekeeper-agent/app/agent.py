@@ -144,7 +144,7 @@ def thread_ttl_seconds() -> int:
                 "Lower this to bound per-turn cost; raise it to keep more raw context.",
 )
 def summarization_trigger_tokens() -> int:
-    return 30
+    return 30_000
 
 @agent_model(
     key="config.summarization.model",
@@ -358,6 +358,28 @@ class SampleAgent:
         assert last_error is not None
         raise last_error
 
+    async def _clear_thread(self, context_id: str) -> None:
+        """Clear checkpointer history for a thread to recover from context overflow."""
+        try:
+            user_id = get_user_sub()
+        except ValueError:
+            user_id = "anonymous"
+        thread_id = f"{user_id}:{context_id}"
+        try:
+            if hasattr(self._checkpointer, "adelete_thread"):
+                await self._checkpointer.adelete_thread(thread_id)
+            elif hasattr(self._checkpointer, "delete_thread"):
+                self._checkpointer.delete_thread(thread_id)
+            elif hasattr(self._checkpointer, "storage"):
+                # MemorySaver: storage keys are (thread_id, checkpoint_ns, checkpoint_id)
+                for attr in ("storage", "writes"):
+                    store = getattr(self._checkpointer, attr, {})
+                    keys = [k for k in store if (isinstance(k, tuple) and k[0] == thread_id) or thread_id in str(k)]
+                    for k in keys:
+                        del store[k]
+        except Exception as exc:
+            logger.warning("Could not clear thread %s from checkpointer: %s", thread_id, exc)
+
     async def stream(
         self,
         query: str,
@@ -400,13 +422,30 @@ class SampleAgent:
                     )
                 )
 
-            result = await self._invoke_with_fallback(
-                tools=tools or [],
-                system_prompt=system_prompt,
-                query=query,
-                context_id=context_id,
-                extra_messages=extra or None,
-            )
+            try:
+                result = await self._invoke_with_fallback(
+                    tools=tools or [],
+                    system_prompt=system_prompt,
+                    query=query,
+                    context_id=context_id,
+                    extra_messages=extra or None,
+                )
+            except Exception as _ctx_err:
+                if "context_length_exceeded" in str(_ctx_err):
+                    logger.warning(
+                        "Context window exceeded for thread %s — clearing history and retrying",
+                        context_id,
+                    )
+                    await self._clear_thread(context_id)
+                    result = await self._invoke_with_fallback(
+                        tools=tools or [],
+                        system_prompt=system_prompt,
+                        query=query,
+                        context_id=context_id,
+                        extra_messages=extra or None,
+                    )
+                else:
+                    raise
             response = result["messages"][-1].content
 
             yield {
