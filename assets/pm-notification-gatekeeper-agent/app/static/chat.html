@@ -678,7 +678,7 @@ function mkBtn(label, cls, onClick) {
 
 function quickSend(text, actionRow) {
   if (streaming) return;
-  actionRow.querySelectorAll('button').forEach(b => b.disabled = true);
+  if (actionRow) actionRow.querySelectorAll('button').forEach(b => b.disabled = true);
   document.getElementById('inp').value = text;
   send();
 }
