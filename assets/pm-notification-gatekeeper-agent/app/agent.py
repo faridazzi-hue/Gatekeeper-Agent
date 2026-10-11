@@ -257,8 +257,9 @@ class SampleAgent:
         """Build and cache a gen_ai_hub LLM on first use (CF runtime only)."""
         if model_name not in self._llm_cache:
             from aicore import init_llm_from_destination
+            _max_tokens = int(os.environ.get("AGENT_LLM_MAX_TOKENS", "0")) or None
             self._llm_cache[model_name] = await init_llm_from_destination(
-                model_name, temperature=self._temperature
+                model_name, temperature=self._temperature, max_tokens=_max_tokens
             )
             if self._summarization_middleware is None:
                 try:
