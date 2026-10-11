@@ -378,7 +378,22 @@ class Client:
                     csrf = await self._fetch_csrf(client, dest, service_root, extra)
                     headers["x-csrf-token"] = csrf
                 headers["Content-Type"] = "application/json"
-                headers["If-Match"] = "*"
+                # Fetch real ETag — SAP rejects If-Match: * for action function imports
+                notif_id = str((params or {}).get("MaintenanceNotification", "")).strip("'")
+                if notif_id:
+                    etag_params: dict[str, Any] = {}
+                    self._inject_mandatory_params(dest, etag_params)
+                    etag_params["$format"] = "json"
+                    etag_r = await client.get(
+                        self._build_url(dest.url, f"{service_root}/MaintenanceNotification('{notif_id}')"),
+                        auth=self._auth(dest),
+                        headers=self._base_headers(),
+                        params=etag_params,
+                    )
+                    etag = etag_r.headers.get("ETag") or etag_r.headers.get("etag") or "*"
+                else:
+                    etag = "*"
+                headers["If-Match"] = etag
                 r = await client.post(
                     self._build_url(dest.url, path),
                     auth=self._auth(dest),
