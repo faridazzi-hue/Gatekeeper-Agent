@@ -203,6 +203,46 @@ class GetFlocLongtextInput(ODataGetInput):
 
 
 # ---------------------------------------------------------------------------
+# Inline schemas (replaces dynamic type() which Pydantic v2 rejects)
+# ---------------------------------------------------------------------------
+
+class CountFilterInput(BaseModel):
+    filter: Optional[str] = Field(default=None, description="OData $filter expression")
+
+
+class NavNotifInput(BaseModel):
+    MaintenanceNotification: str = Field(description="Maintenance Notification number")
+    select: Optional[str] = Field(default=None, description="OData $select expression")
+    expand: Optional[str] = Field(default=None, description="OData $expand expression")
+
+
+class GetEquipLongtextInput(BaseModel):
+    Equipment: str = Field(description="Equipment number")
+    Language: str = Field(description="Language key e.g. EN")
+    select: Optional[str] = Field(default=None, description="OData $select expression")
+    expand: Optional[str] = Field(default=None, description="OData $expand expression")
+
+
+class GetEquipWarrantyInput(BaseModel):
+    Equipment: str = Field(description="Equipment number")
+    WarrantyType: str = Field(description="Warranty type key")
+    select: Optional[str] = Field(default=None, description="OData $select expression")
+    expand: Optional[str] = Field(default=None, description="OData $expand expression")
+
+
+class NavEquipInput(BaseModel):
+    Equipment: str = Field(description="Equipment number")
+    select: Optional[str] = Field(default=None, description="OData $select expression")
+    expand: Optional[str] = Field(default=None, description="OData $expand expression")
+
+
+class NavFlocInput(BaseModel):
+    FunctionalLocation: str = Field(description="Functional Location identifier")
+    select: Optional[str] = Field(default=None, description="OData $select expression")
+    expand: Optional[str] = Field(default=None, description="OData $expand expression")
+
+
+# ---------------------------------------------------------------------------
 # Tool builder
 # ---------------------------------------------------------------------------
 
@@ -584,7 +624,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             args_schema=GetNotifInput, coroutine=get_maintenancenotification, handle_tool_error=True),
         StructuredTool(name="count_maintenancenotification_for_cds_api_maintnotification",
             description="Get the total count of MaintenanceNotification entities matching a $filter.",
-            args_schema=type("CountInput", (BaseModel,), {"filter": (Optional[str], Field(default=None, description="OData $filter expression"))}),
+            args_schema=CountFilterInput,
             coroutine=count_maintenancenotification, handle_tool_error=True),
 
         # MaintNotificationEffectCode
@@ -604,7 +644,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             args_schema=GetNotifItemInput, coroutine=get_maintenancenotificationitem, handle_tool_error=True),
         StructuredTool(name="count_maintenancenotificationitem_for_cds_api_maintnotification",
             description="Get the total count of MaintenanceNotificationItem entities matching a $filter.",
-            args_schema=type("CountInput2", (BaseModel,), {"filter": (Optional[str], Field(default=None, description="OData $filter expression"))}),
+            args_schema=CountFilterInput,
             coroutine=count_maintenancenotificationitem, handle_tool_error=True),
 
         # MaintenanceNotificationPartner
@@ -634,11 +674,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         # Navigation
         StructuredTool(name="get_to_failureeffect_in_maintenancenotification",
             description="Navigate from a MaintenanceNotification to its related FailureEffect entity.",
-            args_schema=type("NavInput1", (BaseModel,), {
-                "MaintenanceNotification": (str, Field(description="Maintenance Notification number")),
-                "select": (Optional[str], Field(default=None, description="$select")),
-                "expand": (Optional[str], Field(default=None, description="$expand")),
-            }),
+            args_schema=NavNotifInput,
             coroutine=get_to_failureeffect, handle_tool_error=True),
         StructuredTool(name="list_to_item_in_maintenancenotification",
             description="Navigate from a MaintenanceNotification to its related Item entities.",
@@ -673,39 +709,25 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             args_schema=GetEquipmentInput, coroutine=get_equipment, handle_tool_error=True),
         StructuredTool(name="count_equipment_for_cds_api_equipment",
             description="Get the total count of Equipment entities matching a $filter.",
-            args_schema=type("CountInput3", (BaseModel,), {"filter": (Optional[str], Field(default=None, description="OData $filter expression"))}),
+            args_schema=CountFilterInput,
             coroutine=count_equipment, handle_tool_error=True),
         StructuredTool(name="list_equipmentlongtext_for_cds_api_equipment",
             description="Retrieve a list of EquipmentLongText entities.",
             args_schema=ODataListInput, coroutine=list_equipmentlongtext, handle_tool_error=True),
         StructuredTool(name="get_equipmentlongtext_for_cds_api_equipment",
             description="Retrieve a single EquipmentLongText by equipment number and language key.",
-            args_schema=type("GetEquipLongText", (BaseModel,), {
-                "Equipment": (str, Field(description="Equipment number")),
-                "Language": (str, Field(description="Language key e.g. EN")),
-                "select": (Optional[str], Field(default=None, description="$select")),
-                "expand": (Optional[str], Field(default=None, description="$expand")),
-            }),
+            args_schema=GetEquipLongtextInput,
             coroutine=get_equipmentlongtext, handle_tool_error=True),
         StructuredTool(name="list_equipmentwarranty_for_cds_api_equipment",
             description="Retrieve a list of EquipmentWarranty entities.",
             args_schema=ODataListInput, coroutine=list_equipmentwarranty, handle_tool_error=True),
         StructuredTool(name="get_equipmentwarranty_for_cds_api_equipment",
             description="Retrieve a single EquipmentWarranty by equipment number and warranty type.",
-            args_schema=type("GetEquipWarranty", (BaseModel,), {
-                "Equipment": (str, Field(description="Equipment number")),
-                "WarrantyType": (str, Field(description="Warranty type key")),
-                "select": (Optional[str], Field(default=None, description="$select")),
-                "expand": (Optional[str], Field(default=None, description="$expand")),
-            }),
+            args_schema=GetEquipWarrantyInput,
             coroutine=get_equipmentwarranty, handle_tool_error=True),
         StructuredTool(name="get_to_longtext_in_equipment_for_cds_api_equipment",
             description="Navigate from an Equipment entity to its LongText.",
-            args_schema=type("NavEquipLongText", (BaseModel,), {
-                "Equipment": (str, Field(description="Equipment number")),
-                "select": (Optional[str], Field(default=None, description="$select")),
-                "expand": (Optional[str], Field(default=None, description="$expand")),
-            }),
+            args_schema=NavEquipInput,
             coroutine=get_to_longtext_in_equipment, handle_tool_error=True),
 
         # FunctionalLocation
@@ -717,7 +739,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             args_schema=GetFlocInput, coroutine=get_functionallocation, handle_tool_error=True),
         StructuredTool(name="count_functionallocation_for_cds_api_functionallocation",
             description="Get the total count of FunctionalLocation entities matching a $filter.",
-            args_schema=type("CountInput4", (BaseModel,), {"filter": (Optional[str], Field(default=None, description="OData $filter expression"))}),
+            args_schema=CountFilterInput,
             coroutine=count_functionallocation, handle_tool_error=True),
         StructuredTool(name="list_functionallocationlongtext_for_cds_api_functionallocation",
             description="Retrieve a list of FunctionalLocationLongText entities.",
@@ -727,10 +749,6 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             args_schema=GetFlocLongtextInput, coroutine=get_functionallocationlongtext, handle_tool_error=True),
         StructuredTool(name="get_to_longtext_in_functionallocation",
             description="Navigate from a FunctionalLocation entity to its LongText.",
-            args_schema=type("NavFlocLongText", (BaseModel,), {
-                "FunctionalLocation": (str, Field(description="Functional Location identifier")),
-                "select": (Optional[str], Field(default=None, description="$select")),
-                "expand": (Optional[str], Field(default=None, description="$expand")),
-            }),
+            args_schema=NavFlocInput,
             coroutine=get_to_longtext_in_functionallocation, handle_tool_error=True),
     ]
