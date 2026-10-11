@@ -681,7 +681,11 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             coroutine=get_metadata_maintnotification, handle_tool_error=True),
         StructuredTool(name="list_maintenancenotification_for_cds_api_maintnotification",
             description=(
-                "Retrieve a list of MaintenanceNotification entities. Supports $filter, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
+                "Retrieve a list of MaintenanceNotification entities. "
+                "REQUIRED PARAMETER RULE: when the user asks for 'open', 'pending', 'outstanding', or 'unresolved' notifications, "
+                "you MUST set status_contains='OSNO' in the tool call — this triggers Python-level filtering so only truly open notifications are returned. "
+                "Without status_contains='OSNO', the tool returns all notifications regardless of status. "
+                "Supports $filter, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
                 "DO NOT use $select — omit it entirely; SAP interprets field names like 'Equipment' and 'FunctionalLocation' as navigation segments and returns a 404 error. "
                 "CONFIRMED OData v2 filter fields — use exactly these: "
                 "(1) Planning plant: MaintenancePlanningPlant eq '1710' (NOT 'Plant', NOT 'MaintPlanningPlant', NOT 'MaintenancePlant'). "
@@ -690,9 +694,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
                 "(3) System status: ConcatenatedActiveSystStsName is returned in results but is NOT filterable and must NOT appear in $select. "
                 "Always display ConcatenatedActiveSystStsName as the status — NEVER use NotifProcessingPhase as a status label. "
                 "Decode status codes: OSNO=Outstanding Open, NOCO=Not Completed, AENC=Awaiting Completion, OAFF=Order Follow-up, APRF=Approved. "
-                "When the user asks for 'open', 'pending', 'outstanding', or 'unresolved' notifications: pass status_contains='OSNO' — "
-                "the tool will pre-filter results and return only OSNO notifications. "
-                "If the result list is empty, reply 'No open notifications found for this period'. "
+                "If result list is empty after status_contains filtering, reply 'No open notifications found for this period'. "
                 "(4) Type: NotificationType. Priority: MaintPriority. "
                 "Never use bare ISO dates — always use datetime'YYYY-MM-DDTHH:MM:SS' format."
             ),
