@@ -361,8 +361,9 @@ class Client:
         service_root: str,
         function_name: str,
         params: dict[str, Any] | None = None,
+        method: str = "GET",
     ) -> dict[str, Any]:
-        """Call an OData V2 function import (GET-based)."""
+        """Call an OData V2 function import (GET or POST)."""
         dest = await self.destination()
         merged: dict[str, Any] = dict(params or {})
         self._inject_mandatory_params(dest, merged)
@@ -372,12 +373,25 @@ class Client:
         headers.update(extra)
         path = f"{service_root}/{function_name}"
         async with httpx.AsyncClient(**client_kwargs) as client:
-            r = await client.get(
-                self._build_url(dest.url, path),
-                auth=self._auth(dest),
-                headers=headers,
-                params=merged,
-            )
+            if method.upper() == "POST":
+                if CSRF_REQUIRED:
+                    csrf = await self._fetch_csrf(client, dest, service_root, extra)
+                    headers["x-csrf-token"] = csrf
+                headers["Content-Type"] = "application/json"
+                r = await client.post(
+                    self._build_url(dest.url, path),
+                    auth=self._auth(dest),
+                    headers=headers,
+                    params=merged,
+                    json={},
+                )
+            else:
+                r = await client.get(
+                    self._build_url(dest.url, path),
+                    auth=self._auth(dest),
+                    headers=headers,
+                    params=merged,
+                )
         if r.status_code >= 400:
             return {"error": True, "status_code": r.status_code, "message": r.text}
         try:

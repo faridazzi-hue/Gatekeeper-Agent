@@ -478,6 +478,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         result = await client.function_import(
             NOTIF_ROOT, "ApproveMaintWorkRequest",
             params={"MaintenanceNotification": f"'{MaintenanceNotification}'"},
+            method="POST",
         )
         return _rj(result)
 
@@ -485,6 +486,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         result = await client.function_import(
             NOTIF_ROOT, "CompleteMaintNotification",
             params={"MaintenanceNotification": f"'{MaintenanceNotification}'"},
+            method="POST",
         )
         return _rj(result)
 
@@ -495,13 +497,14 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         params: dict[str, Any] = {"MaintenanceNotification": f"'{MaintenanceNotification}'"}
         if MaintNotifLongTextForRejection:
             params["MaintNotifLongTextForRejection"] = f"'{MaintNotifLongTextForRejection}'"
-        result = await client.function_import(NOTIF_ROOT, "RejectMaintWorkRequest", params=params)
+        result = await client.function_import(NOTIF_ROOT, "RejectMaintWorkRequest", params=params, method="POST")
         return _rj(result)
 
     async def function_setmaintnotiftoinforequired(MaintenanceNotification: str) -> str:
         result = await client.function_import(
             NOTIF_ROOT, "SetMaintNotifToInfoRequired",
             params={"MaintenanceNotification": f"'{MaintenanceNotification}'"},
+            method="POST",
         )
         return _rj(result)
 
@@ -509,6 +512,7 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         result = await client.function_import(
             NOTIF_ROOT, "SetMaintNotifToInProcess",
             params={"MaintenanceNotification": f"'{MaintenanceNotification}'"},
+            method="POST",
         )
         return _rj(result)
 
