@@ -660,17 +660,14 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
             coroutine=get_metadata_maintnotification, handle_tool_error=True),
         StructuredTool(name="list_maintenancenotification_for_cds_api_maintnotification",
             description=(
-                "Retrieve a list of MaintenanceNotification entities. Supports $filter, $select, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
-                "CONFIRMED OData v2 field names — use exactly these: "
+                "Retrieve a list of MaintenanceNotification entities. Supports $filter, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
+                "DO NOT use $select — omit it entirely; SAP interprets field names like 'Equipment' and 'FunctionalLocation' as navigation segments and returns a 404 error. "
+                "CONFIRMED OData v2 filter fields — use exactly these: "
                 "(1) Planning plant: MaintenancePlanningPlant eq '1710' (NOT 'Plant', NOT 'MaintPlanningPlant', NOT 'MaintenancePlant'). "
                 "(2) Date fields use OData v2 datetime literal: "
                 "NotificationCreationDate ge datetime'2025-01-01T00:00:00' and NotificationCreationDate le datetime'2025-12-31T23:59:59'. "
-                "(3) System status: ConcatenatedActiveSystStsName shows the active statuses (e.g. 'OSNO', 'NOCO', 'APRF') "
-                "but is NOT filterable in $filter — SAP will return a 'not implemented' error if you try. "
-                "NotifProcessingPhase is also NOT a reliable status indicator. "
-                "IMPORTANT: Do NOT add any status filter to the $filter expression. "
-                "Instead, always include ConcatenatedActiveSystStsName in $select so the status is visible in results, "
-                "then describe which notifications are pending/outstanding based on the returned ConcatenatedActiveSystStsName value. "
+                "(3) System status: ConcatenatedActiveSystStsName is returned in results (shows e.g. 'OSNO', 'NOCO') "
+                "but is NOT filterable and must NOT appear in $select. "
                 "(4) Type: NotificationType. Priority: MaintPriority. "
                 "Never use bare ISO dates — always use datetime'YYYY-MM-DDTHH:MM:SS' format."
             ),
