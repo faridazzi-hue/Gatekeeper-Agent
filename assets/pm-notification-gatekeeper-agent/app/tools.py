@@ -641,24 +641,33 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
     return [
         # MaintenanceNotification
         StructuredTool(name="get_metadata_cds_api_maintnotification",
-            description="Get the OData metadata (XML) for the API_MAINTNOTIFICATION service. Call this first if you are unsure of property names. Key filter fields on MaintenanceNotification: MaintPlanningPlant (plant), NotificationType, MaintPriority, FunctionalLocation, Equipment, MaintNotifProcessPhase, NotificationCreationDate.",
+            description=(
+                "Get the OData metadata (XML) for the API_MAINTNOTIFICATION service. "
+                "Confirmed field names on MaintenanceNotification: "
+                "MaintenancePlant (plant filter, e.g. '1010'), NotificationType, MaintPriority, "
+                "FunctionalLocation, Equipment, MaintNotifProcessPhaseCode, MaintNotifProcessSubPhaseCode, "
+                "NotificationCreationDateTime (datetime filter), NotifProcessingPhase, "
+                "MaintenancePlanningPlant, PlantSection, AssetLocation."
+            ),
             args_schema=NoInput,
             coroutine=get_metadata_maintnotification, handle_tool_error=True),
         StructuredTool(name="list_maintenancenotification_for_cds_api_maintnotification",
             description=(
                 "Retrieve a list of MaintenanceNotification entities. Supports $filter, $select, $orderby, $top (max 100), $skip, $expand, $inlinecount. "
-                "IMPORTANT filter rules: "
-                "(1) Filter by plant using MaintPlanningPlant (NOT 'Plant'), e.g. MaintPlanningPlant eq '1710'. "
-                "(2) Date fields (e.g. NotificationCreationDate) MUST use OData v2 datetime literal format: "
-                "NotificationCreationDate ge datetime'2023-10-01T00:00:00' and NotificationCreationDate le datetime'2023-10-31T23:59:59'. "
-                "Never use bare ISO dates like '2023-10-01' — they will cause a 400 error."
+                "CONFIRMED field names — use exactly these: "
+                "(1) Plant: MaintenancePlant eq '1010' (NOT 'Plant', NOT 'MaintPlanningPlant'). "
+                "(2) Datetime: NotificationCreationDateTime — use OData v2 literal: "
+                "NotificationCreationDateTime ge datetime'2025-01-01T00:00:00' and NotificationCreationDateTime le datetime'2025-12-31T23:59:59'. "
+                "(3) Process phase: MaintNotifProcessPhaseCode (e.g. '02'). "
+                "(4) Type: NotificationType. Priority: MaintPriority. "
+                "Never use bare ISO dates — always use datetime'...' literal format."
             ),
             args_schema=ODataListInput, coroutine=list_maintenancenotification, handle_tool_error=True),
         StructuredTool(name="get_maintenancenotification_for_cds_api_maintnotification",
             description="Retrieve a single MaintenanceNotification by its notification number.",
             args_schema=GetNotifInput, coroutine=get_maintenancenotification, handle_tool_error=True),
         StructuredTool(name="count_maintenancenotification_for_cds_api_maintnotification",
-            description="Get the total count of MaintenanceNotification entities matching a $filter. Date fields must use OData v2 datetime literal: datetime'YYYY-MM-DDTHH:MM:SS'.",
+            description="Get the total count of MaintenanceNotification entities matching a $filter. Plant field: MaintenancePlant. Datetime field: NotificationCreationDateTime — use datetime'YYYY-MM-DDTHH:MM:SS' format.",
             args_schema=CountFilterInput,
             coroutine=count_maintenancenotification, handle_tool_error=True),
 
