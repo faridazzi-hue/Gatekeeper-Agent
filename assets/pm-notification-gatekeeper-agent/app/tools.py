@@ -293,16 +293,13 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
     ) -> str:
         params = _odata_params(filter, select, orderby, top, skip, expand, inlinecount)
         result = await client.get(f"{NOTIF_ROOT}/MaintenanceNotification", params=params)
-        if isinstance(result, dict) and "d" in result:
-            records = result["d"].get("results", [])
-            for r in records:
-                status = r.get("ConcatenatedActiveSystStsName")
-                print(f"OSNO_DEBUG notif={r.get('MaintenanceNotification')} status={status!r}", file=sys.stderr, flush=True)
+        if isinstance(result, dict) and "results" in result:
+            records = result.get("results", [])
             filtered = [r for r in records if "OSNO" in (r.get("ConcatenatedActiveSystStsName") or "")]
-            print(f"OSNO_DEBUG total={len(records)} kept={len(filtered)}", file=sys.stderr, flush=True)
-            result["d"]["results"] = filtered
+            print(f"OSNO_DEBUG total={len(records)} kept={len(filtered)} sample_statuses={[r.get('ConcatenatedActiveSystStsName') for r in records[:3]]}", file=sys.stderr, flush=True)
+            result["results"] = filtered
         else:
-            print(f"OSNO_DEBUG result type={type(result)} keys={list(result.keys()) if isinstance(result, dict) else 'N/A'}", file=sys.stderr, flush=True)
+            print(f"OSNO_DEBUG unexpected result type={type(result)} keys={list(result.keys()) if isinstance(result, dict) else 'N/A'}", file=sys.stderr, flush=True)
         return _rj(result)
 
     async def get_maintenancenotification(
