@@ -65,7 +65,7 @@ async def _configure_aicore(destination_name: str) -> None:
     if not dest_binding:
         raise RuntimeError(
             "No 'destination' service binding found in VCAP_SERVICES. "
-            "Bind 'proj-vector-destination-service' (or any destination service instance) "
+            "Bind a destination service instance (e.g. 'proj-dest-service') "
             "to this CF app."
         )
 
@@ -116,6 +116,12 @@ async def _configure_aicore(destination_name: str) -> None:
     _initialized = True
 
 
+def _has_direct_aicore_binding() -> bool:
+    """Return True when an 'aicore' service is bound directly via VCAP_SERVICES."""
+    vcap = _vcap()
+    return bool(vcap.get("aicore") or vcap.get("AICORE"))
+
+
 async def init_llm_from_destination(
     model_name: str,
     *,
@@ -123,14 +129,15 @@ async def init_llm_from_destination(
     max_tokens: int | None = None,
     destination_name: str | None = None,
 ) -> Any:
-    """Return a LangChain LLM backed by SAP AI Core, resolved via a BTP destination.
+    """Return a LangChain LLM backed by SAP AI Core.
 
-    The destination lookup only runs once per process; subsequent calls reuse
-    the env vars set on the first call.
+    When an 'aicore' service is bound directly (VCAP_SERVICES), gen_ai_hub reads
+    the credentials automatically — no destination lookup needed.  The lookup only
+    runs when neither a direct binding nor AICORE_BASE_URL is present.
     """
     from gen_ai_hub.proxy.langchain.init_models import init_llm  # type: ignore[import]
 
-    if not _initialized and not os.environ.get("AICORE_BASE_URL"):
+    if not _initialized and not os.environ.get("AICORE_BASE_URL") and not _has_direct_aicore_binding():
         await _configure_aicore(destination_name or _DEFAULT_AICORE_DESTINATION)
 
     kwargs: dict[str, Any] = {"temperature": temperature}

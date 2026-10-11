@@ -13,7 +13,8 @@ applications:
     health-check-type: http
     health-check-http-endpoint: /.well-known/agent.json
     services:
-      - proj-vector-destination-service
+      - instanceAICore
+      - proj-dest-service
     env:
       AGENT_PUBLIC_URL: https://pm-notification-gatekeeper-agent.cfapps.eu11.hana.ondemand.com/
       AICORE_DESTINATION_NAME: aicore
