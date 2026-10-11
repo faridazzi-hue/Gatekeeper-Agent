@@ -18,5 +18,6 @@ applications:
     env:
       AGENT_PUBLIC_URL: https://pm-notification-gatekeeper-agent.cfapps.eu11.hana.ondemand.com/
       AICORE_DESTINATION_NAME: aicore
+      AICORE_RESOURCE_GROUP: default
       AGENT_LLM_MODEL: gpt-4o
       LOG_LEVEL: INFO

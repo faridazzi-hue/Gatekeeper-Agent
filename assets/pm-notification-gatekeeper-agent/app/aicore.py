@@ -139,6 +139,12 @@ async def init_llm_from_destination(
 
     if not _initialized and not os.environ.get("AICORE_BASE_URL") and not _has_direct_aicore_binding():
         await _configure_aicore(destination_name or _DEFAULT_AICORE_DESTINATION)
+    elif _has_direct_aicore_binding() and not os.environ.get("AICORE_RESOURCE_GROUP"):
+        # Direct aicore binding: the VCAP_SERVICES credential doesn't carry the
+        # resource group — gen_ai_hub needs it explicitly to set the AI-Resource-Group
+        # header on every /deployments and inference call.
+        os.environ["AICORE_RESOURCE_GROUP"] = "default"
+        logger.info("Direct aicore binding detected — set AICORE_RESOURCE_GROUP=default")
 
     kwargs: dict[str, Any] = {"temperature": temperature}
     if max_tokens is not None:
