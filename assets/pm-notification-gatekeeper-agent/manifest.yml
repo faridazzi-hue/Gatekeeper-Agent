@@ -15,10 +15,12 @@ applications:
     services:
       - instanceAICore
       - proj-dest-service
+      - proj-connectivity-service
     env:
       AGENT_PUBLIC_URL: https://pm-notification-gatekeeper-agent.cfapps.eu11.hana.ondemand.com/
       AICORE_DESTINATION_NAME: aicore
       AICORE_RESOURCE_GROUP: default
       AGENT_LLM_MODEL: gpt-4o
       SUMMARIZATION_LLM_MODEL: gpt-4o
+      S4HANA_DESTINATION_NAME: S4HANA_QUALITY
       LOG_LEVEL: INFO

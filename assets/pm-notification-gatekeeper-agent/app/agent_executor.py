@@ -1,4 +1,5 @@
 import logging
+import os
 
 from a2a.server.agent_execution import AgentExecutor as A2AAgentExecutor, RequestContext
 from a2a.server.events import EventQueue
@@ -16,8 +17,16 @@ from opentelemetry import trace
 
 from agent import SampleAgent
 from load_skill_resources import get_load_skill_resource_tool
-from mcp_providers.agw import get_mcp_tools
 from prompt_injection_detector import wrap_tool
+
+# CF mode: direct OData via BTP Destination Service (no user JWT needed)
+# Joule mode: Agent Gateway with per-user JWT OBO
+_IS_CF = bool(os.environ.get("VCAP_SERVICES"))
+
+if _IS_CF:
+    from tools import build_domain_tools
+else:
+    from mcp_providers.agw import get_mcp_tools
 
 logger = logging.getLogger(__name__)
 tracer = trace.get_tracer(__name__)
@@ -31,7 +40,8 @@ class AgentExecutor(A2AAgentExecutor):
     async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Execute the agent and stream results back via A2A protocol.
 
-        Discovers and loads MCP tools from Agent Gateway before each execution.
+        On CF: loads domain tools directly via BTP Destination Service (technical user).
+        On Joule: discovers MCP tools from Agent Gateway using per-user JWT.
         Business milestones are instrumented with structured logs and OTel spans.
 
         Args:
@@ -48,25 +58,35 @@ class AgentExecutor(A2AAgentExecutor):
             task = new_task(context.message)
             await event_queue.enqueue_event(task)
 
-        # Load MCP tools — user token is read from context var set by JWTContextMiddleware
-        mcp_tools: list = []
-        mcp_tools_available = False
-        try:
-            mcp_tools = await get_mcp_tools()
-            if not mcp_tools:
-                logger.warning("No tools returned from Agent Gateway")
-            else:
-                mcp_tools_available = True
-                tool_names = [t.name for t in mcp_tools]
-                logger.info(
-                    "Loaded %d MCP tool(s) for agent execution: %s",
-                    len(mcp_tools),
-                    tool_names,
-                )
-        except Exception as e:
-            logger.error("Failed to load tools from Agent Gateway: %s", e)
+        sap_tools: list = []
+        sap_tools_available = False
 
-        tools = [*mcp_tools, *self.skill_tools]
+        if _IS_CF:
+            # CF: direct OData — always available, no user JWT required
+            sap_tools = build_domain_tools()
+            sap_tools_available = True
+            logger.info(
+                "CF mode: loaded %d domain tool(s): %s",
+                len(sap_tools),
+                [t.name for t in sap_tools],
+            )
+        else:
+            # Joule: Agent Gateway — user token is read from context var set by JWTContextMiddleware
+            try:
+                sap_tools = await get_mcp_tools()
+                if not sap_tools:
+                    logger.warning("No tools returned from Agent Gateway")
+                else:
+                    sap_tools_available = True
+                    logger.info(
+                        "Loaded %d MCP tool(s) for agent execution: %s",
+                        len(sap_tools),
+                        [t.name for t in sap_tools],
+                    )
+            except Exception as e:
+                logger.error("Failed to load tools from Agent Gateway: %s", e)
+
+        tools = [*sap_tools, *self.skill_tools]
 
         # Wrap all tools with prompt injection scanning for uniform protection
         tools = [wrap_tool(t) for t in tools]
@@ -74,12 +94,12 @@ class AgentExecutor(A2AAgentExecutor):
         updater = TaskUpdater(event_queue, task.id, task.context_id)
 
         try:
-            await self._run_agent(query, task, tools, updater, mcp_tools_available=mcp_tools_available)
+            await self._run_agent(query, task, tools, updater, sap_tools_available=sap_tools_available)
         except Exception as e:
             logger.exception("Agent execution error")
             raise ServerError(error=InternalError()) from e
 
-    async def _run_agent(self, query: str, task, tools, updater: TaskUpdater, *, mcp_tools_available: bool = True) -> None:
+    async def _run_agent(self, query: str, task, tools, updater: TaskUpdater, *, sap_tools_available: bool = True) -> None:
         """Run the agent stream and handle business milestone instrumentation.
 
         Business logic is extracted from execute() into this plain async method
@@ -89,7 +109,7 @@ class AgentExecutor(A2AAgentExecutor):
             span.set_attribute("task.id", task.id)
             span.set_attribute("tool.count", len(tools))
 
-            async for item in self.agent.stream(query, task.context_id, tools=tools, sap_tools_available=mcp_tools_available):
+            async for item in self.agent.stream(query, task.context_id, tools=tools, sap_tools_available=sap_tools_available):
                 is_task_complete = item["is_task_complete"]
                 require_user_input = item["require_user_input"]
                 content = item["content"]
