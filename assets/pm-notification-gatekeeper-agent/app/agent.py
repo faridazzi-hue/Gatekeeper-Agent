@@ -261,14 +261,20 @@ class SampleAgent:
                 model_name, temperature=self._temperature
             )
             if self._summarization_middleware is None:
-                summarization_llm = await init_llm_from_destination(
-                    get_summarization_model_name(), temperature=0.0
-                )
-                self._summarization_middleware = SummarizationMiddleware(
-                    model=summarization_llm,
-                    trigger=("tokens", summarization_trigger_tokens()),
-                    keep=("messages", 4),
-                )
+                try:
+                    summarization_llm = await init_llm_from_destination(
+                        get_summarization_model_name(), temperature=0.0
+                    )
+                    self._summarization_middleware = SummarizationMiddleware(
+                        model=summarization_llm,
+                        trigger=("tokens", summarization_trigger_tokens()),
+                        keep=("messages", 4),
+                    )
+                except Exception as exc:
+                    logger.warning(
+                        "Summarization model '%s' unavailable on CF (%s) — skipping summarization",
+                        get_summarization_model_name(), exc,
+                    )
         return self._llm_cache[model_name]
 
     def _create_graph(

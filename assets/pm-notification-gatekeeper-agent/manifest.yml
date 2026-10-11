@@ -20,4 +20,5 @@ applications:
       AICORE_DESTINATION_NAME: aicore
       AICORE_RESOURCE_GROUP: default
       AGENT_LLM_MODEL: gpt-4o
+      SUMMARIZATION_LLM_MODEL: gpt-4o
       LOG_LEVEL: INFO
