@@ -675,8 +675,8 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
                 "are NOT open/pending — a notification with these statuses MUST be excluded when the user asks for open/pending notifications. "
                 "When the user asks for 'open', 'pending', 'outstanding', or 'unresolved' notifications: "
                 "fetch without a status filter, then STRICTLY exclude every result whose "
-                "ConcatenatedActiveSystStsName does NOT contain 'OSNO'. "
-                "If zero results remain after exclusion, reply 'No open notifications found for this period'. "
+                "ConcatenatedActiveSystStsName does NOT contain 'OSNO' — do NOT display or mention excluded notifications. "
+                "If zero results remain after exclusion, reply only 'No open notifications found for this period'. "
                 "(4) Type: NotificationType. Priority: MaintPriority. "
                 "Never use bare ISO dates — always use datetime'YYYY-MM-DDTHH:MM:SS' format."
             ),
