@@ -49,22 +49,24 @@ class AgentExecutor(A2AAgentExecutor):
             await event_queue.enqueue_event(task)
 
         # Load MCP tools — user token is read from context var set by JWTContextMiddleware
-        tools = []
+        mcp_tools: list = []
+        mcp_tools_available = False
         try:
-            tools = await get_mcp_tools()
-            if not tools:
+            mcp_tools = await get_mcp_tools()
+            if not mcp_tools:
                 logger.warning("No tools returned from Agent Gateway")
             else:
-                tool_names = [t.name for t in tools]
+                mcp_tools_available = True
+                tool_names = [t.name for t in mcp_tools]
                 logger.info(
                     "Loaded %d MCP tool(s) for agent execution: %s",
-                    len(tools),
+                    len(mcp_tools),
                     tool_names,
                 )
         except Exception as e:
             logger.error("Failed to load tools from Agent Gateway: %s", e)
 
-        tools = [*tools, *self.skill_tools]
+        tools = [*mcp_tools, *self.skill_tools]
 
         # Wrap all tools with prompt injection scanning for uniform protection
         tools = [wrap_tool(t) for t in tools]
@@ -72,12 +74,12 @@ class AgentExecutor(A2AAgentExecutor):
         updater = TaskUpdater(event_queue, task.id, task.context_id)
 
         try:
-            await self._run_agent(query, task, tools, updater)
+            await self._run_agent(query, task, tools, updater, mcp_tools_available=mcp_tools_available)
         except Exception as e:
             logger.exception("Agent execution error")
             raise ServerError(error=InternalError()) from e
 
-    async def _run_agent(self, query: str, task, tools, updater: TaskUpdater) -> None:
+    async def _run_agent(self, query: str, task, tools, updater: TaskUpdater, *, mcp_tools_available: bool = True) -> None:
         """Run the agent stream and handle business milestone instrumentation.
 
         Business logic is extracted from execute() into this plain async method
@@ -87,7 +89,7 @@ class AgentExecutor(A2AAgentExecutor):
             span.set_attribute("task.id", task.id)
             span.set_attribute("tool.count", len(tools))
 
-            async for item in self.agent.stream(query, task.context_id, tools=tools):
+            async for item in self.agent.stream(query, task.context_id, tools=tools, sap_tools_available=mcp_tools_available):
                 is_task_complete = item["is_task_complete"]
                 require_user_input = item["require_user_input"]
                 content = item["content"]

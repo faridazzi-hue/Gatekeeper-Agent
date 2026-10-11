@@ -362,6 +362,7 @@ class SampleAgent:
         query: str,
         context_id: str,
         tools: Sequence[BaseTool] | None = None,
+        sap_tools_available: bool = True,
     ) -> AsyncGenerator[dict, None]:
         yield {
             "is_task_complete": False,
@@ -381,6 +382,20 @@ class SampleAgent:
                         content="IMPORTANT: No tools are currently available. "
                         "Do not attempt to call any tools. Respond to the user "
                         "explaining that tools are temporarily unavailable."
+                    )
+                )
+            elif not sap_tools_available:
+                extra.append(
+                    SystemMessage(
+                        content=(
+                            "IMPORTANT: SAP connectivity tools are NOT available for this request. "
+                            "The request arrived without a user authentication token (Bearer JWT). "
+                            "You cannot access any SAP plant maintenance data, notifications, or systems. "
+                            "Do NOT attempt to call SAP tools and do NOT invent tool errors or resource paths. "
+                            "Instead, respond clearly and helpfully: explain that to retrieve live SAP data "
+                            "you need to be called via Joule or with a valid Authorization Bearer token, "
+                            "and offer to describe your capabilities or answer general questions."
+                        )
                     )
                 )
 
