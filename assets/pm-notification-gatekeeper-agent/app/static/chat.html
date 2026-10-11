@@ -309,6 +309,34 @@
       color: var(--muted);
       margin-top: 5px;
     }
+
+    /* ── Action buttons ── */
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 8px;
+      padding-left: 39px;
+      animation: fadein .2s ease;
+    }
+    .action-btn {
+      border: none;
+      border-radius: 6px;
+      padding: 6px 13px;
+      font-size: 12px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: filter .12s, transform .1s;
+      white-space: nowrap;
+    }
+    .action-btn:hover  { filter: brightness(.92); }
+    .action-btn:active { transform: scale(.96); }
+    .action-btn:disabled { opacity: .45; cursor: not-allowed; }
+    .btn-accept  { background: #EBFBEE; color: var(--green);  border: 1px solid #A5D6A7; }
+    .btn-override{ background: #FFF3E0; color: var(--orange); border: 1px solid #FFCC80; }
+    .btn-info    { background: var(--blue-light); color: var(--blue); border: 1px solid #C5DCF9; }
+    .btn-review  { background: var(--surface); color: var(--blue); border: 1px solid var(--border); font-weight: 400; }
   </style>
 </head>
 <body>
@@ -564,6 +592,8 @@ async function send() {
 
     // Finalise
     bubble.innerHTML = rawText ? mdToHtml(rawText) : '<em style="color:var(--muted)">No response received.</em>';
+    const msgRow = bubble.closest('.msg');
+    if (rawText) injectActions(rawText, msgRow);
 
   } catch (err) {
     bubble.className = 'bubble';  // remove inherited styling
@@ -576,6 +606,54 @@ async function send() {
   document.getElementById('sendBtn').disabled = false;
   scrollBottom();
   inp.focus();
+}
+// ── Post-response action injection ─────────────────────────────────────────
+
+function injectActions(raw, msgRow) {
+  const row = document.createElement('div');
+  row.className = 'action-row';
+
+  // A — HITL buttons when agent presents the 3 choices
+  if (/accept agent recommendation/i.test(raw)) {
+    row.append(
+      mkBtn('✓ Accept',        'action-btn btn-accept',   () => quickSend('1. Accept agent recommendation', row)),
+      mkBtn('✏ Override',      'action-btn btn-override', () => startOverride(row)),
+      mkBtn('ℹ Request info',  'action-btn btn-info',     () => quickSend('3. Request more information', row))
+    );
+  }
+
+  // B — Review chips for each notification ID in the list
+  const ids = [...new Set((raw.match(/\b1\d{7}\b/g) || []))].slice(0, 10);
+  ids.forEach(id => {
+    row.append(mkBtn(`Review ${id} →`, 'action-btn btn-review',
+      () => quickSend(`Review notification ${id} and give me your recommendation`, row)));
+  });
+
+  if (row.children.length > 0) msgRow.after(row);
+}
+
+function mkBtn(label, cls, onClick) {
+  const b = document.createElement('button');
+  b.className = cls;
+  b.textContent = label;
+  b.onclick = onClick;
+  return b;
+}
+
+function quickSend(text, actionRow) {
+  if (streaming) return;
+  actionRow.querySelectorAll('button').forEach(b => b.disabled = true);
+  document.getElementById('inp').value = text;
+  send();
+}
+
+function startOverride(actionRow) {
+  actionRow.querySelectorAll('button').forEach(b => b.disabled = true);
+  const inp = document.getElementById('inp');
+  inp.value = '2. Override: ';
+  inp.style.height = 'auto';
+  inp.focus();
+  inp.setSelectionRange(inp.value.length, inp.value.length);
 }
 </script>
 
