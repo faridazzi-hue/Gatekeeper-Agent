@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import logging
+import sys
 from typing import Any, Optional
 
 from langchain_core.tools import BaseTool, StructuredTool
@@ -295,10 +296,13 @@ def build_domain_tools(s4: S4Client | None = None) -> list[BaseTool]:
         if isinstance(result, dict) and "d" in result:
             records = result["d"].get("results", [])
             for r in records:
-                logger.info("OSNO_DEBUG notif=%s status=%r", r.get("MaintenanceNotification"), r.get("ConcatenatedActiveSystStsName"))
+                status = r.get("ConcatenatedActiveSystStsName")
+                print(f"OSNO_DEBUG notif={r.get('MaintenanceNotification')} status={status!r}", file=sys.stderr, flush=True)
             filtered = [r for r in records if "OSNO" in (r.get("ConcatenatedActiveSystStsName") or "")]
-            logger.info("OSNO_DEBUG total=%d kept=%d", len(records), len(filtered))
+            print(f"OSNO_DEBUG total={len(records)} kept={len(filtered)}", file=sys.stderr, flush=True)
             result["d"]["results"] = filtered
+        else:
+            print(f"OSNO_DEBUG result type={type(result)} keys={list(result.keys()) if isinstance(result, dict) else 'N/A'}", file=sys.stderr, flush=True)
         return _rj(result)
 
     async def get_maintenancenotification(
