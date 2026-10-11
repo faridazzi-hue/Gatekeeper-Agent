@@ -378,6 +378,7 @@ class Client:
                     csrf = await self._fetch_csrf(client, dest, service_root, extra)
                     headers["x-csrf-token"] = csrf
                 headers["Content-Type"] = "application/json"
+                headers["If-Match"] = "*"
                 r = await client.post(
                     self._build_url(dest.url, path),
                     auth=self._auth(dest),
