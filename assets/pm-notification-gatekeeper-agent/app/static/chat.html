@@ -94,7 +94,7 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      max-width: 860px;
+      max-width: 1100px;
       width: 100%;
       margin: 0 auto;
       padding: 16px 16px 0;
@@ -340,9 +340,10 @@
 
     /* ── Notification progress table ── */
     .notif-table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 13px; }
-    .notif-table th, .notif-table td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; vertical-align: middle; }
+    .notif-table th, .notif-table td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; vertical-align: middle; white-space: nowrap; }
     .notif-table th { background: #F0F4F8; font-weight: 600; }
     .notif-table tr:nth-child(even) td { background: #FAFBFC; }
+    .msg.agent .bubble:has(.notif-table) { max-width: 100%; width: 100%; }
     .notif-link { color: var(--blue); text-decoration: none; font-weight: 500; }
     .notif-link:hover { text-decoration: underline; }
   </style>
