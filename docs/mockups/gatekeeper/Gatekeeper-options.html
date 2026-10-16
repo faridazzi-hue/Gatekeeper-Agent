@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14243b">
+  <title>Gatekeeper · Assessment workspace</title>
+  <style>
+:root{--navy:#15263d;--navy-2:#20364f;--ink:#172b43;--muted:#6d7c8e;--line:#e7ecf2;--bg:#f5f7fa;--blue:#315de5;--blue-light:#eef3ff;--green:#147d63;--green-light:#e9f7f0;--amber:#9b6710;--amber-light:#fff5e4;--red:#bc4853;--red-light:#fdf0f0;--radius:12px;--shadow:0 4px 22px #15263d08}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:13px;line-height:1.5}button,input,select{font:inherit}button,a,input,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.43}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #86adff;outline-offset:3px}button,a{transition:background .16s,border-color .16s,box-shadow .16s}a{color:inherit}svg{width:19px;height:19px;vertical-align:middle;flex-shrink:0}button span[data-icon],.icon-wrap{display:inline-flex;align-items:center;justify-content:center}button{color:inherit}button svg{width:17px;height:17px}[hidden]{display:none!important}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.sidebar{width:234px;position:fixed;inset:0 auto 0 0;display:flex;flex-direction:column;background:var(--navy);color:#c5d0dd;padding:30px 18px 18px;z-index:20}.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:white;font-size:22px;font-weight:650;letter-spacing:-.8px;padding:0 7px}.brand-mark{width:38px;height:40px;background:#253e53;color:#85dfc0;border:1px solid #ffffff12;border-radius:9px;display:grid;place-items:center}.brand-mark svg{width:30px;height:30px}.brand-sub{display:block;font-size:7px;letter-spacing:1.38px;color:#8fa2b7;margin-top:1px;font-weight:500}.workspace-label{font-size:9px;letter-spacing:1.7px;color:#70869d;padding:40px 10px 10px}.plant-card{display:flex;align-items:center;gap:10px;margin:0 6px 27px;padding:10px;background:#ffffff06;border:1px solid #ffffff0e;border-radius:8px}.plant-symbol{width:30px;height:30px;background:#ffffff0b;display:grid;place-items:center;border-radius:6px;font-size:12px;color:#d3ddea;font-weight:600}.plant-copy{font-size:12px;color:#e4ebf5;font-weight:550}.plant-copy small{display:block;color:#8094aa;font-size:9px;font-weight:400;margin-top:2px}.online-dot{width:5px;height:5px;background:#7bd6b2;border-radius:50%;margin-left:auto}.nav{display:grid;gap:5px}.nav-item{border:0;background:transparent;color:#91a3b7;padding:12px 11px;display:flex;align-items:center;gap:11px;text-align:left;border-radius:7px;font-size:12px}.nav-item svg{width:17px;height:17px}.nav-item:hover{background:#ffffff08;color:#e5eef7}.nav-item.active{background:#2b4260;color:#fff;box-shadow:inset 3px 0 #90d9c2}.nav-count{margin-left:auto;background:#ffffff13;font-size:10px;padding:0 6px;border-radius:4px}.sidebar-note{border-top:1px solid #ffffff0b;margin:38px 10px 0;padding-top:24px;font-size:11px;color:#90a4ba}.sidebar-note>span{display:block;color:#76c8b1;margin-bottom:9px}.sidebar-note strong{color:#d5dfec;font-size:15px;font-weight:500;line-height:1.6}.sidebar-note p{line-height:1.9;font-size:10px;margin-top:10px;color:#7f94ad}.sidebar-bottom{display:flex;align-items:center;gap:9px;border-top:1px solid #ffffff0d;padding:19px 7px 0;margin-top:auto}.avatar{height:32px;width:32px;display:grid;place-items:center;background:#304760;color:#cdd8e5;border:1px solid #ffffff0b;border-radius:50%;font-size:10px}.profile-copy strong{display:block;font-weight:500;color:#d5dfeb;font-size:10px}.profile-copy small{font-size:9px;color:#72879e}.profile-dot{margin-left:auto;width:4px;height:4px;background:#7992ad;border-radius:50%}
+.main{margin-left:234px}.topbar{height:70px;display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid var(--line);padding:0 38px}.breadcrumb{font-size:9px;font-weight:600;letter-spacing:1.35px;color:#8090a2;display:flex;gap:14px}.breadcrumb span{color:#c5cfdb}.topbar-right{display:flex;align-items:center;gap:18px}.demo-pill{display:flex;align-items:center;gap:7px;font-size:10px;color:#718195}.demo-pill>span{width:6px;height:6px;border-radius:50%;background:#e8b564}.icon-button{width:31px;height:31px;border:1px solid var(--line);border-radius:6px;background:white;display:inline-flex;align-items:center;justify-content:center;color:#728299}.icon-button svg{width:15px;height:15px}.icon-button:hover{background:#f3f6fa;color:var(--blue);border-color:#c4d2e5}.page{max-width:1580px;margin:auto;padding:31px 38px 20px}.page-heading{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:29px}.eyebrow{font-size:9px;font-weight:700;letter-spacing:1.7px;color:#7d8c9f;margin-bottom:8px}h1{font-size:28px;font-weight:600;line-height:1.3;letter-spacing:-.9px;margin:0 0 9px}.page-heading p{color:var(--muted);margin:0;font-size:11px}.button{border:1px solid transparent;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;min-height:36px;font-size:11px;font-weight:550;white-space:nowrap}.button.primary{background:var(--blue);color:white;box-shadow:0 2px 4px #2549aa16}.button.primary:not(:disabled):hover{background:#254bc9}.button.secondary{background:#fff;border-color:#dce3ed;color:#54657b}.button.secondary:not(:disabled):hover{background:#f4f7fc;border-color:#b6c7dd}.button.approve{background:var(--green);color:#fff}.button.approve:hover{background:#096b51}.compare-button{font-size:10px;padding:9px 12px}.section-label{font-size:9px;font-weight:700;letter-spacing:1.3px;color:#7a899c;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.section-label span{font-size:10px;letter-spacing:0;font-weight:400;color:#8a97a7}.mode-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.mode-card{text-align:left;background:white;border:1px solid #e0e6ef;border-radius:10px;padding:15px 18px 13px;position:relative;min-height:159px;box-shadow:0 2px 4px #172b4302}.mode-card:hover{border-color:#acbddb;box-shadow:var(--shadow)}.mode-card.selected{border-color:#5276e9;box-shadow:0 0 0 1px #5276e9;background:#f8faff}.mode-card-top{display:flex;align-items:center;gap:8px}.mode-number{font-size:11px;color:#91a0b4;letter-spacing:.8px}.mode-tag{font-size:7px;letter-spacing:.8px;color:#5273c8;background:#eaf0ff;padding:2px 5px;border-radius:3px;font-weight:650}.mode-radio{width:14px;height:14px;border:1px solid #c6d0dd;border-radius:50%;margin-left:auto}.selected .mode-radio{border:4px solid var(--blue);background:white}.mode-card h2{font-size:15px;margin:10px 0 6px;font-weight:600;letter-spacing:-.2px}.selected h2{color:#284cae}.mode-card p{font-size:10.5px;color:#7c8a9d;line-height:1.65;margin:0 0 12px}.mode-card-bottom{display:flex;align-items:center;gap:6px;color:#7d8ca0;font-size:9px;padding-top:9px;border-top:1px solid #edf0f5}.mode-card-bottom svg{width:13px;height:13px}.selected .mode-card-bottom{color:#526faf;border-top-color:#e5ebfa}.mode-guide{border:1px solid #e0e8f5;background:#edf3fc;border-radius:8px;display:flex;align-items:center;gap:12px;padding:12px 15px;margin-top:14px;color:#526d91;min-height:61px}.guide-icon{color:#6086bf;display:flex}.guide-copy{flex:1}.guide-copy strong{display:block;font-size:10.5px;font-weight:600;color:#355880}.guide-copy p{font-size:10px;line-height:1.7;margin:2px 0 0}.guide-tag{font-size:9px;padding:4px 9px;color:#6281a6;border:1px solid #d5e2f3;border-radius:20px;white-space:nowrap;background:#f6f9fe}.stats{display:grid;grid-template-columns:repeat(4,1fr);margin:21px 0;background:#fff;border:1px solid var(--line);border-radius:9px;padding:17px 0}.stat{padding:0 20px;border-right:1px solid var(--line)}.stat:last-child{border:0}.stat-label{font-size:8px;letter-spacing:1px;color:#8896a7;font-weight:600}.stat>div{display:flex;align-items:baseline;gap:9px;margin-top:5px}.stat strong{font-size:27px;line-height:1.3;font-weight:550;letter-spacing:-1px}.stat strong span{font-size:15px;color:#b2becb;letter-spacing:0;font-weight:400;margin-left:2px}.stat-sub{font-size:9px;color:#94a0ae}.worklist-card{background:white;border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);overflow:hidden}.worklist-heading{display:flex;justify-content:space-between;align-items:center;padding:19px 20px;gap:15px}.worklist-heading h2{font-size:14px;font-weight:600;margin:0;letter-spacing:-.2px}.worklist-heading h2 span{font-size:9px;font-weight:500;color:#8291a4;border:1px solid #e6ebf2;border-radius:5px;padding:1px 5px;margin-left:5px;vertical-align:2px}.worklist-heading p{font-size:10px;color:#8b98a8;margin:5px 0 0}.worklist-actions{display:flex;gap:8px}.worklist-actions .button{font-size:10px;min-height:34px;padding:8px 11px}.table-toolbar{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 20px;display:flex;gap:20px;align-items:center;justify-content:space-between;background:#fdfdfe}.search{display:flex;align-items:center;gap:9px;max-width:390px;flex:1;color:#a1adbc}.search svg{width:15px;height:15px}.search input{border:0;background:transparent;outline:0;min-width:0;width:100%;font-size:10px;color:var(--ink);padding:4px 0}.search input::placeholder{color:#9ba8b7}.key-hint{border:1px solid #e4e9f0;border-radius:3px;padding:0 5px;color:#b1bdca;font-size:10px}.toolbar-right{display:flex;align-items:center;gap:14px}.selected-count{font-size:9px;color:#a0aabb;white-space:nowrap}.selected-count.has-selection{color:#486ac0;font-weight:600}.filter-select{display:flex;align-items:center;gap:6px;color:#8796a9;border-left:1px solid var(--line);padding-left:14px}.filter-select svg{width:13px;height:13px}.filter-select select{color:#718196;border:0;background:transparent;outline:0;font-size:10px;max-width:180px;padding:4px 2px;cursor:pointer}.table-scroll{overflow:auto}.worklist-table{border-collapse:collapse;width:100%;font-size:10px;white-space:nowrap;min-width:925px}.worklist-table th{background:#fafbfd;color:#8c99aa;font-weight:500;text-align:left;font-size:9px;border-bottom:1px solid var(--line);padding:12px 11px}.worklist-table td{padding:12px 11px;border-bottom:1px solid #edf0f5;vertical-align:middle;height:66px}.worklist-table tbody tr{transition:background .15s}.worklist-table tbody tr:hover{background:#fafbfe}.worklist-table tbody tr.selected-row{background:#f7f9ff}.worklist-table tbody tr:last-child td{border-bottom:0}.worklist-table .checkbox-cell{width:38px;padding-left:20px;padding-right:5px}input[type=checkbox]{width:13px;height:13px;accent-color:var(--blue);vertical-align:middle;cursor:pointer}.notif-link{border:0;background:transparent;padding:0;color:#4165bf;font-size:11px;font-weight:600;letter-spacing:.1px;text-decoration:none}.notif-link:hover{text-decoration:underline}.cell-title{display:block;color:#8290a2;font-size:9px;margin-top:3px;max-width:185px;overflow:hidden;text-overflow:ellipsis}.equipment-id{font-size:10px;font-weight:500;color:#5f7188}.equipment-name{display:block;color:#94a0ae;font-size:9px;max-width:155px;text-overflow:ellipsis;overflow:hidden;margin-top:3px}.priority{font-size:9px;display:inline-flex;align-items:center;gap:5px;color:#7b8798}.priority i{display:inline-block;width:5px;height:5px;border-radius:50%;background:#a5b8c3}.priority.high i{background:#dfa76b}.priority.very-high i{background:#cb7b7e}.badge{display:inline-flex;align-items:center;gap:5px;font-size:8px;font-weight:550;border-radius:5px;padding:4px 7px;line-height:1.3;white-space:nowrap}.badge svg{width:11px;height:11px}.badge.success{background:var(--green-light);color:var(--green)}.badge.warning{background:var(--amber-light);color:var(--amber)}.badge.danger{background:var(--red-light);color:var(--red)}.badge.neutral{color:#8291a3;background:#f0f3f7}.badge.blue{color:#4e6cb2;background:#ecf1fd}.small-dash{color:#c0c9d4;font-size:12px}.confidence{font-size:9px;color:#66788c;display:inline-flex;align-items:center;gap:5px}.confidence-dot{width:5px;height:5px;border-radius:50%;background:#2e9a79}.confidence.medium .confidence-dot{background:#d7a449}.confidence.unrated .confidence-dot{background:#a1aebc}.decision{font-size:9px;color:#9ba5b4}.decision.approved{color:#178060}.row-arrow{border:0;background:transparent;color:#a4b1c2;display:grid;place-items:center;padding:5px;border-radius:4px}.row-arrow:hover{background:#edf2fc;color:var(--blue)}.row-arrow svg{width:15px;height:15px}.spinner{display:inline-block;width:10px;height:10px;border:1.5px solid #c9d5ef;border-top-color:#5276cc;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.table-footer{border-top:1px solid var(--line);padding:11px 20px;display:flex;align-items:center;justify-content:space-between;font-size:9px;color:#95a0af;background:#fdfdfe}.table-footer>span:last-child{display:flex;align-items:center;gap:6px}.small-lock svg{width:11px;height:11px}.empty-state{padding:42px!important;text-align:center;color:#8d9aac}.progress-region{padding:12px 20px;border-top:1px solid #e2eafd;background:#f4f7ff}.progress-copy{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#5d78ad;margin-bottom:7px}.progress-copy strong{font-weight:550;display:flex;align-items:center;gap:7px}.progress-track{height:4px;background:#e2e9f8;border-radius:6px;overflow:hidden}.progress-fill{height:100%;background:#6687e5;transition:width .25s;border-radius:6px}.assurance-strip{display:flex;gap:12px;align-items:center;border:1px solid #e1e9e6;border-radius:8px;padding:14px 16px;margin-top:17px;background:#f0f6f3}.assurance-icon{display:flex;color:#6d9c8b}.assurance-strip strong{font-size:10px;font-weight:550;color:#557666}.assurance-strip p{font-size:9px;color:#87a092;margin:3px 0 0}.text-button{background:transparent;border:0;color:#648573;font-size:9px;display:flex;align-items:center;gap:6px;margin-left:auto;white-space:nowrap}.text-button:hover{color:#265a40;text-decoration:underline}.text-button svg{width:13px;height:13px}.page-footer{display:flex;justify-content:space-between;align-items:center;color:#a0aab7;font-size:8px;margin-top:20px;gap:12px}.footer-dot{padding:0 7px}
+.drawer-overlay{position:fixed;inset:0;background:#0d203249;backdrop-filter:blur(2px);z-index:40}.drawer{position:fixed;inset:0 0 0 auto;width:530px;max-width:94vw;background:#fff;z-index:45;box-shadow:-15px 0 70px #13264021;overflow:auto;animation:slidein .2s ease}.drawer-head{position:sticky;top:0;background:#fff;z-index:2;padding:22px 26px 16px;border-bottom:1px solid var(--line)}.drawer-eyebrow{display:flex;justify-content:space-between;align-items:center;font-size:9px;letter-spacing:1.4px;color:#8b99aa;margin-bottom:10px}.drawer h2{font-size:22px;letter-spacing:-.5px;margin:0 0 4px}.drawer-subtitle{font-size:12px;color:#7c8b9d;margin:0}.drawer-body{padding:22px 26px}.snapshot-note{display:flex;align-items:center;gap:7px;font-size:9px;color:#789187;background:#f0f7f3;border:1px solid #e0eee6;border-radius:6px;padding:9px 11px;margin-bottom:17px}.snapshot-note svg{width:13px;height:13px}.detail-result{border:1px solid #dee8e3;border-radius:9px;padding:17px;background:#fbfdfc}.detail-result.rework{border-color:#eddbce;background:#fffcf8}.detail-result.review{border-color:#e6e3da;background:#fffefa}.detail-result .result-label{font-size:8px;letter-spacing:1.2px;color:#91a094;font-weight:600}.detail-result h3{font-size:20px;letter-spacing:-.4px;font-weight:550;line-height:1.35;margin:7px 0;color:#236c51}.detail-result.rework h3{color:#a86a23}.detail-result.review h3{color:#8b7537}.detail-result p{color:#7b8d82;font-size:11px;line-height:1.7;margin:8px 0 0}.detail-result.rework p,.detail-result.review p{color:#928675}.confidence-line{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e9ede8;margin-top:14px;padding-top:12px;font-size:10px;color:#7d8e83}.detail-overview{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:22px 0;padding-bottom:20px;border-bottom:1px solid var(--line)}.detail-overview dt{font-size:8px;color:#9aa6b5;letter-spacing:.9px;margin-bottom:4px}.detail-overview dd{font-size:11px;color:#5c6e83;margin:0}.detail-section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.detail-section-head h3{font-size:12px;font-weight:600;margin:0}.detail-section-head span{font-size:9px;color:#98a4b3}.check{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #edf0f4}.check:last-child{border-bottom:0}.check-icon{height:20px;width:20px;display:grid;place-items:center;border-radius:50%;background:#edf7f1;color:#4b997c;flex-shrink:0}.check-icon svg{height:12px;width:12px}.check.fail .check-icon{background:#fdf0ea;color:#bd8054}.check.unknown .check-icon,.check.warning .check-icon{background:#fff6e6;color:#c6994d}.check.na .check-icon{background:#f0f3f6;color:#93a0af}.check-copy{flex:1;min-width:0}.check-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.check-title{font-size:10px;font-weight:550;color:#596d82}.check-status{font-size:8px;color:#68917d}.check.fail .check-status{color:#b37e56}.check.warning .check-status,.check.unknown .check-status{color:#b49253}.check.na .check-status{color:#9aa8b6}.check-copy p{font-size:10px;color:#8795a5;line-height:1.7;margin:4px 0}.check-rule{font-size:8px;color:#a1adbb}.assessment-meta{display:grid;grid-template-columns:1fr 1fr;gap:11px;background:#f7f9fc;border:1px solid #e9edf3;border-radius:7px;padding:13px;margin:19px 0}.assessment-meta div{font-size:8px;color:#9aa6b5}.assessment-meta strong{display:block;font-size:9px;color:#6c7f96;font-weight:500;margin-top:2px;overflow-wrap:anywhere}.drawer-actions{padding:17px 26px;position:sticky;bottom:0;background:#fffffffa;border-top:1px solid var(--line);display:flex;gap:8px;align-items:center;justify-content:space-between}.drawer-actions p{font-size:9px;color:#96a4b4;margin:0;max-width:200px}.stale-alert{background:#fff5e7;border:1px solid #eedab7;border-radius:7px;padding:12px;margin-bottom:16px;font-size:10px;color:#9c793b;line-height:1.7}.stale-alert strong{display:block;color:#906d31;font-size:11px}.change-note{background:#edf4ff;border:1px solid #dbe7fa;border-radius:7px;padding:11px;margin-bottom:15px;color:#597bae;font-size:10px;line-height:1.8}.change-note strong{display:block}.simulation-box{border:1px dashed #d5dfe9;padding:12px;border-radius:7px;margin-top:20px;display:flex;gap:12px;align-items:center;justify-content:space-between}.simulation-box strong{font-size:9px;color:#8290a3;display:block}.simulation-box p{font-size:9px;color:#a0aab6;margin:3px 0 0}.simulation-box button{font-size:8px;padding:7px 9px}.pending-detail{text-align:center;padding:38px 17px;border:1px dashed #dce3ee;background:#fafbfe;border-radius:9px}.pending-detail>span{display:inline-grid;place-items:center;width:42px;height:42px;background:#eef2f9;border-radius:50%;color:#8a9eba;margin-bottom:13px}.pending-detail h3{font-size:15px;margin:0 0 8px}.pending-detail p{font-size:11px;color:#8c9aaa;line-height:1.8;max-width:340px;margin:0 auto 16px}.pending-detail .button{font-size:10px}.detail-approved{color:#178363;font-size:10px;display:flex;gap:6px;align-items:center}.version-line{font-size:8px;color:#9aa8b7;margin:12px 0 0;text-align:center}.modal-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#14263c66;backdrop-filter:blur(3px);z-index:60;padding:24px}.modal{background:#fff;box-shadow:0 25px 90px #10233b44;border-radius:13px;width:850px;max-width:96vw;max-height:88vh;overflow:auto;padding:28px 30px}.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.modal h2{font-size:22px;letter-spacing:-.5px;margin:0 0 7px}.modal-intro{font-size:11px;color:#8391a2;line-height:1.8;margin:0 0 23px}.compare-table{border-collapse:collapse;width:100%;font-size:11px;margin:10px 0 22px}.compare-table th{background:#f4f7fc;text-align:left;color:#59759b;padding:12px;font-size:10px}.compare-table th:first-child{width:20%}.compare-table td{padding:13px 12px;border-bottom:1px solid var(--line);color:#7a8b9e;line-height:1.75;vertical-align:top}.compare-table td:first-child{color:#536780;font-size:10px;font-weight:550}.modal-bottom{border-top:1px solid var(--line);padding-top:17px;display:flex;justify-content:space-between;align-items:center;gap:12px}.modal-bottom p{font-size:10px;color:#8c9baa;margin:0;max-width:540px}.policy-list{display:grid;gap:9px;margin-bottom:22px}.policy-item{padding:12px;background:#f7f9fc;border:1px solid var(--line);border-radius:7px;display:flex;gap:10px}.policy-item .icon-wrap{color:#7b96bd}.policy-item strong{font-size:11px;color:#58718f}.policy-item p{font-size:10px;color:#8a98a8;margin:3px 0 0;line-height:1.7}.activity-item{display:flex;gap:12px;border-bottom:1px solid var(--line);padding:12px 0}.activity-item time{color:#a0adbc;font-size:9px;min-width:40px;padding-top:2px}.activity-item strong{font-size:11px;color:#657990;font-weight:500}.activity-item p{font-size:10px;margin:3px 0;color:#94a2b1}.approval-list{display:grid;gap:7px;margin-bottom:18px}.approval-item{border:1px solid var(--line);border-radius:7px;padding:12px;display:flex;justify-content:space-between;gap:10px;align-items:center}.approval-item strong{font-size:11px;color:#5879b3}.approval-item p{font-size:10px;margin:3px 0 0;color:#8b9bad}.approval-confirm{display:flex;gap:8px;align-items:flex-start;background:#f4f8fd;padding:12px;border-radius:7px;color:#748ba5;font-size:10px;line-height:1.8;margin-bottom:19px}.approval-confirm input{margin-top:3px;flex-shrink:0}.toast{position:fixed;bottom:25px;left:calc(50% + 115px);transform:translateX(-50%);z-index:80;background:#203953;color:#eef4fb;padding:12px 19px;border-radius:8px;box-shadow:0 8px 30px #14284022;max-width:80vw;font-size:11px;animation:fadein .2s}.metric-highlight{padding:11px 13px;background:#f4f7fc;border:1px solid #e2e9f4;border-radius:7px;color:#7d90a8;font-size:10px;line-height:1.8}.metric-highlight strong{color:#4d6a94}.modal .muted{color:#97a5b4;font-size:10px}.modal .legend{display:flex;gap:15px;flex-wrap:wrap;margin-bottom:17px;font-size:10px;color:#8897a9}.approval-copy{font-size:10px;color:#8a9aab;margin-top:13px;line-height:1.8}@keyframes slidein{from{transform:translateX(50px);opacity:.5}to{transform:translateX(0);opacity:1}}@keyframes fadein{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+@media(min-width:1600px){.page{padding-top:39px}.page-heading{margin-bottom:34px}.mode-card{padding:19px 21px;min-height:177px}.mode-card h2{font-size:17px}.mode-card p{font-size:12px}.mode-card-bottom{font-size:10px}.worklist-table{font-size:11px}.worklist-table td{height:72px}.mode-guide{padding:14px 17px}.page-heading p{font-size:12px}.worklist-heading p{font-size:11px}.stat-sub{font-size:10px}.stat-label{font-size:9px}.notif-link{font-size:12px}.cell-title{font-size:10px;max-width:230px}.equipment-id{font-size:11px}.equipment-name{font-size:10px;max-width:190px}.badge{font-size:9px}.confidence,.priority,.decision{font-size:10px}.worklist-table th{font-size:10px}.guide-copy p{font-size:11px}}
+@media(max-width:1240px){.sidebar{width:200px;padding-left:12px;padding-right:12px}.brand{font-size:20px}.brand-sub{font-size:6px}.main{margin-left:200px}.page{padding-left:24px;padding-right:24px}.topbar{padding:0 24px}h1{font-size:25px}.page-heading{align-items:flex-end}.mode-card{padding:13px}.mode-card h2{font-size:13px}.mode-card p{font-size:10px}.stat{padding:0 14px}.stat>div{display:block}.stat-sub{display:block;margin-top:3px}.toast{left:calc(50% + 100px)}}
+@media(max-width:1000px){.sidebar{width:70px;padding:25px 9px 13px;align-items:center}.brand{padding:0}.brand>span:last-child,.workspace-label,.plant-card,.nav-item>span:not(:first-child),.sidebar-note,.profile-copy,.profile-dot{display:none}.brand-mark{width:37px}.nav{margin-top:44px;gap:10px;width:100%}.nav-item{justify-content:center;padding:13px 5px}.sidebar-bottom{padding-top:14px;width:100%;justify-content:center}.main{margin-left:70px}.page{padding:24px 21px 18px}.topbar{height:58px;padding:0 21px}.page-heading{gap:10px}.page-heading p{font-size:10px;max-width:430px}h1{font-size:24px}.section-label span{display:none}.worklist-heading{padding:15px}.worklist-actions{gap:5px}.worklist-actions .button{font-size:9px;padding:8px}.worklist-heading p{max-width:300px}.worklist-heading h2{font-size:12px}.table-toolbar{padding:10px 15px;gap:12px}.selected-count{display:none}.filter-select{padding-left:8px}.toolbar-right{gap:7px}.assurance-strip .text-button{display:none}.toast{left:calc(50% + 35px)}}
+@media(max-width:700px){.sidebar{display:none}.main{margin-left:0}.page{padding:20px 15px}.topbar{padding:0 16px}.breadcrumb{font-size:8px;letter-spacing:1px;gap:9px}.demo-pill{font-size:8px}.topbar-right{gap:9px}.page-heading{display:block;margin-bottom:22px}h1{font-size:23px;max-width:330px}.page-heading p{font-size:11px;max-width:380px;line-height:1.8}.compare-button{margin-top:13px;padding:7px 10px}.mode-cards{grid-template-columns:1fr;gap:8px}.mode-card{min-height:0;padding:12px 14px;display:grid;grid-template-columns:36px 1fr;column-gap:8px}.mode-card-top{grid-column:1;grid-row:1/4;align-items:flex-start;justify-content:center;padding-top:4px}.mode-tag,.mode-radio{display:none}.selected .mode-number{color:var(--blue);font-weight:650}.mode-card h2{margin:0 0 3px;font-size:13px}.mode-card p{margin:0;font-size:10px}.mode-card p br{display:none}.mode-card-bottom{display:none}.mode-card.selected:after{content:'✓';position:absolute;right:14px;top:12px;color:var(--blue);font-size:12px}.mode-guide{padding:10px 12px;gap:8px;align-items:flex-start}.guide-icon{padding-top:2px}.guide-copy p{font-size:10px}.guide-tag{display:none}.stats{grid-template-columns:1fr 1fr;gap:15px 0;padding:15px 0}.stat:nth-child(2){border-right:0}.stat-label{font-size:8px}.stat>div{display:flex;gap:8px}.stat-sub{font-size:8px}.stat strong{font-size:24px}.worklist-heading{display:block}.worklist-heading p{max-width:none;line-height:1.7}.worklist-actions{margin-top:13px;justify-content:space-between}.worklist-actions .button{font-size:10px;padding:9px 11px}.worklist-actions .primary{margin-left:auto}.table-toolbar{padding:10px 12px;gap:5px;flex-wrap:wrap}.search{min-width:180px}.key-hint{display:none}.filter-select{border:0;padding:0}.filter-select select{max-width:135px;font-size:9px}.toolbar-right>.icon-button{display:none}.table-footer{padding:10px 12px;font-size:8px}.table-footer>span:last-child{max-width:155px;text-align:right;font-size:7px}.assurance-strip{padding:12px;align-items:flex-start;gap:9px}.assurance-strip strong{font-size:10px;line-height:1.6;display:block}.assurance-strip p{font-size:9px;line-height:1.8}.page-footer{font-size:8px;display:block}.page-footer>span{display:block;margin-bottom:5px}.drawer{width:100%;max-width:100%}.drawer-head{padding:18px 20px}.drawer-body{padding:18px 20px}.drawer-actions{padding:13px 20px}.modal-overlay{padding:12px}.modal{padding:21px 17px;max-width:100%;max-height:94vh;border-radius:10px}.modal h2{font-size:19px}.compare-table{min-width:620px}.compare-scroll{overflow:auto;margin-bottom:15px}.modal-bottom{align-items:flex-start;flex-direction:column}.modal-bottom .button{align-self:flex-end}.toast{left:50%;width:max-content;max-width:90vw;font-size:10px}.approval-item{align-items:flex-start}.snapshot-note{font-size:8px}.drawer-actions p{font-size:8px;max-width:155px}}
+.table-scroll{position:relative}.worklist-table th{position:relative}.mobile-table-hint{display:none}
+@media(max-width:700px){.mobile-table-hint{display:block;padding:7px 12px;font-size:8px;color:#7b91b0;background:#f5f8fe;border-bottom:1px solid #e7ecf2}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+</style>
+</head>
+<body>
+  <aside class="sidebar">
+    <a href="#" class="brand" data-action="home" aria-label="Gatekeeper worklist">
+      <span class="brand-mark"><svg viewBox="0 0 32 32" fill="none"><path d="M7 25V9l9-5 9 5v16M12 25V12l4-2 4 2v13M4 27h24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span>gatekeeper<span class="brand-sub">MAINTENANCE INTELLIGENCE</span></span>
+    </a>
+    <div class="workspace-label">WORKSPACE</div>
+    <div class="plant-card"><span class="plant-symbol">17</span><span class="plant-copy">Plant 1710<small>Maintenance operations</small></span><span class="online-dot"></span></div>
+    <nav class="nav" aria-label="Main navigation">
+      <button class="nav-item active" data-action="home"><span data-icon="grid"></span><span>Assessment worklist</span><span class="nav-count">8</span></button>
+      <button class="nav-item" data-action="activity"><span data-icon="clock"></span><span>Decision history</span></button>
+      <button class="nav-item" data-action="policy"><span data-icon="shield"></span><span>Policy reference</span></button>
+    </nav>
+    <div class="sidebar-note"><span data-icon="layers"></span><strong>One assessment.<br>Every view.</strong><p>Open a notification to inspect the same evidence and decision shown in the worklist.</p></div>
+    <div class="sidebar-bottom"><div class="avatar">FM</div><div class="profile-copy"><strong>Maintenance planner</strong><small>Demo workspace</small></div><span class="profile-dot"></span></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar"><div class="breadcrumb">OPERATIONS <span>/</span> ASSESSMENT WORKSPACE</div><div class="topbar-right"><span class="demo-pill"><span></span>Interactive prototype</span><button class="icon-button" data-action="reset" title="Reset all simulated results" aria-label="Reset demo"><span data-icon="reset"></span></button></div></header>
+    <div class="page">
+      <section class="page-heading"><div><div class="eyebrow">NOTIFICATION QUALITY</div><h1>Prepare better maintenance decisions.</h1><p>Explore three ways to evaluate your worklist. A completed assessment stays consistent in every view.</p></div><button class="button secondary compare-button" data-action="compare"><span data-icon="compare"></span> Compare approaches</button></section>
+
+      <section class="mode-section" aria-label="Choose an assessment approach"><div class="section-label">CHOOSE HOW TO ASSESS <span>Same notifications. Same policy. Different workflow.</span></div><div class="mode-cards" role="group" aria-label="Assessment mode">
+        <button class="mode-card selected" data-mode="batch" aria-pressed="true"><div class="mode-card-top"><span class="mode-number">01</span><span class="mode-tag">START HERE</span><span class="mode-radio"></span></div><h2>Complete batch</h2><p>Fully evaluate every notification. <br>Work with results as they finish.</p><span class="mode-card-bottom"><span data-icon="layers"></span> Entire worklist</span></button>
+        <button class="mode-card" data-mode="selected" aria-pressed="false"><div class="mode-card-top"><span class="mode-number">02</span><span class="mode-radio"></span></div><h2>Selected working set</h2><p>Choose what you will handle today. <br>Evaluate only that selection.</p><span class="mode-card-bottom"><span data-icon="check-square"></span> Your selected notifications</span></button>
+        <button class="mode-card" data-mode="policy" aria-pressed="false"><div class="mode-card-top"><span class="mode-number">03</span><span class="mode-radio"></span></div><h2>Policy + exceptions</h2><p>Resolve evidence-complete cases. <br>Focus review on exceptions.</p><span class="mode-card-bottom"><span data-icon="split"></span> Clear cases first</span></button>
+      </div></section>
+
+      <section class="mode-guide" id="mode-guide" aria-live="polite"></section>
+
+      <section class="stats" aria-label="Worklist summary">
+        <div class="stat"><span class="stat-label">NOTIFICATIONS</span><div><strong id="stat-total">8</strong><span class="stat-sub">in this worklist</span></div></div>
+        <div class="stat"><span class="stat-label">ASSESSED</span><div><strong id="stat-complete">0<span>/8</span></strong><span class="stat-sub" id="stat-complete-sub">ready to inspect</span></div></div>
+        <div class="stat"><span class="stat-label">CORRECTIONS IDENTIFIED</span><div><strong id="stat-rework">0</strong><span class="stat-sub">confirmed policy failures</span></div></div>
+        <div class="stat"><span class="stat-label">NEEDS ATTENTION</span><div><strong id="stat-attention">0</strong><span class="stat-sub">exceptions or missing evidence</span></div></div>
+      </section>
+
+      <section class="worklist-card" aria-labelledby="worklist-title">
+        <div class="worklist-heading"><div><h2 id="worklist-title">Maintenance notifications <span id="table-count">8</span></h2><p id="worklist-caption">No provisional approvals. Recommendations appear only after assessment.</p></div><div class="worklist-actions"><button class="button secondary" data-action="approvals" id="approve-button" disabled><span data-icon="check-circle"></span><span>Review approvals</span></button><button class="button primary" data-action="evaluate" id="evaluate-button"><span data-icon="play"></span><span>Evaluate all 8</span></button></div></div>
+        <div class="progress-region" id="progress-region" hidden></div>
+        <div class="table-toolbar"><label class="search"><span data-icon="search"></span><input id="search" type="search" placeholder="Search notification, equipment or symptom" aria-label="Search notifications"><span class="key-hint">/</span></label><div class="toolbar-right"><span class="selected-count" id="selected-count">0 selected</span><label class="filter-select"><span data-icon="filter"></span><select id="filter" aria-label="Filter notifications"><option value="all">All notifications</option><option value="unassessed">Not assessed</option><option value="approve">Recommended for approval</option><option value="rework">Needs rework</option><option value="review">Needs review</option><option value="stale">Evidence changed</option></select></label><button class="icon-button" data-action="export" title="Export completed assessments" aria-label="Export assessments"><span data-icon="download"></span></button></div></div>
+        <div class="mobile-table-hint">Swipe the table to see recommendations and confidence →</div>
+        <div class="table-scroll"><table class="worklist-table"><thead><tr><th class="checkbox-cell"><input type="checkbox" id="select-all" aria-label="Select all visible notifications"></th><th>Notification</th><th>Equipment</th><th>Priority</th><th>Assessment</th><th>Recommendation</th><th>Confidence</th><th class="decision-column">Human decision</th><th><span class="sr-only">Open details</span></th></tr></thead><tbody id="table-body"></tbody></table></div>
+        <div class="table-footer"><span id="visible-count">Showing 8 notifications</span><span><span class="small-lock" data-icon="lock"></span> Human confirmation required for every approval</span></div>
+      </section>
+
+      <section class="assurance-strip"><div class="assurance-icon" data-icon="shield-check"></div><div><strong>Details explain the result. They never create a second opinion.</strong><p>Recommendation, confidence and evidence version are shared across the worklist and the individual view.</p></div><button class="text-button" data-action="consistency">Explore consistency <span data-icon="arrow-right"></span></button></section>
+      <footer class="page-footer"><span>Simulated data · Illustrative policy · No connection to SAP</span><span>Assessment design lab <span class="footer-dot">·</span> Policy DEMO-1.0</span></footer>
+    </div>
+  </main>
+
+  <div class="drawer-overlay" id="drawer-overlay" hidden></div><aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" hidden></aside>
+  <div class="modal-overlay" id="modal-overlay" hidden><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" id="modal"></section></div>
+  <div class="toast" id="toast" role="status" hidden></div><div class="sr-only" role="status" aria-live="polite" id="announcer"></div>
+  <script>
+// Illustrative offline fixture. All notifications, evidence and rules are simulated.
+// Every evaluation mode reads these same results; opening details never rescores.
+window.GATEKEEPER_DATA = {
+  policy: {
+    id: "DEMO-PM-01",
+    version: "0.3",
+    label: "Illustrative notification quality policy"
+  },
+  notifications: [
+    {
+      id: "10002256",
+      title: "Cooling-water pump seal leak",
+      type: "M2",
+      equipmentId: "EQ-P104",
+      equipmentName: "Cooling-water pump P-104",
+      priority: "2 · High",
+      abc: "Missing",
+      planner: "MECH-01",
+      fastEligible: false,
+      checks: [
+        { id: "coding", label: "Mandatory notification coding", status: "pass", required: true, evidence: "M2 · PUMP catalog · LEAK damage code are populated in the simulated record.", rule: "R-01 · Notification type, catalog and damage code must be present." },
+        { id: "abc", label: "Equipment ABC classification", status: "unknown", required: true, evidence: "The simulated equipment snapshot has no ABC classification. Asset criticality cannot be established.", rule: "R-02 · An A, B or C equipment classification is required before approval; unavailable evidence requires review." },
+        { id: "planner", label: "Planner assignment", status: "pass", required: true, evidence: "Planner group MECH-01 is assigned and valid in the demo lookup.", rule: "R-03 · A valid responsible planner group must be assigned." },
+        { id: "equipment", label: "Equipment reference", status: "pass", required: true, evidence: "EQ-P104 resolves to one active equipment record in the demo snapshot.", rule: "R-04 · The equipment reference must resolve to one active asset." },
+        { id: "duplicates", label: "Duplicate assessment", status: "pass", required: true, evidence: "The complete simulated open-notification pool contains no matching issue for EQ-P104.", rule: "R-05 · Assess a complete duplicate pool; unresolved matches or incomplete coverage require review." },
+        { id: "priority", label: "Priority justification", status: "pass", required: true, evidence: "Active leakage and reduced cooling flow support the recorded high priority in the demo rubric.", rule: "R-06 · Priority must have a clear rationale in the supplied condition evidence." },
+        { id: "description", label: "Actionable issue description", status: "pass", required: true, evidence: "Description identifies the seal location, active leak and reduced cooling flow.", rule: "R-07 · Describe the symptom, affected location and observed effect." }
+      ],
+      recommendation: "Review needed",
+      confidence: "Unrated",
+      reason: "Required ABC evidence is missing. The other six checks pass, but approval cannot be rated until criticality is known.",
+      route: "specialist"
+    },
+    {
+      id: "10002195",
+      title: "Compressor drive-end bearing vibration",
+      type: "M2",
+      equipmentId: "EQ-C201",
+      equipmentName: "Air compressor C-201",
+      priority: "2 · High",
+      abc: "A",
+      planner: "MECH-01",
+      fastEligible: true,
+      checks: [
+        { id: "coding", label: "Mandatory notification coding", status: "pass", required: true, evidence: "M2 · COMPRESSOR catalog · VIBRATION damage code are populated in the simulated record.", rule: "R-01 · Notification type, catalog and damage code must be present." },
+        { id: "abc", label: "Equipment ABC classification", status: "pass", required: true, evidence: "The simulated equipment snapshot records classification A.", rule: "R-02 · An A, B or C equipment classification is required before approval; unavailable evidence requires review." },
+        { id: "planner", label: "Planner assignment", status: "pass", required: true, evidence: "Planner group MECH-01 is assigned and valid in the demo lookup.", rule: "R-03 · A valid responsible planner group must be assigned." },
+        { id: "equipment", label: "Equipment reference", status: "pass", required: true, evidence: "EQ-C201 resolves to one active equipment record in the demo snapshot.", rule: "R-04 · The equipment reference must resolve to one active asset." },
+        { id: "duplicates", label: "Duplicate assessment", status: "pass", required: true, evidence: "The complete simulated open-notification pool contains no matching bearing-vibration issue for EQ-C201.", rule: "R-05 · Assess a complete duplicate pool; unresolved matches or incomplete coverage require review." },
+        { id: "priority", label: "Priority justification", status: "pass", required: true, evidence: "Rising vibration, bearing temperature and continued duty support high priority in the demo rubric.", rule: "R-06 · Priority must have a clear rationale in the supplied condition evidence." },
+        { id: "description", label: "Actionable issue description", status: "pass", required: true, evidence: "Description specifies drive-end bearing, measured vibration and the operating condition.", rule: "R-07 · Describe the symptom, affected location and observed effect." }
+      ],
+      recommendation: "Approve",
+      confidence: "High",
+      reason: "All seven required checks pass with complete evidence and no unresolved duplicate candidate.",
+      route: "policy"
+    },
+    {
+      id: "10002196",
+      title: "Conveyor return roller seized",
+      type: "M2",
+      equipmentId: "EQ-CV018",
+      equipmentName: "Packing conveyor CV-018",
+      priority: "3 · Normal",
+      abc: "B",
+      planner: "MECH-02",
+      fastEligible: true,
+      checks: [
+        { id: "coding", label: "Mandatory notification coding", status: "pass", required: true, evidence: "M2 · CONVEYOR catalog · SEIZED damage code are populated in the simulated record.", rule: "R-01 · Notification type, catalog and damage code must be present." },
+        { id: "abc", label: "Equipment ABC classification", status: "pass", required: true, evidence: "The simulated equipment snapshot records classification B.", rule: "R-02 · An A, B or C equipment classification is required before approval; unavailable evidence requires review." },
+        { id: "planner", label: "Planner assignment", status: "pass", required: true, evidence: "Planner group MECH-02 is assigned and valid in the demo lookup.", rule: "R-03 · A valid responsible planner group must be assigned." },
+        { id: "equipment", label: "Equipment reference", status: "pass", required: true, evidence: "EQ-CV018 resolves to one active equipment record in the demo snapshot.", rule: "R-04 · The equipment reference must resolve to one active asset." },
+        { id: "duplicates", label: "Duplicate assessment", status: "pass", required: true, evidence: "The complete simulated open-notification pool contains no matching roller issue for EQ-CV018.", rule: "R-05 · Assess a complete duplicate pool; unresolved matches or incomplete coverage require review." },
+        { id: "priority", label: "Priority justification", status: "pass", required: true, evidence: "A spare conveyor is available and no immediate production loss is reported; normal priority fits the demo rubric.", rule: "R-06 · Priority must have a clear rationale in the supplied condition evidence." },
+        { id: "description", label: "Actionable issue description", status: "pass", required: true, evidence: "Description identifies return roller 6, its seized state and visible belt wear.", rule: "R-07 · Describe the symptom, affected location and observed effect." }
+      ],
+      recommendation: "Approve",
+      confidence: "High",
+      reason: "All seven required checks pass. The issue is actionable, correctly assigned and supported by complete evidence.",
+      route: "policy"
+    },
+    {
+      id: "10002215",
+      title: "Feed pump suction pressure low",
+      type: "M2",
+      equipmentId: "EQ-P312",
+      equipmentName: "Feed pump P-312",
+      priority: "2 · High",
+      abc: "A",
+      planner: "MECH-01",
+      fastEligible: true,
+      checks: [
+        { id: "coding", label: "Mandatory notification coding", status: "fail", required: true, evidence: "M2 and the PUMP catalog are populated, but the required damage code is confirmed blank in the simulated record.", rule: "R-01 · Notification type, catalog and damage code must be present." },
+        { id: "abc", label: "Equipment ABC classification", status: "pass", required: true, evidence: "The simulated equipment snapshot records classification A.", rule: "R-02 · An A, B or C equipment classification is required before approval; unavailable evidence requires review." },
+        { id: "planner", label: "Planner assignment", status: "pass", required: true, evidence: "Planner group MECH-01 is assigned and valid in the demo lookup.", rule: "R-03 · A valid responsible planner group must be assigned." },
+        { id: "equipment", label: "Equipment reference", status: "pass", required: true, evidence: "EQ-P312 resolves to one active equipment record in the demo snapshot.", rule: "R-04 · The equipment reference must resolve to one active asset." },
+        { id: "duplicates", label: "Duplicate assessment", status: "pass", required: true, evidence: "The complete simulated open-notification pool contains no matching suction-pressure issue for EQ-P312.", rule: "R-05 · Assess a complete duplicate pool; unresolved matches or incomplete coverage require review." },
+        { id: "priority", label: "Priority justification", status: "pass", required: true, evidence: "Sustained low suction pressure and feed instability support high priority in the demo rubric.", rule: "R-06 · Priority must have a clear rationale in the supplied condition evidence." },
+        { id: "description", label: "Actionable issue description", status: "pass", required: true, evidence: "Description states the suction-pressure reading, normal range and observed feed instability.", rule: "R-07 · Describe the symptom, affected location and observed effect." }
+      ],
+      recommendation: "Rework",
+      confidence: "High",
+      reason: "The required damage code is confirmed blank. Complete the mandatory coding before resubmission.",
+      route: "policy"
+    },
+    {
+      id: "10002216",
+      title: "Motor terminal-box gasket damaged",
+      type: "M1",
+      equipmentId: "EQ-M044",
+      equipmentName: "Ventilation motor M-044",
+      priority: "3 · Normal",
+      abc: "C",
+      planner: "Missing",
+      fastEligible: true,
+      checks: [
+        { id: "coding", label: "Mandatory notification coding", status: "pass", required: true, evidence: "M1 · MOTOR catalog · GASKET damage code are populated in the simulated record.", rule: "R-01 · Notification type, catalog and damage code must be present." },
+        { id: "abc", label: "Equipment ABC classification", status: "pass", required: true, evidence: "The simulated equipment snapshot records classification C.", rule: "R-02 · An A, B or C equipment classification is required before approval; unavailable evidence requires review." },
+        { id: "planner", label: "Planner assignment", status: "fail", required: true, evidence: "The planner group is confirmed blank in the simulated notification; no responsible group is assigned.", rule: "R-03 · A valid responsible planner group must be assigned." },
+        { id: "equipment", label: "Equipment reference", status: "pass", required: true, evidence: "EQ-M044 resolves to one active equipment record in the demo snapshot.", rule: "R-04 · The equipment reference must resolve to one active asset." },
+        { id: "duplicates", label: "Duplicate assessment", status: "pass", required: true, evidence: "The complete simulated open-notification pool contains no matching terminal-box issue for EQ-M044.", rule: "R-05 · Assess a complete duplicate pool; unresolved matches or incomplete coverage require review." },
+        { id: "priority", label: "Priority justification", status: "pass", required: true, evidence: "The motor is isolated and a standby unit is available; normal priority fits the demo rubric.", rule: "R-06 · Priority must have a clear rationale in the supplied condition evidence." },
+        { id: "description", label: "Actionable issue description", status: "pass", required: true, evidence: "Description locates the damaged terminal-box gasket and documents visible moisture ingress.", rule: "R-07 · Describe the symptom, affected location and observed effect." }
+      ],
+      recommendation: "Rework",
+      confidence: "High",
+      reason: "The responsible planner group is confirmed missing. Assign a valid group before resubmission.",
+      route: "policy"
+    },
+    {
+      id: "10002217",
+      title: "Transfer pump seal leak after restart",
+      type: "M2",
+      equipmentId: "EQ-P203",
+      equipmentName: "Transfer pump P-203",
+      priority: "2 · High",
+      abc: "B",
+      planner: "MECH-02",
+      fastEligible: false,
+      checks: [
+        { id: "coding", label: "Mandatory notification coding", status: "pass", required: true, evidence: "M2 · PUMP catalog · LEAK damage code are populated in the simulated record.", rule: "R-01 · Notification type, catalog and damage code must be present." },
+        { id: "abc", label: "Equipment ABC classification", status: "pass", required: true, evidence: "The simulated equipment snapshot records classification B.", rule: "R-02 · An A, B or C equipment classification is required before approval; unavailable evidence requires review." },
+        { id: "planner", label: "Planner assignment", status: "pass", required: true, evidence: "Planner group MECH-02 is assigned and valid in the demo lookup.", rule: "R-03 · A valid responsible planner group must be assigned." },
+        { id: "equipment", label: "Equipment reference", status: "pass", required: true, evidence: "EQ-P203 resolves to one active equipment record in the demo snapshot.", rule: "R-04 · The equipment reference must resolve to one active asset." },
+        { id: "duplicates", label: "Duplicate assessment", status: "warning", required: true, evidence: "The complete demo pool includes simulated candidate DEMO-4108 on EQ-P203 with similar seal-leak wording. Timing suggests either a recurrence or the same unresolved issue.", rule: "R-05 · Assess a complete duplicate pool; unresolved matches or incomplete coverage require review." },
+        { id: "priority", label: "Priority justification", status: "pass", required: true, evidence: "Active leakage after restart supports high priority in the demo rubric.", rule: "R-06 · Priority must have a clear rationale in the supplied condition evidence." },
+        { id: "description", label: "Actionable issue description", status: "pass", required: true, evidence: "Description identifies the seal location, restart timing and observed leak rate.", rule: "R-07 · Describe the symptom, affected location and observed effect." }
+      ],
+      recommendation: "Review needed",
+      confidence: "Medium",
+      reason: "A similar open issue on the same equipment could be a duplicate or a recurrence. A specialist must resolve the relationship.",
+      route: "specialist"
+    },
+    {
+      id: "10002219",
+      title: "Control valve fails to reach open position",
+      type: "M2",
+      equipmentId: "EQ-V118",
+      equipmentName: "Control valve V-118",
+      priority: "2 · High",
+      abc: "A",
+      planner: "INST-01",
+      fastEligible: false,
+      checks: [
+        { id: "coding", label: "Mandatory notification coding", status: "pass", required: true, evidence: "M2 · VALVE catalog · STROKE damage code are populated in the simulated record.", rule: "R-01 · Notification type, catalog and damage code must be present." },
+        { id: "abc", label: "Equipment ABC classification", status: "pass", required: true, evidence: "The simulated equipment snapshot records classification A.", rule: "R-02 · An A, B or C equipment classification is required before approval; unavailable evidence requires review." },
+        { id: "planner", label: "Planner assignment", status: "pass", required: true, evidence: "Planner group INST-01 is assigned and valid in the demo lookup.", rule: "R-03 · A valid responsible planner group must be assigned." },
+        { id: "equipment", label: "Equipment reference", status: "pass", required: true, evidence: "EQ-V118 resolves to one active equipment record in the demo snapshot.", rule: "R-04 · The equipment reference must resolve to one active asset." },
+        { id: "duplicates", label: "Duplicate assessment", status: "unknown", required: true, evidence: "The simulated duplicate-pool export omits the instrumentation planner group. No match was found in the available subset, but coverage is incomplete.", rule: "R-05 · Assess a complete duplicate pool; unresolved matches or incomplete coverage require review." },
+        { id: "priority", label: "Priority justification", status: "pass", required: true, evidence: "Limited valve travel and reduced process throughput support high priority in the demo rubric.", rule: "R-06 · Priority must have a clear rationale in the supplied condition evidence." },
+        { id: "description", label: "Actionable issue description", status: "pass", required: true, evidence: "Description records the commanded and observed valve position plus the throughput effect.", rule: "R-07 · Describe the symptom, affected location and observed effect." }
+      ],
+      recommendation: "Review needed",
+      confidence: "Unrated",
+      reason: "Duplicate coverage is incomplete. A no-match result from a partial pool cannot support approval or a confidence rating.",
+      route: "specialist"
+    },
+    {
+      id: "10002220",
+      title: "Oil cooler outlet temperature rising",
+      type: "M2",
+      equipmentId: "EQ-H062",
+      equipmentName: "Oil cooler H-062",
+      priority: "1 · Urgent",
+      abc: "B",
+      planner: "MECH-01",
+      fastEligible: false,
+      checks: [
+        { id: "coding", label: "Mandatory notification coding", status: "pass", required: true, evidence: "M2 · COOLER catalog · TEMP damage code are populated in the simulated record.", rule: "R-01 · Notification type, catalog and damage code must be present." },
+        { id: "abc", label: "Equipment ABC classification", status: "pass", required: true, evidence: "The simulated equipment snapshot records classification B.", rule: "R-02 · An A, B or C equipment classification is required before approval; unavailable evidence requires review." },
+        { id: "planner", label: "Planner assignment", status: "pass", required: true, evidence: "Planner group MECH-01 is assigned and valid in the demo lookup.", rule: "R-03 · A valid responsible planner group must be assigned." },
+        { id: "equipment", label: "Equipment reference", status: "pass", required: true, evidence: "EQ-H062 resolves to one active equipment record in the demo snapshot.", rule: "R-04 · The equipment reference must resolve to one active asset." },
+        { id: "duplicates", label: "Duplicate assessment", status: "pass", required: true, evidence: "The complete simulated open-notification pool contains no matching temperature issue for EQ-H062.", rule: "R-05 · Assess a complete duplicate pool; unresolved matches or incomplete coverage require review." },
+        { id: "priority", label: "Priority justification", status: "warning", required: true, evidence: "The description reports a rising temperature below the alarm limit while standby cooling is available. The demo rubric does not clearly support urgent priority.", rule: "R-06 · Priority must have a clear rationale in the supplied condition evidence." },
+        { id: "description", label: "Actionable issue description", status: "pass", required: true, evidence: "Description gives outlet-temperature readings over time, the alarm limit and standby availability.", rule: "R-07 · Describe the symptom, affected location and observed effect." }
+      ],
+      recommendation: "Review needed",
+      confidence: "Medium",
+      reason: "The recorded urgent priority needs interpretation against the temperature trend and available standby cooling.",
+      route: "specialist"
+    }
+  ]
+};
+
+(() => {
+  'use strict';
+  const data = window.GATEKEEPER_DATA;
+  const notifications = data.notifications;
+  const byId = Object.fromEntries(notifications.map(n => [n.id, n]));
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const paths = {
+    grid:'<rect x="3" y="3" width="7" height="7" rx="1.4"/><rect x="14" y="3" width="7" height="7" rx="1.4"/><rect x="3" y="14" width="7" height="7" rx="1.4"/><rect x="14" y="14" width="7" height="7" rx="1.4"/>',
+    clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    shield:'<path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/>',
+    'shield-check':'<path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m8 12 3 3 5-6"/>',
+    layers:'<path d="m12 3 10 5-10 5L2 8zM3 12l9 5 9-5M3 17l9 5 9-5"/>',
+    'check-square':'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="m7 12 3 3 7-7"/>',
+    split:'<path d="M5 4v3c0 5 14 5 14 10v3M5 20v-3c0-5 14-5 14-10V4M16 7l3-3 3 3M16 17l3 3 3-3"/>',
+    compare:'<path d="M8 3v18M16 3v18M4 7l4-4 4 4M12 17l4 4 4-4"/>',
+    reset:'<path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/>',
+    play:'<path d="m9 5 11 7-11 7z"/>',
+    search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>',
+    filter:'<path d="M3 5h18M6 12h12M10 19h4"/>',
+    download:'<path d="M12 3v12m-5-5 5 5 5-5M4 16v4h16v-4"/>',
+    lock:'<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/>',
+    'arrow-right':'<path d="M4 12h16m-6-6 6 6-6 6"/>',
+    'chevron-right':'<path d="m9 5 7 7-7 7"/>',
+    'check-circle':'<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
+    check:'<path d="m5 12 4 4L19 6"/>',
+    close:'<path d="m6 6 12 12M6 18 18 6"/>',
+    alert:'<path d="m12 3 10 18H2zM12 9v5m0 3v.2"/>',
+    info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.2"/>',
+    minus:'<path d="M6 12h12"/>',
+    file:'<path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h8"/>'
+  };
+  const icon = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.info}</svg>`;
+  $$('[data-icon]').forEach(el => { el.innerHTML = icon(el.dataset.icon); });
+
+  const state = {
+    mode:'batch', selected:new Set(), records:{}, overrides:{}, busy:false,
+    progress:null, drawer:null, modal:null, activity:[], generation:0,
+    search:'', filter:'all', runSerial:0
+  };
+  let lastFocus = null;
+  let toastTimer;
+  const time = () => new Intl.DateTimeFormat('en-GB', {hour:'2-digit', minute:'2-digit', timeZone:'Africa/Casablanca'}).format(new Date());
+  const policyLabel = `${data.policy.id} · v${data.policy.version}`;
+  const fresh = r => !!r.assessment && r.assessment.sourceVersion === r.sourceVersion;
+  const eligible = r => r.status === 'complete' && fresh(r) && r.assessment.recommendation === 'Approve' && !r.approval;
+  const attention = r => r.status === 'exception' || (!!r.assessment && !fresh(r)) || (fresh(r) && r.assessment.recommendation === 'Review needed');
+  const pending = r => ['unassessed','exception'].includes(r.status) || (!!r.assessment && !fresh(r));
+  const statusNames = {pass:'Pass',fail:'Fail',unknown:'Not evaluated',warning:'Needs interpretation',na:'Not applicable'};
+  const modeNames = {batch:'Complete batch',selected:'Selected working set',policy:'Policy + exceptions'};
+  const guides = {
+    batch:['The full review, applied to every notification.','Completed rows become available immediately. Opening details reuses their assessment; it never starts a competing review.','Complete evidence'],
+    selected:['Choose the notifications you will work on today.','Select rows, then prepare their complete reviews. Everything outside your selection remains explicitly unassessed.','You control the scope'],
+    policy:['Resolve clear cases. Give exceptions focused attention.','Policy checks complete four clear cases in this example. Four exceptions wait for an individual or grouped review.','Evidence before decisions']
+  };
+
+  function initialiseRecords() {
+    state.records = Object.fromEntries(notifications.map(n => [n.id, {status:'unassessed',sourceVersion:1,assessment:null,approval:null}]));
+  }
+  function scenario(id) {
+    const n = JSON.parse(JSON.stringify(byId[id]));
+    if (state.overrides[id]) {
+      n.planner = 'Missing'; n.fastEligible = true; n.route = 'policy';
+      const check = n.checks.find(c => c.id === 'planner');
+      check.status = 'fail';
+      check.evidence = 'In simulated evidence version 2, the planner assignment was removed. This is a new, verified missing mandatory field.';
+      n.recommendation = 'Rework'; n.confidence = 'High';
+      n.reason = 'New evidence confirms that the mandatory planner assignment was removed. Rework is required; the prior approval recommendation is superseded.';
+    }
+    return n;
+  }
+  function log(title, description='') {
+    state.activity.unshift({time:time(),title,description});
+  }
+  function toast(message) {
+    clearTimeout(toastTimer);
+    const el = $('#toast'); el.textContent = message; el.hidden = false;
+    toastTimer = setTimeout(() => { el.hidden = true; },4200);
+  }
+  function announce(message) { $('#announcer').textContent = message; }
+  function reset() {
+    state.generation++; state.selected.clear(); state.overrides = {}; state.busy = false;
+    state.progress = null; state.drawer = null; state.modal = null; state.activity = [];
+    state.search = ''; state.filter = 'all'; state.runSerial = 0;
+    initialiseRecords(); $('#search').value = ''; $('#filter').value = 'all';
+    $('#modal-overlay').hidden = true; document.body.style.overflow = '';
+    render(); announce('Demo reset. All eight notifications are unassessed.');
+  }
+  function switchMode(mode) {
+    if (!guides[mode]) return;
+    state.mode = mode;
+    $$('.mode-card').forEach(el => {
+      const active = el.dataset.mode === mode;
+      el.classList.toggle('selected',active); el.setAttribute('aria-pressed',String(active));
+    });
+    render();
+    announce(`${modeNames[mode]} selected. Existing assessments are reused.`);
+  }
+  function visibleNotifications() {
+    const query = state.search.toLowerCase().trim();
+    return notifications.filter(n => {
+      const r = state.records[n.id];
+      if (query && !`${n.id} ${n.title} ${n.equipmentId} ${n.equipmentName}`.toLowerCase().includes(query)) return false;
+      switch (state.filter) {
+        case 'unassessed': return !r.assessment;
+        case 'approve': return fresh(r) && r.assessment.recommendation === 'Approve';
+        case 'rework': return fresh(r) && r.assessment.recommendation === 'Rework';
+        case 'review': return attention(r);
+        case 'stale': return !!r.assessment && !fresh(r);
+        default: return true;
+      }
+    });
+  }
+  function recommendationBadge(result, stale=false) {
+    if (!result) return '<span class="small-dash">—</span>';
+    const name = result.recommendation;
+    const style = name === 'Approve' ? 'success' : name === 'Rework' ? 'warning' : 'blue';
+    return `<span class="badge ${stale ? 'neutral' : style}" ${stale ? 'title="Previous assessment. New evidence requires re-evaluation."' : ''}>${name === 'Approve' ? icon('check') : name === 'Rework' ? icon('alert') : icon('info')}${esc(name)}</span>`;
+  }
+  function confidenceMarkup(result) {
+    if (!result) return '<span class="small-dash">—</span>';
+    const confidence = result.confidence;
+    const title = confidence === 'High' ? 'Conclusive evidence supports this recommendation; not a probability.' : confidence === 'Medium' ? 'Some interpretation requires reviewer attention; not a probability.' : 'Required evidence is unavailable. No substantive approval confidence is assigned.';
+    return `<span class="confidence ${confidence.toLowerCase()}" title="${title}"><span class="confidence-dot"></span>${esc(confidence)}</span>`;
+  }
+  function assessmentBadge(r) {
+    if (r.assessment && !fresh(r)) return `<span class="badge warning">${icon('alert')}Evidence changed</span>`;
+    if (r.status === 'running') return '<span class="badge blue"><span class="spinner"></span>Evaluating</span>';
+    if (r.status === 'queued') return `<span class="badge neutral">${icon('clock')}Queued</span>`;
+    if (r.status === 'exception') return `<span class="badge warning">${icon('split')}Needs analysis</span>`;
+    if (r.status === 'complete') return `<span class="badge success">${icon('check-circle')}Assessed</span>`;
+    return '<span class="badge neutral">Not assessed</span>';
+  }
+  function renderStats() {
+    const records = Object.values(state.records);
+    const completed = records.filter(r => r.status === 'complete' && fresh(r)).length;
+    $('#stat-total').textContent = notifications.length;
+    $('#stat-complete').innerHTML = `${completed}<span>/${notifications.length}</span>`;
+    $('#stat-complete-sub').textContent = state.busy ? 'assessments in progress' : 'current assessments';
+    $('#stat-rework').textContent = records.filter(r => fresh(r) && r.assessment.recommendation === 'Rework').length;
+    $('#stat-attention').textContent = records.filter(attention).length;
+  }
+  function renderGuide() {
+    const [title,copy,tag] = guides[state.mode];
+    $('#mode-guide').innerHTML = `<span class="guide-icon">${icon(state.mode === 'policy' ? 'split' : 'info')}</span><div class="guide-copy"><strong>${title}</strong><p>${copy}</p></div><span class="guide-tag">${tag}</span>`;
+    const p = state.progress;
+    const region = $('#progress-region');
+    region.hidden = !p;
+    if (p) {
+      region.innerHTML = `<div class="progress-copy"><strong>${state.busy ? '<span class="spinner"></span>' : icon('check-circle')}${esc(p.title)}</strong><span>${p.done} / ${p.total} processed</span></div><div class="progress-track" role="progressbar" aria-label="Assessment progress" aria-valuemin="0" aria-valuemax="${p.total}" aria-valuenow="${p.done}"><div class="progress-fill" style="width:${p.total ? p.done / p.total * 100 : 0}%"></div></div>`;
+    }
+  }
+  function renderActions() {
+    const remaining = notifications.filter(n => pending(state.records[n.id]));
+    const selectedPending = [...state.selected].filter(id => pending(state.records[id]));
+    const primary = $('#evaluate-button');
+    let label,disabled;
+    if (state.busy) { label = 'Assessment in progress'; disabled = true; }
+    else if (state.mode === 'batch') { label = remaining.length ? `Evaluate ${remaining.length === notifications.length ? 'all ' : 'remaining '}${remaining.length}` : 'All notifications assessed'; disabled = !remaining.length; }
+    else if (state.mode === 'selected') { label = state.selected.size ? `Evaluate selected (${selectedPending.length})` : 'Select notifications'; disabled = !selectedPending.length; }
+    else {
+      const unassessed = remaining.filter(n => state.records[n.id].status !== 'exception');
+      const exceptions = remaining.filter(n => state.records[n.id].status === 'exception');
+      label = unassessed.length ? `Apply policy to ${unassessed.length}` : exceptions.length ? `Review exceptions (${exceptions.length})` : 'All notifications assessed';
+      disabled = !remaining.length;
+    }
+    primary.disabled = disabled;
+    primary.innerHTML = `${state.busy ? '<span class="spinner"></span>' : icon(state.mode === 'policy' ? 'split' : 'play')}<span>${label}</span>`;
+    const approvals = Object.values(state.records).filter(eligible).length;
+    $('#approve-button').disabled = !approvals || state.busy;
+    $('#approve-button').innerHTML = `${icon('check-circle')}<span>Review approvals${approvals ? ` (${approvals})` : ''}</span>`;
+    $('#selected-count').textContent = `${state.selected.size} selected`;
+    $('#selected-count').classList.toggle('has-selection',!!state.selected.size);
+    $('#worklist-caption').textContent = state.mode === 'selected' ? 'Select a working set. Unselected rows receive no recommendation.' : state.mode === 'policy' ? 'Evidence-complete cases finish first. Exceptions remain visible until reviewed.' : 'No provisional approvals. Recommendations appear only after assessment.';
+  }
+  function renderTable() {
+    const visible = visibleNotifications();
+    $('#table-count').textContent = visible.length;
+    $('#visible-count').textContent = `Showing ${visible.length} of ${notifications.length} notifications`;
+    $('#select-all').checked = !!visible.length && visible.every(n => state.selected.has(n.id));
+    $('#select-all').indeterminate = visible.some(n => state.selected.has(n.id)) && !$('#select-all').checked;
+    $('#table-body').innerHTML = visible.length ? visible.map(n => {
+      const r = state.records[n.id], result = r.assessment;
+      const stale = result && !fresh(r);
+      const priorityStyle = n.priority.toLowerCase().includes('very high') ? 'very-high' : n.priority.toLowerCase().includes('high') ? 'high' : '';
+      return `<tr data-id="${n.id}" class="${state.selected.has(n.id) ? 'selected-row' : ''}"><td class="checkbox-cell"><input type="checkbox" class="row-select" value="${n.id}" aria-label="Select notification ${n.id}" ${state.selected.has(n.id) ? 'checked' : ''}></td><td><button class="notif-link" data-action="open" data-id="${n.id}">${n.id}</button><span class="cell-title" title="${esc(n.title)}">${esc(n.title)}</span></td><td><span class="equipment-id">${esc(n.equipmentId)}</span><span class="equipment-name" title="${esc(n.equipmentName)}">${esc(n.equipmentName)}</span></td><td><span class="priority ${priorityStyle}"><i></i>${esc(n.priority.replace(/^\d+\s*·\s*/,''))}</span></td><td>${assessmentBadge(r)}</td><td class="result-cell">${recommendationBadge(result,stale)}</td><td class="confidence-cell">${confidenceMarkup(result)}</td><td class="decision-column"><span class="decision ${r.approval && fresh(r) ? 'approved' : ''}">${r.approval && fresh(r) ? '✓ Simulated approval' : result && fresh(r) ? 'Awaiting human' : '—'}</span></td><td><button class="row-arrow" data-action="open" data-id="${n.id}" aria-label="Open details for ${n.id}">${icon('chevron-right')}</button></td></tr>`;
+    }).join('') : '<tr><td colspan="9" class="empty-state">No notifications match these filters. Try another search or view.</td></tr>';
+  }
+  function detailOverview(n) {
+    return `<dl class="detail-overview"><div><dt>EQUIPMENT</dt><dd>${esc(n.equipmentId)} · ${esc(n.equipmentName)}</dd></div><div><dt>PLANT / TYPE</dt><dd>1710 / ${esc(n.type)}</dd></div><div><dt>PRIORITY / ABC</dt><dd>${esc(n.priority)} / ${esc(n.abc)}</dd></div><div><dt>PLANNER GROUP</dt><dd>${esc(n.planner)}</dd></div></dl>`;
+  }
+  function renderDrawer() {
+    const panel = $('#drawer'), overlay = $('#drawer-overlay');
+    panel.hidden = overlay.hidden = !state.drawer;
+    if (!state.drawer) return;
+    const id = state.drawer, n = scenario(id), r = state.records[id], result = r.assessment;
+    const hasResult = !!result, stale = hasResult && !fresh(r);
+    const heading = `<header class="drawer-head"><div class="drawer-eyebrow"><span>NOTIFICATION DETAIL</span><button class="icon-button" data-action="close-drawer" aria-label="Close notification details">${icon('close')}</button></div><h2 id="drawer-title">${id}</h2><p class="drawer-subtitle">${esc(n.title)}</p></header>`;
+    if (!hasResult) {
+      const processing = ['running','queued'].includes(r.status);
+      const exception = r.status === 'exception';
+      panel.innerHTML = `${heading}<div class="drawer-body">${detailOverview(n)}<div class="pending-detail"><span>${processing ? '<span class="spinner"></span>' : icon(exception ? 'split' : 'file')}</span><h3>${processing ? 'Your assessment is in progress' : exception ? 'This case needs focused analysis' : 'This notification is not assessed yet'}</h3><p>${processing ? 'This view will display the same completed result as the worklist. No second assessment is started.' : exception ? 'The policy pass identified an exception. Complete its review before a recommendation or confidence is shown.' : 'Prepare the assessment to see findings, a recommendation and its evidence. Opening details does not generate another opinion.'}</p><button class="button primary" data-action="evaluate-one" data-id="${id}" ${state.busy ? 'disabled' : ''}>${icon('play')}${exception ? 'Review this exception' : 'Evaluate this notification'}</button></div><p class="version-line">Seven illustrative checks · ${esc(policyLabel)}</p></div><div class="drawer-actions"><p>Recommendations remain hidden until this assessment is complete.</p><button class="button secondary" data-action="close-drawer">Back to worklist</button></div>`;
+      return;
+    }
+    const resultClass = result.recommendation === 'Approve' ? '' : result.recommendation === 'Rework' ? 'rework' : 'review';
+    const title = result.recommendation === 'Approve' ? 'Recommended for approval' : result.recommendation === 'Rework' ? 'Corrections required' : 'Human review needed';
+    const previous = result.changedFrom;
+    const changeNote = previous ? `<div class="change-note"><strong>Assessment revised after evidence changed</strong>${esc(previous.recommendation)} / ${esc(previous.confidence)} → ${esc(result.recommendation)} / ${esc(result.confidence)}. Planner assignment changed from present to missing. This revision is also shown in the worklist.</div>` : '';
+    const staleNote = stale ? `<div class="stale-alert"><strong>Evidence changed. This assessment is out of date.</strong>Planner assignment was removed in evidence version ${r.sourceVersion}. The previous result below cannot be approved. Re-evaluate to create an explicit revision.</div>` : '';
+    const checkContent = result.checks.map(c => `<div class="check ${c.status}"><span class="check-icon">${icon(c.status === 'pass' ? 'check' : c.status === 'fail' ? 'close' : c.status === 'na' ? 'minus' : c.status === 'unknown' ? 'info' : 'alert')}</span><div class="check-copy"><div class="check-top"><span class="check-title">${esc(c.label)}</span><span class="check-status">${statusNames[c.status]}</span></div><p>${esc(c.evidence)}</p><div class="check-rule">${esc(c.rule)}${c.required ? ' · Required' : ''}</div></div></div>`).join('');
+    const same = `<div class="snapshot-note">${icon('lock')}Same assessment as the worklist · No recalculation on opening</div>`;
+    const resultCard = `<section class="detail-result ${resultClass}" data-assessment-id="${esc(result.id)}"><span class="result-label">${stale ? 'PREVIOUS ASSESSMENT' : 'COMPLETED ASSESSMENT'}</span><h3>${title}</h3><p>${esc(result.reason)}</p><div class="confidence-line"><span>Recommendation confidence</span>${confidenceMarkup(result)}</div></section>`;
+    const checksPassed = result.checks.filter(c => c.status === 'pass' || c.status === 'na').length;
+    const meta = `<div class="assessment-meta"><div>ASSESSMENT ID<strong>${esc(result.id)}</strong></div><div>POLICY VERSION<strong>${esc(policyLabel)}</strong></div><div>EVIDENCE VERSION<strong>S${String(result.sourceVersion).padStart(3,'0')}${stale ? ' · superseded' : ' · current'}</strong></div><div>COMPLETED VIA<strong>${esc(result.via)}</strong></div></div>`;
+    const demoChange = result.recommendation === 'Approve' && !stale ? `<div class="simulation-box"><div><strong>TRY AN EVIDENCE CHANGE</strong><p>Remove a planner assignment in a new mock snapshot.</p></div><button class="button secondary" data-action="change-evidence" data-id="${id}" ${state.busy ? 'disabled' : ''}>Simulate change</button></div>` : '';
+    let footer;
+    if (stale) footer = `<p>Re-evaluation is required before approval.</p><button class="button primary" data-action="evaluate-one" data-id="${id}" ${state.busy ? 'disabled' : ''}>${state.busy ? '<span class="spinner"></span>' : icon('reset')}Re-evaluate changes</button>`;
+    else if (r.approval) footer = `<span class="detail-approved">${icon('check-circle')}Human approval simulated for ${esc(result.id)}</span><button class="button secondary" data-action="close-drawer">Done</button>`;
+    else if (eligible(r)) footer = `<p>Final action requires your explicit confirmation. No SAP write is made.</p><button class="button approve" data-action="approve-one" data-id="${id}" ${state.busy ? 'disabled' : ''}>${icon('check-circle')}Simulate approval</button>`;
+    else footer = `<p>${result.confidence === 'Unrated' ? 'Required evidence remains unavailable. Approval is disabled.' : 'This recommendation requires correction or human interpretation.'}</p><button class="button secondary" data-action="close-drawer">Back to worklist</button>`;
+    panel.innerHTML = `${heading}<div class="drawer-body">${same}${staleNote}${changeNote}${resultCard}${detailOverview(n)}<div class="detail-section-head"><h3>Policy findings</h3><span>${checksPassed} / ${result.checks.length} checks satisfied</span></div>${checkContent}${meta}${demoChange}</div><div class="drawer-actions">${footer}</div>`;
+  }
+  function render() { renderStats(); renderGuide(); renderActions(); renderTable(); renderDrawer(); }
+  function openDrawer(id) {
+    if (!byId[id]) return;
+    lastFocus = document.activeElement; state.drawer = id;
+    renderDrawer(); document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => $('[data-action="close-drawer"]', $('#drawer'))?.focus());
+  }
+  function closeDrawer() {
+    state.drawer = null; $('#drawer').hidden = $('#drawer-overlay').hidden = true;
+    if (!state.modal) document.body.style.overflow = '';
+    if (lastFocus?.isConnected) lastFocus.focus();
+  }
+  function delay(ms) { return new Promise(resolve => setTimeout(resolve,ms)); }
+  function finishAssessment(id, via) {
+    const r = state.records[id], n = scenario(id), previous = r.assessment;
+    const revision = previous ? previous.revision + 1 : 1;
+    r.assessment = {
+      id:`GK-${id}-R${revision}`,notificationId:id,revision,sourceVersion:r.sourceVersion,
+      policyId:data.policy.id,policyVersion:data.policy.version,
+      recommendation:n.recommendation,confidence:n.confidence,reason:n.reason,
+      checks:n.checks,via,completedAt:new Date().toISOString(),
+      changedFrom:previous ? {recommendation:previous.recommendation,confidence:previous.confidence,assessmentId:previous.id} : null
+    };
+    r.status = 'complete'; r.approval = null;
+    log(`Assessment ready · ${id}`,`${n.recommendation} / ${n.confidence} · ${r.assessment.id} · evidence S${r.sourceVersion}`);
+  }
+  async function evaluate(ids, via='Complete review') {
+    if (state.busy) return;
+    const scope = [...new Set(ids)].filter(id => byId[id] && pending(state.records[id]));
+    if (!scope.length) { toast('Current assessments are already available. Open details to inspect them.'); return; }
+    const generation = state.generation;
+    state.busy = true; state.runSerial++;
+    scope.forEach(id => { state.records[id].status = 'queued'; });
+    state.progress = {title:`Preparing ${scope.length} complete assessment${scope.length === 1 ? '' : 's'}`,done:0,total:scope.length};
+    log(`Review started · ${scope.length} notification${scope.length === 1 ? '' : 's'}`,`${via}. Scope captured at start; later selection changes do not alter it.`);
+    announce(state.progress.title); render();
+    let cursor = 0;
+    async function worker() {
+      while (cursor < scope.length) {
+        const index = cursor++, id = scope[index];
+        if (state.generation !== generation) return;
+        state.records[id].status = 'running'; render();
+        await delay(420 + (index % 3) * 170);
+        if (state.generation !== generation) return;
+        finishAssessment(id,via); state.progress.done++; render();
+      }
+    }
+    await Promise.all([worker(),worker()]);
+    if (state.generation !== generation) return;
+    state.busy = false;
+    state.progress.title = `${scope.length} assessment${scope.length === 1 ? '' : 's'} complete · results are shared with details`;
+    render(); announce(state.progress.title); toast(`${scope.length} complete assessment${scope.length === 1 ? '' : 's'} ready. Open a notification to inspect its saved result.`);
+  }
+  async function applyPolicy() {
+    if (state.busy) return;
+    const scope = notifications.filter(n => pending(state.records[n.id]) && state.records[n.id].status !== 'exception').map(n => n.id);
+    if (!scope.length) {
+      return evaluate(notifications.filter(n => state.records[n.id].status === 'exception').map(n => n.id),'Focused exception review');
+    }
+    const generation = state.generation;
+    state.busy = true; scope.forEach(id => { state.records[id].status = 'queued'; });
+    state.progress = {title:'Applying illustrative policy · evidence-complete cases first',done:0,total:scope.length};
+    log('Policy pass started',`${scope.length} notifications · ${policyLabel}`); render();
+    let cursor = 0;
+    async function worker() {
+      while (cursor < scope.length) {
+        const id = scope[cursor++];
+        if (state.generation !== generation) return;
+        state.records[id].status = 'running'; render();
+        await delay(230);
+        if (state.generation !== generation) return;
+        if (scenario(id).fastEligible) finishAssessment(id,'Evidence-complete policy path');
+        else { state.records[id].status = 'exception'; log(`Exception identified · ${id}`,'No recommendation assigned. Focused review is required.'); }
+        state.progress.done++; render();
+      }
+    }
+    await Promise.all([worker(),worker()]);
+    if (state.generation !== generation) return;
+    state.busy = false;
+    const exceptions = notifications.filter(n => state.records[n.id].status === 'exception').length;
+    state.progress.title = exceptions ? `Policy pass complete · ${exceptions} exceptions need focused analysis` : 'Policy pass complete · all assessments ready';
+    render(); announce(state.progress.title); toast(exceptions ? `${exceptions} cases remain in the exception queue. Review them together or open one individually.` : 'All policy assessments are ready.');
+  }
+  function runCurrentMode() {
+    if (state.mode === 'policy') return applyPolicy();
+    if (state.mode === 'selected') return evaluate([...state.selected],'Selected working set');
+    return evaluate(notifications.map(n => n.id),'Complete batch');
+  }
+  function simulateChange(id) {
+    const r = state.records[id];
+    if (state.busy || !r || !fresh(r) || r.assessment.recommendation !== 'Approve') return;
+    state.overrides[id] = true; r.sourceVersion++; r.approval = null;
+    log(`Evidence changed · ${id}`,`Planner assignment removed in S${r.sourceVersion}. Previous assessment ${r.assessment.id} is out of date; approval disabled.`);
+    render(); announce('Evidence changed. The previous assessment is stale. Re-evaluation is required.');
+    toast('New evidence snapshot created. The prior result is preserved but cannot be approved.');
+  }
+  function modalHeader(title, intro) {
+    return `<div class="modal-head"><div><div class="eyebrow">ASSESSMENT DESIGN LAB</div><h2 id="modal-title">${title}</h2></div><button class="icon-button" data-action="close-modal" aria-label="Close dialog">${icon('close')}</button></div><p class="modal-intro">${intro}</p>`;
+  }
+  function showModal(kind, ids) {
+    lastFocus = document.activeElement;
+    state.modal = {kind};
+    const el = $('#modal');
+    if (kind === 'compare') {
+      el.innerHTML = `${modalHeader('Three approaches. One trusted result.','Choose what fits your team’s workload. All three approaches use the same illustrative policy and saved assessment; none produces provisional approval recommendations.')}<div class="compare-scroll"><table class="compare-table"><thead><tr><th></th><th>01 · Complete batch</th><th>02 · Working set</th><th>03 · Policy + exceptions</th></tr></thead><tbody><tr><td>What gets evaluated?</td><td>The entire worklist, with completed rows available progressively.</td><td>Only the notifications explicitly selected by the planner.</td><td>Evidence-complete cases first; exceptions receive focused analysis.</td></tr><tr><td>Before completion</td><td>Queued / Evaluating. No recommendation yet.</td><td>Unselected rows stay Not assessed.</td><td>Exceptions stay Needs analysis until their review completes.</td></tr><tr><td>Best fit</td><td>You need a prepared decision for every notification.</td><td>You handle only part of a large queue each day.</td><td>Many company rules can be evaluated reliably from structured evidence.</td></tr><tr><td>Trade-off</td><td>More total assessment work.</td><td>No decision for the rest of the worklist.</td><td>More policy definition and engineering.</td></tr><tr><td>Individual details</td><td colspan="3">Read the same assessment ID, findings, recommendation and confidence shown in the worklist. A new evidence snapshot requires an explicit revision.</td></tr></tbody></table></div><div class="metric-highlight"><strong>Try a fair comparison:</strong> select an approach, reset the demo and run it. The animation illustrates workflow only; it does not benchmark SAP or model performance.</div><div class="modal-bottom"><p>Completed results are reused when switching approaches. Reset creates a fresh simulated worklist.</p><button class="button primary" data-action="close-modal">Explore the worklist ${icon('arrow-right')}</button></div>`;
+    } else if (kind === 'policy') {
+      const rules = notifications[0].checks;
+      el.innerHTML = `${modalHeader('The policy behind this example',`${esc(policyLabel)} · Illustrative rules only. This prototype does not represent a company-approved rulebook or connect to SAP.`)}<div class="policy-list">${rules.map(c => `<div class="policy-item"><span class="icon-wrap">${icon('shield-check')}</span><div><strong>${esc(c.label)}</strong><p>${esc(c.rule)}</p></div></div>`).join('')}</div><div class="metric-highlight"><strong>Outcome rules:</strong> a verified mandatory failure can support Rework / High. Required unavailable evidence produces Review needed / Unrated. An unresolved semantic exception produces Review needed / Medium. Approval requires conclusive applicable checks. Confidence is qualitative, not a measured probability.</div><div class="modal-bottom"><p>The fast path can complete only cases whose policy obligations are satisfied or whose decisive failure is established.</p><button class="button primary" data-action="close-modal">Understood</button></div>`;
+    } else if (kind === 'activity') {
+      el.innerHTML = `${modalHeader('Decision history','Each event belongs to a notification, assessment revision and evidence snapshot. All actions here are simulated.')}<div>${state.activity.length ? state.activity.slice(0,35).map(a => `<div class="activity-item"><time>${a.time}</time><div><strong>${esc(a.title)}</strong><p>${esc(a.description)}</p></div></div>`).join('') : '<div class="pending-detail"><h3>No decisions yet</h3><p>Run an assessment to see the shared results and revision history.</p></div>'}</div><div class="modal-bottom"><p>Approval never changes the recommendation or confidence. It records a separate human decision.</p><button class="button primary" data-action="close-modal">Back to worklist</button></div>`;
+    } else if (kind === 'consistency') {
+      el.innerHTML = `${modalHeader('Consistent does not mean frozen','Opening a detail view never creates another model opinion. Changes are allowed only through a visible, versioned assessment revision.')}<div class="policy-list"><div class="policy-item"><span class="icon-wrap">${icon('layers')}</span><div><strong>1 · One assessment, two views</strong><p>The worklist and detail panel display the same recommendation, confidence and assessment ID.</p></div></div><div class="policy-item"><span class="icon-wrap">${icon('alert')}</span><div><strong>2 · Evidence changes visibly</strong><p>On an approval recommendation, use Simulate change to remove its planner assignment. The previous assessment becomes stale and approval is disabled.</p></div></div><div class="policy-item"><span class="icon-wrap">${icon('reset')}</span><div><strong>3 · Re-evaluate explicitly</strong><p>The new evidence creates revision 2. Both views show Rework / High, with a reason explaining the change. High confidence can support a correction.</p></div></div></div><div class="modal-bottom"><p>Start with notification 10002195. Evaluate it first if it is still unassessed.</p><button class="button primary" data-action="open-example">Open example ${icon('arrow-right')}</button></div>`;
+    } else if (kind === 'approvals') {
+      const scope = (ids || notifications.map(n => n.id)).filter(id => eligible(state.records[id]));
+      if (!scope.length) { state.modal = null; toast('No current approval recommendations are available.'); return; }
+      state.modal.drafts = scope.map(id => ({id,assessmentId:state.records[id].assessment.id,sourceVersion:state.records[id].sourceVersion}));
+      el.innerHTML = `${modalHeader('Confirm a simulated human decision','Review the exact notification and assessment versions below. This action records a demo approval only; it never calls SAP.')}<div class="approval-list">${scope.map(id => `<div class="approval-item"><div><strong>${id} · ${esc(byId[id].title)}</strong><p>${esc(state.records[id].assessment.id)} · evidence S${state.records[id].sourceVersion} · ${esc(policyLabel)}</p></div>${recommendationBadge(state.records[id].assessment)}</div>`).join('')}</div><label class="approval-confirm"><input type="checkbox" id="confirm-approval"><span>I reviewed these current assessments and explicitly confirm the simulated approval of these ${scope.length} notification${scope.length === 1 ? '' : 's'}.</span></label><div class="modal-bottom"><p>Rework, unresolved, stale and unassessed notifications are ineligible. The decision is bound to the versions listed above.</p><button class="button approve" data-action="confirm-approval" id="confirm-approval-button" disabled>Confirm ${scope.length} simulated approval${scope.length === 1 ? '' : 's'}</button></div>`;
+    }
+    $('#modal-overlay').hidden = false; document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => $('[data-action="close-modal"]',el)?.focus());
+  }
+  function closeModal() {
+    state.modal = null; $('#modal-overlay').hidden = true;
+    if (!state.drawer) document.body.style.overflow = '';
+    if (lastFocus?.isConnected) lastFocus.focus();
+  }
+  function confirmApprovals() {
+    if (state.modal?.kind !== 'approvals' || !$('#confirm-approval')?.checked) return;
+    const drafts = state.modal.drafts;
+    const valid = drafts.every(d => {
+      const r = state.records[d.id];
+      return eligible(r) && r.assessment.id === d.assessmentId && r.sourceVersion === d.sourceVersion;
+    });
+    if (!valid) { closeModal(); toast('An assessment changed. Review the current version before confirming.'); return; }
+    drafts.forEach(d => {
+      state.records[d.id].approval = {assessmentId:d.assessmentId,sourceVersion:d.sourceVersion,at:new Date().toISOString()};
+      log(`Human approval simulated · ${d.id}`,`${d.assessmentId} · explicit confirmation recorded. No SAP write.`);
+    });
+    closeModal(); render(); announce(`${drafts.length} simulated approvals recorded.`);
+    toast(`${drafts.length} human approval${drafts.length === 1 ? '' : 's'} simulated. No SAP changes were made.`);
+  }
+  function exportResults() {
+    const payload = {prototype:true,policy:data.policy,exportedAt:new Date().toISOString(),assessments:Object.entries(state.records).filter(([,r]) => r.assessment).map(([id,r]) => ({notificationId:id,currentEvidenceVersion:r.sourceVersion,current:fresh(r),assessment:r.assessment,humanDecision:r.approval}))};
+    const url = URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));
+    const anchor = document.createElement('a'); anchor.href = url; anchor.download = 'gatekeeper-demo-assessments.json'; anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url),1000);
+    toast(`Exported ${payload.assessments.length} simulated assessment${payload.assessments.length === 1 ? '' : 's'}.`);
+  }
+  document.addEventListener('click',event => {
+    const mode = event.target.closest('[data-mode]');
+    if (mode) { switchMode(mode.dataset.mode); return; }
+    const el = event.target.closest('[data-action]');
+    if (!el || el.disabled) return;
+    event.preventDefault();
+    const id = el.dataset.id;
+    switch (el.dataset.action) {
+      case 'home': closeModal(); closeDrawer(); $('#worklist-title').scrollIntoView({behavior:'smooth',block:'center'}); break;
+      case 'reset': reset(); toast('Fresh worklist. Choose an approach and try it.'); break;
+      case 'evaluate': runCurrentMode(); break;
+      case 'evaluate-one': evaluate([id],state.records[id].status === 'exception' ? 'Focused exception review' : 'Individual review'); break;
+      case 'open': openDrawer(id); break;
+      case 'close-drawer': closeDrawer(); break;
+      case 'compare': showModal('compare'); break;
+      case 'policy': showModal('policy'); break;
+      case 'activity': showModal('activity'); break;
+      case 'consistency': showModal('consistency'); break;
+      case 'close-modal': closeModal(); break;
+      case 'open-example': closeModal(); openDrawer('10002195'); break;
+      case 'approvals': showModal('approvals'); break;
+      case 'approve-one': showModal('approvals',[id]); break;
+      case 'confirm-approval': confirmApprovals(); break;
+      case 'change-evidence': simulateChange(id); break;
+      case 'export': exportResults(); break;
+    }
+  });
+  document.addEventListener('change',event => {
+    if (event.target.matches('.row-select')) {
+      const id = event.target.value;
+      event.target.checked ? state.selected.add(id) : state.selected.delete(id); renderActions(); renderTable();
+    }
+    if (event.target.id === 'select-all') {
+      visibleNotifications().forEach(n => event.target.checked ? state.selected.add(n.id) : state.selected.delete(n.id)); renderActions(); renderTable();
+    }
+    if (event.target.id === 'filter') { state.filter = event.target.value; renderTable(); }
+    if (event.target.id === 'confirm-approval') $('#confirm-approval-button').disabled = !event.target.checked;
+  });
+  $('#search').addEventListener('input',event => { state.search = event.target.value; renderTable(); });
+  $('#drawer-overlay').addEventListener('click',closeDrawer);
+  $('#modal-overlay').addEventListener('click',event => { if (event.target.id === 'modal-overlay') closeModal(); });
+  document.addEventListener('keydown',event => {
+    if (event.key === 'Escape') { if (state.modal) closeModal(); else if (state.drawer) closeDrawer(); }
+    if (event.key === '/' && !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName) && !state.modal && !state.drawer) { event.preventDefault(); $('#search').focus(); }
+    if (event.key === 'Tab' && (state.modal || state.drawer)) {
+      const container = state.modal ? $('#modal') : $('#drawer');
+      const focusable = $$('button:not(:disabled),input:not(:disabled),select:not(:disabled),a[href],[tabindex="0"]',container).filter(el => el.getClientRects().length);
+      const first = focusable[0], last = focusable[focusable.length-1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    }
+  });
+  window.GATEKEEPER_DEMO = Object.freeze({
+    getState:() => JSON.parse(JSON.stringify({...state,selected:[...state.selected]}))
+  });
+  $('.page-footer>span:last-child').textContent = `Assessment design lab · ${policyLabel}`;
+  initialiseRecords(); render();
+})();
+
+</script>
+</body>
+</html>
