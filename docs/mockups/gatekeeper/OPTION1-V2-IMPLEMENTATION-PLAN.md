@@ -2,11 +2,13 @@
 
 Review and revised implementation plan, 17 October 2026.
 
+**Revision 2 — session-only state.** The user clarified that no durable SAP/assessment storage is expected at the BTP agent level. This revision removes the earlier mandatory database/restart-recovery requirement. Throughout this plan, “saved” or “stored assessment” means a typed snapshot held temporarily for the active session, not a durable business record.
+
 ## Decision and scope
 
 The proposed plan needs substantive changes before implementation. Renaming a link and asking the model to copy a prior table cannot establish a reliable assessment system. In V2, bulk is deliberately a quick pre-screen and individual review is deeper. Freezing the quick verdict would make the views look consistent while retaining incomplete analysis.
 
-Implement one full assessment pipeline, persist its evidence and result, and render that saved assessment in the summary, details and contextual chat. Clicking details must not initiate assessment. Explicit reassessment creates a new version.
+Reuse one full assessment pipeline, keep its evidence and result in temporary session memory, and render that same snapshot in the summary, details and contextual chat. Clicking details must not initiate assessment. Explicit reassessment creates a new revision within the session. Durability and full assessment depth are separate decisions: a complete assessment does not require a new agent database.
 
 The latest user choices govern this plan:
 
@@ -16,9 +18,19 @@ The latest user choices govern this plan:
 - Keep a **Joule-style conversation** with contextual human-in-the-loop actions.
 - Show the initial notification list with overall SAP details and **no AI result columns**.
 - Keep details **display-only**, including when a user opens an unassessed notification.
-- Do not add Settings, History, Policy, Export, or batch-approval navigation to the end-user interface. Internal policy management, version records and audit remain necessary.
+- Do not add Settings, History, Policy, Export, or batch-approval navigation to the end-user interface. Policy configuration and session revision references remain necessary. Any required long-term business audit uses the approved existing destination, such as SAP; this increment does not introduce durable agent-side storage.
 
 At 445 matching notifications, a 20-row page gives **23 pages**, with 5 notifications on the last page. Scrolling inside a page does not change page membership. Previous/Next navigates between pages.
+
+### Recommended decision
+
+Fix the critical routing/confirmation defects first, then deliver the full current-page review using temporary session state. The alternatives are not limited to copying a pre-screen or building a durable assessment platform.
+
+| Approach | Assessment depth | State | Fit for the current requirement |
+| --- | --- | --- | --- |
+| Critical fixes plus existing pre-screen | Listing-only checks | Existing conversation/session | A short-term patch only; label it preliminary and do not present it as the full Option 1 assessment. |
+| **Full current-page assessment with typed session snapshots** | Reuse the full single-review capability for each page member | Bounded, expiring process memory; no new database | **Recommended.** Full depth and consistent views during the active session. |
+| Full assessment plus durable agent storage | Full checks | Long-term application storage/recovery | Outside the user's current storage requirement; not a prerequisite for consistency. |
 
 ## 1. Inputs, verification and limitations
 
@@ -197,13 +209,13 @@ Suggested boundaries are deliberately small; filenames can be consolidated if th
 | Module | Responsibility |
 | --- | --- |
 | `assessment_models.py` | Typed page snapshot, run, evidence, finding, assessment and action-context schemas. |
-| `assessment_repository.py` | Authorized storage, immutable versions/current pointer, run membership, idempotency and item leases. |
-| `assessment_service.py` | Evidence collection, required-source completeness, existing consistency checks, semantic analysis, recommendation/confidence derivation, schema validation and atomic save. |
-| `batch_service.py` | Fixed current-page run, bounded workers, per-item completion/failure, retry and progress. |
+| `assessment_session.py` | Authorized in-memory snapshots, TTL/capacity cleanup, current revision, run membership, request deduplication and async locks. |
+| `assessment_service.py` | Reuse the existing full review capability, capture actual evidence/check coverage, validate the structured result, and publish the immutable session snapshot. Do not rewrite every company rule for this increment. |
+| `batch_service.py` or helpers in the service | Fixed current-page run, bounded async workers, isolated item invocations, per-item completion/failure, retry and progress. |
 | `assessment_presenter.py` | Raw list, result rows and detail presentation from typed records, with safe text escaping. |
-| `action_service.py` | Exact action confirmation, freshness checks, existing SAP operation sequence, outcomes and audit. |
+| `action_service.py` or the existing action handlers | Exact action confirmation against a live session snapshot, freshness checks, existing SAP operation sequence, outcomes and approved audit. |
 
-### Stored records
+### Temporary session records
 
 **Worklist snapshot:** snapshot ID, verified actor/tenant/backend scope, conversation, plant/filter/sort definition, ordered IDs, source listing time, total/completeness, page size 20 and expiry. The configured plant is not carried into new conversations as an implicit default; records can still retain the plant used for assessment/audit.
 
@@ -213,11 +225,25 @@ Suggested boundaries are deliberately small; filenames can be consolidated if th
 
 **Action context/outcome:** actor, conversation, notification ID, assessment ID/revision, permitted action, expiry/nonce, override reason when needed, request idempotency key, verified source state, mutation result, comment result, actual returned SAP status and audit reference.
 
-Use durable storage shared by deployed instances. `InMemoryTaskStore`, LLM checkpoints and `/tmp` audit files are not the authoritative assessment repository. Choose the existing supported application database/binding before implementation; SQLAlchemy is already a dependency. A local development store is acceptable for development but does not meet restart/multi-instance acceptance by itself. Page size 20 does not require a new multi-agent platform or distributed queue: persist item states/leases and implement recovery with the existing deployment, adding a separate worker only if operational needs justify it.
+Use a small `SessionAssessmentStore` in process memory, separate from the model's transcript. Key it by verified actor/tenant/backend and conversation, then notification/run/assessment IDs. Hold the actual evidence and structured findings needed for consistent display, with configurable TTL, capacity limits and cleanup. A dictionary alone is not enough: add per-item async locks/single-flight coordination and revision checks so overlapping requests cannot publish an older result over a newer one. There is no database binding, disk-backed cache or durable job queue in this scope.
 
-The PRD's existing data-handling constraint applies to this design: line 488 limits retained SAP data to the **authorized audit destination** and restricts retained creator PII to notification number/creator ID. Implement the canonical repository in that approved destination or explicitly reconcile the requirement before adding another persistent store. Persist the minimum policy-relevant evidence, with approved redaction/retention rules; do not dump full SAP entities, creator names or unrestricted long text into a new database, logs or the distributed plan package. Saved detail snapshots may use the permitted creator ID/redacted evidence; any requirement to retain more needs a documented PRD resolution. Scope and expire temporary listing/evidence caches within the same approved handling boundary.
+Expiry/eviction invalidates the session/run generation as well as deleting its records. Cancel its outstanding work where possible and reject late publication from the old generation, so an expired worker cannot recreate actionable results.
 
-Use a per-target/version lease or equivalent single-flight mechanism and a transactional compare-and-set when publishing the current assessment pointer. Reserve revision order consistently: a late older worker must not replace a newer current revision. Request idempotency alone does not prevent overlapping jobs with different request keys from evaluating the same target. Keep the full run/assessment records for audit while active views resolve the approved current pointer and mark historical snapshots explicitly.
+Reuse the current full single-notification review as the assessment capability. Its current output is prose/Markdown, so add a validated structured result and capture evidence/check coverage from actual tool execution. A rendered table parsed back from conversation is not that result. Missing required evidence must remain incomplete. This shared wrapper does not require rebuilding every rule as a new framework before the first delivery.
+
+**Parallelism must isolate model state.** V2 keys graph history by user and conversation. Do not invoke 20 reviews concurrently against that same mutable checkpoint thread. Use independent item invocation contexts (for example actor/conversation/run/notification), or a supported stateless assessment invocation, and publish only validated outcomes to the parent conversation. One async process can run these bounded tasks; adding Gunicorn workers is not required to parallelize reads.
+
+**Pilot deployment boundary:** V2's `manifest.yml` specifies one instance and one worker, while its `Procfile` specifies two workers. Verify which launch command is active and align the session-memory pilot to one owning process. Multi-worker/replica deployment requires verified session routing or another explicitly designed transient-state mechanism; it cannot silently assume that process-local dictionaries are shared. Do not add a durable database to address that question. Horizontal scaling/restart recovery is a separate requirement if later needed.
+
+**Loss/expiry behavior:** while the owning session lives, summary and details use the same immutable record. After TTL, eviction, restart, deployment or loss of that owning state, return “Assessment no longer available in this session” and disable its actions. The user can explicitly assess again. A browser may still show an old conversational snapshot, but that display is not authority to write. Do not silently reconstruct a result from chat, rescore it, or replay a write. Reconnect succeeds only while the session state still exists. Browser refresh alone may preserve the server session if its identity/state survives; no new persistence guarantee is implied.
+
+**Check existing retention paths too.** V2 prefers an SDK cloud checkpointer when importable and falls back to `MemorySaver`; the reviewed code does not establish the cloud backend's durability. Explicitly configure/verify a non-durable checkpoint mode when the user's constraint applies to conversational SAP data as well. Give the typed store its own cleanup policy rather than assuming the LLM checkpointer's TTL also covers it. Avoid logging raw evidence or writing snapshots to local files. PRD line 488 continues to govern retained business audit and creator PII. Reuse the approved audit destination/SAP action trail where required; that is separate from transient display state and does not authorize a new BTP data store.
+
+Delete/expire per-item child checkpoint histories and temporary raw tool evidence as well as the typed records. The word `MemorySaver` does not by itself give an expiry guarantee; a task's cleanup must cover its retained messages/caches.
+
+**Action retries have a boundary:** in-session idempotency prevents ordinary double clicks, but it does not provide exactly-once writes across process loss. Use SAP-supported request identity/concurrency controls and verified action outcomes where available. After an uncertain write or expired session, inspect/verify the actual backend outcome and require a fresh explicit action context; never automatically replay the mutation. The design must not claim durable deduplication from an in-memory map.
+
+These boundaries can be implemented as a session-store helper, shared full-review wrapper and presenter, plus changes to the existing executor/client. The module table describes responsibilities, not a requirement to build six separate subsystems.
 
 ### Action contract
 
@@ -247,7 +273,7 @@ For details, send `notificationId`, `assessmentId` and context identifiers. For 
 5. Stop that item if a required source is unavailable, in accordance with the PRD; save failure evidence and allow the remaining items to continue.
 6. Run objective checks in code. Use structured semantic findings for description/coding/occurrence interpretation where needed; never let tool-text instructions alter routing or permission.
 7. Derive recommendation/confidence using one shared rubric. Validate that Approve is impossible when a required check is incomplete or duplicate coverage is insufficient.
-8. Validate and atomically persist the entire immutable assessment. Only then publish its completion event and enable its eligible HIL actions.
+8. Validate and atomically publish the entire immutable assessment into the scoped session store. Only then emit its completion event and enable its eligible HIL actions.
 
 Do not assume every check has a real data source merely because a skill describes it. Verify the catalog, user/work-centre and functional-location resolvers. A populated user name is not proof of a valid SAP user. Missing resolver capabilities must be implemented or identified as unverified evidence; no invented Pass result.
 
@@ -257,7 +283,7 @@ Verify duplicate candidate evidence as well: the PRD requests status, reporter a
 
 V2 pins `a2a-sdk[all]==0.3.22`. Validate its structured data/artifact update APIs and the actual CAP consumer before selecting exact SDK calls. Preserve a short text summary for text-only consumers, but use structured page/result/progress payloads for the UI.
 
-Each event needs run/page identity, monotonically ordered sequence or equivalent revision, notification ID, item state and assessment ID for completed records. The client upserts by these keys, ignores duplicate/late stale events, and can resume from the persisted run after reconnect. Do not mark a job complete merely because one model text response finished. Keep full evidence on the server; fetch the selected assessment for details.
+Each event needs run/page identity, monotonically ordered sequence or equivalent revision, notification ID, item state and assessment ID for completed records. The client upserts by these keys and ignores duplicate/late stale events. Reconnect can recover only while the owning process/session still holds the run; otherwise show an expired/unavailable session. Do not mark a job complete merely because one model text response finished. Keep the evidence temporarily in the scoped session record and fetch that record for details.
 
 ### Confirmation and source currentness
 
@@ -265,11 +291,11 @@ Retain the existing tool-layer target/action guard and extend it. A server-issue
 
 For a Low-confidence outcome or its manual override, require and record the additional explicit uncertainty acknowledgment specified by PRD line 434. An ordinary Accept label, a quoted phrase or a model-inferred intention is not that acknowledgment.
 
-Relevant dependencies include notification state, equipment master, company policy/catalogs and duplicate scope, not just the notification's ETag. Use available source versions or fingerprints and policy-defined freshness windows; re-query required dynamic evidence when needed for action validation. If relevant evidence changed, mark the result outdated and request explicit reassessment. This validation is not a new hidden assessment.
+Relevant dependencies include notification state, equipment master, company policy/catalogs and duplicate scope, not just the notification's ETag. Use available source versions or fingerprints and policy-defined freshness windows; re-query required dynamic evidence when needed for action validation. External changes are not detected instantly without reads or events. If a relevant change is detected, mark the result outdated and request explicit reassessment. This validation is not a new hidden assessment.
 
 Where SAP supports optimistic concurrency, pass the expected assessed version to the mutation. V2's `function_import` currently fetches a fresh ETag at write time (`app/s4hana_client.py:511-535`); that alone does not prove the human-approved evidence was unchanged. Map actual backend concurrency support carefully. Related-source checks cannot make multiple SAP services one atomic transaction, so document the supported freshness boundary honestly.
 
-Use idempotent action records and recovery for repeated clicks/transport retries. Do not retry an uncertain write blindly. Approval and its follow-up comment retain their required order; if the comment fails after approval succeeds, report and retry the missing step without approving twice. Audit is retained even though there is no History tab.
+Use idempotent action records and recovery within the live session for repeated clicks/transport retries. Do not retry an uncertain write blindly; process loss requires backend outcome reconciliation. Approval and its follow-up comment retain their required order; if the comment fails after approval succeeds, report and retry the missing step without approving twice. Required retained audit uses the approved destination even though there is no History tab.
 
 ## 5. Performance changes, in order
 
@@ -318,8 +344,8 @@ Use the same representative 20-item datasets and policy before/after changes. Re
 | SAP status map | V2 YAML says Rework -> NOPO; V2 tool doc and PRD line 585 say Y02 -> AIRQ/OSNO. Consolidate one backend-verified configured map. Display actual API status, not an assumed status from the requested action. Do not blindly wire stale YAML into execution. |
 | HIL choices | PRD line 265 includes Request more information; the submitted plan substitutes Show Remaining. Keep information request as a business action and remaining/page controls as navigation. All SAP writes still require precise confirmation. |
 | Policy configuration | Stable check types belong in code; applicability, allowed catalogs, plant/type dependencies, materiality, approved action mappings and rubric versions are controlled inputs. Replace TODO catalogs and validate policy before enabling approval. Reload policy deliberately; pin each assessment's policy version. No Settings tab is required. |
-| Audit vs History UI | REQ-08 lines 311-313 requires earlier assessments, evidence and failures to remain traceable. Retain these backend records; omit History navigation as requested. |
-| Retained evidence | PRD line 488 permits retention only in the authorized audit destination and limits creator PII. Place the canonical snapshot/run store within that approved boundary and keep minimum/redacted evidence; resolve any changed retention need explicitly. |
+| Audit vs History UI | REQ-08 lines 311-313 requires earlier assessments, evidence and failures to remain traceable. Satisfy required long-term traceability only through the approved existing audit/SAP destination; omit History navigation and new durable agent storage. Temporary memory alone does not satisfy historical retrieval. If the approved destination cannot retain the required assessment evidence, record an explicit PRD exception/change rather than silently introducing an agent database or claiming the requirement is met. |
+| Retained evidence | The user excludes durable storage at agent BTP level. Keep assessment/run evidence only in temporary scoped memory. PRD line 488 still governs any approved external business audit and creator PII; do not add an agent database or new long-term log/snapshot destination. |
 | Model/runtime descriptions | PRD line 355 names GPT-4o/MCP while V2 uses GPT-5 and a CF direct-OData path as well as Joule support. Plan against V2; no model migration is necessary for consistency. |
 | Email | Preserve applicable unsent draft behavior. New Outlook integration is outside this increment; nothing is sent merely because the plan or PRD mentions email. |
 
@@ -339,19 +365,20 @@ The PRD's valid-company-policy inputs and action-map contradictions are implemen
 | `app/skills/duplicate-detection/SKILL.md` | Align coverage, no-label/unavailable handling and suspected-duplicate manual review with shared engine and approved policy. |
 | `app/skills/recommendation/SKILL.md` | Use the one rubric and outcome vocabulary; separate execution states from confidence; preserve evidence-backed reasoning and HIL. |
 | `app/skills/sap-action-mapping/SKILL.md` | Reconcile the verified action map and version-bound confirmation, including explicit manual duplicate disposition. |
-| `app/main.py` | Wire durable repository/run services and authenticated actor boundary; start/close pooled clients; recover persisted jobs. In-memory A2A task storage is not the assessment source of truth. |
+| `app/main.py` | Wire the scoped transient assessment store and authenticated actor boundary; start/close pooled clients; expire results/jobs on process loss. Keep typed results separate from conversational text/checkpoints. |
 | `app/audit_writer.py` | Append assessment/action version references, failures and partial success to approved storage; no visible History screen needed. |
-| Proposed assessment/repository/batch/presenter/action modules | Add the shared application boundaries and schemas described above; avoid duplicating rule logic in UI, prompts and separate batch functions. |
+| Proposed session/service/presenter helpers | Add the smallest shared boundaries and schemas described above, consolidating files where useful; reuse the full-review capability and avoid a database or a separate rules-engine rewrite. |
 | Actual Gatekeeper chat frontend(s), currently absent | Implement 20-row scrollable raw list, typed links/actions, result-card updates, saved detail display, chat context, HIL state and reconnection. If two deployed variants genuinely exist, share/test renderer behavior in both. Inspect the CAP proxy path as well. |
-| Tests and test fixtures | Add focused routing, evidence/decision, persistence, transport, UI and HIL tests below. V2 does not include a complete test suite in the archive. |
-| Deployment configuration | Add the chosen persistent-store binding and measured concurrency/lifecycle settings. Verify proxy/stream timeout behavior. Deployment and BTP credentials are a separate operational step, not part of executing this review. |
+| Tests and test fixtures | Add focused routing, evidence/decision, session expiry, parallel isolation, transport, UI and HIL tests below. V2 does not include a complete test suite in the archive. |
+| Deployment configuration | Align the single owning process/session routing and measured async concurrency settings; no new persistent-store binding. Verify checkpoint/logging behavior and proxy/stream timeouts. Deployment and BTP credentials remain a separate operational step. |
 
 Do not modify the Maintenance Creation Agent or the older checkout's agent implementation to approximate missing V2 sources. The archive is the baseline; the repository branch is only distributing this plan and the visual reference.
 
 ## 8. Implementation sequence and acceptance
 
-### Delivery 1: establish contracts and policy decisions
+### Delivery 1: fix critical dispatch and establish contracts
 
+- Fix arbitrary-text confirmation dispatch and add a genuine display-only route immediately. If a full session result is not yet available, show raw details/unavailable assessment; do not fall back to review or reconstruct a verdict from a pre-screen table.
 - Obtain the actual Gatekeeper frontend and CAP request/streaming handler sources.
 - Freeze the 20-row current-page contract, typed IDs and result schemas.
 - Reconcile the PRD policy/action-map contradictions and identify real evidence resolvers.
@@ -359,20 +386,20 @@ Do not modify the Maintenance Creation Agent or the older checkout's agent imple
 
 **Exit:** code paths, frontend sources and policy assumptions are explicit; the missing inputs are not represented as already implemented.
 
-### Delivery 2: shared full assessment and durable results
+### Delivery 2: shared full assessment and transient session results
 
-- Implement evidence/policy snapshots, repository and the full `assess_one` service.
+- Add evidence/policy snapshots and a typed transient session store. Wrap the existing full single-review capability with the shared `assess_one` entry point.
 - Reuse that service for explicit standalone assessment.
-- Save complete findings/rationale/result together; persist incomplete item states separately.
+- Keep complete findings/rationale/result together in memory; retain incomplete item states for the active session. Do not add durable agent storage.
 - Reconcile all prompts/skills with the executable pipeline.
 
-**Exit:** a real full assessment can be retrieved by ID after conversation summarization and process restart, without re-running checks.
+**Exit:** a full assessment can be retrieved by ID throughout the active owning session, independently of conversation summarization. TTL, restart or eviction yields an explicit expired/unavailable result with actions disabled; no automatic reassessment.
 
 ### Delivery 3: bounded current-page jobs and progressive transport
 
 - Capture the 20 or fewer IDs from the selected page, with an idempotent run.
-- Add shared retrieval and bounded workers; persist per-item completions/failures.
-- Implement structured progress, reconnect recovery and client upserts.
+- Add shared retrieval and bounded async workers; keep per-item completions/failures in session memory. Isolate parallel model/checkpoint contexts per notification.
+- Implement structured progress, client upserts, reconnect recovery within the live session and explicit expiry otherwise.
 - Fix snapshot pagination and connection lifecycle before claiming an improvement.
 
 **Exit:** all page members are accounted for; navigation/scrolling cannot add members; one timeout does not discard the other results.
@@ -390,7 +417,7 @@ Do not modify the Maintenance Creation Agent or the older checkout's agent imple
 
 - Bind confirmations to saved assessments and verified actor/action context.
 - Add stale-result handling, explicit reassessment and versioned updates.
-- Preserve correct SAP sequence, outcome verification, idempotent recovery, override reasons and audit.
+- Preserve correct SAP sequence, outcome verification, in-session idempotent recovery, override reasons and approved audit; reconcile uncertain outcomes after session/process loss.
 
 **Exit:** no stale/old-button/negated-message action can mutate the wrong notification or accept a superseded assessment.
 
@@ -418,7 +445,7 @@ Do not modify the Maintenance Creation Agent or the older checkout's agent imple
 | CONS-03 | Open unassessed row |Raw details/Not assessed; no analysis until a distinct explicit action. |
 | CONS-04 | Ask why |Read-only explanation of the selected saved record; no state/score mutation. |
 | CONS-05 | Independent entry points |Batch and standalone use the same rule engine with equal deterministic fixtures/semantic outputs. Do not require independent stochastic model calls to be byte-identical. |
-| CONS-06 | Long chat/restart/multiple instances |Saved assessment remains available and authorized; no dependency on a table remaining in model context. |
+| CONS-06 | Long chat and process/session loss |Summarization does not change the typed snapshot. Restart, TTL, eviction or missing owning state returns expired/unavailable, disables HIL, and requires explicit assessment; never reconstruct from chat. |
 | EVID-01 | Required SAP source fails |Affected item incomplete, failure evidence recorded, no invented Pass/approval/confidence; other page items continue. |
 | EVID-02 | Empty field vs unavailable field |Different evidence states; outcome follows approved policy. No blanket conversion of all blanks to Low. |
 | EVID-03 | Policy/catalog unresolved |No false code-invalid finding or false company-compliant approval. |
@@ -426,17 +453,18 @@ Do not modify the Maintenance Creation Agent or the older checkout's agent imple
 | DUP-02 | Duplicate outside current page |It is considered in the same-object open candidate scope. Page scope limits assessment targets, not duplicate evidence. |
 | DUP-03 | Missing technical object/malformed pool/error |Explicit unknown/unavailable evidence; never a verified “no duplicates”. |
 | BATCH-01 | HTTP batch A200/B500/C200 |All three request slots retain correct identity/status, including failed B; C cannot be assigned to B. Required only if batching is adopted. |
-| RUN-01 | Duplicate click/retry/reconnect |One idempotent run for that request; no duplicate current result, replayed UI row or competing write. |
+| RUN-01 | Duplicate click/retry/reconnect while session lives |One idempotent run for that request; no duplicate current result or replayed UI row. After process loss, show expiry and never replay a write automatically. |
 | RUN-01b | New request key or overlapping single/page request |Reuse a valid current assessment or join its in-flight work; new inference requires explicit reassessment. A late older worker/event cannot replace or display over a newer current revision. |
-| RUN-02 | Mixed successes/timeouts |Completed records remain available; retry only unresolved items; progress counts are truthful. |
-| RUN-03 | Concurrent sessions |SAP/model concurrency and actor isolation hold across jobs and deployment instances. |
+| RUN-02 | Mixed successes/timeouts |Completed records remain available within the live session; retry only unresolved items; progress counts are truthful. A restarted process does not claim to recover lost jobs. |
+| RUN-03 | Concurrent sessions/items |SAP/model limits and actor isolation hold; parallel notifications use isolated model/checkpoint contexts. Enforce one owning process or verified session routing; do not promise cross-replica recovery. |
 | REV-01 | Relevant evidence/policy changes |Old result marked outdated; ordinary Accept blocked; explicit reassessment makes a new version and updates active views. |
 | HIL-01 | Negation/quoted/explanatory Accept |Never authorizes a write. Ordinary chat has no mutation authority. |
 | HIL-02 | Old target/button/version/wrong user |Server rejects invalid action context; never falls back to last-selected target. |
-| HIL-03 | Approve succeeds, comment fails |Shows partial success; retry does not approve twice or claim complete audit success. |
+| HIL-03 | Approve succeeds, comment fails or outcome is uncertain |Shows known partial success; retry only the missing safe step. Timeout/process loss requires backend outcome reconciliation, not blind mutation replay or a claimed exactly-once guarantee. |
 | HIL-04 | CF and Joule paths |Equivalent display/confirmation restrictions verified at execution boundaries. |
 | HIL-05 | Low-confidence decision/override |Requires the additional recorded uncertainty acknowledgment; ordinary navigation or generic Accept text cannot satisfy it. |
-| DATA-01 | Saved snapshots/cache/audit |Use the authorized destination and approved retention/redaction rules; no unrestricted creator PII or full raw entities persist elsewhere. |
+| DATA-01 | Session state/checkpoints/cache/audit |No durable assessment/SAP data at agent BTP level; verify the selected checkpointer and logs as well as the new session store. Only approved business audit is retained in its authorized destination. |
+| SESSION-01 | TTL/capacity/isolation |Expire and evict records/checkpoint histories with actions disabled; reject late results from expired run generations. Verified users/conversations cannot read each other's records. Model summarization and 20 concurrent item tasks cannot overwrite another item's typed state. |
 | QUALITY-01 | Representative expert-reviewed cases |Full checks and decision/rationale quality meet the agreed pilot acceptance set; include true duplicates, separate occurrences, ambiguity and unavailable evidence. |
 | PERF-01 | Representative 20-row pages |Measured first result, total, p50/p95, detail latency, calls/tokens, retries and memory; no unsupported speedup claims. |
 
@@ -447,8 +475,8 @@ Do not modify the Maintenance Creation Agent or the older checkout's agent imple
 - Offline evaluation of recommendation agreement, duplicate precision/recall and confidence error rates against expert-labeled examples. This can improve confidence reliability, but it must not be presented as existing calibration.
 - Additional virtualization for unusually wide/large cards, if 20-row scrolling and ordinary pagination are insufficient in real usage.
 
-No multi-agent scoring layer, new model migration, Outlook integration, Settings tab or visible History page is necessary to implement this consistency increment.
+No multi-agent scoring layer, new model migration, durable agent database, Outlook integration, Settings tab or visible History page is necessary to implement this consistency increment.
 
 ## 9. Handoff instruction for the coding assistant
 
-Implement this design against assets V2 and the actual Gatekeeper frontend, not the older GitHub agent checkout. First map the exact existing entry points and resolve the missing frontend/policy inputs. Add the shared full assessment and saved-result contract, then the fixed 20-row current-page runner, display route and chat/HIL integration. Keep model/SAP calls out of completed detail rendering. Return a file-by-file diff and meaningful test results for review. Treat this document as a reviewed proposal, not evidence that changes are already implemented, performance is proven or deployment is authorized.
+Implement this design against assets V2 and the actual Gatekeeper frontend, not the older GitHub agent checkout. First map the exact existing entry points and resolve the missing frontend/policy inputs. Reuse the full review through a shared entry point and a typed temporary session snapshot, then add the fixed 20-row current-page runner, display route and chat/HIL integration. Do not introduce durable agent-side storage; expire the session safely when its state is lost. Keep model/SAP calls out of completed detail rendering. Return a file-by-file diff and meaningful test results for review. Treat this document as a reviewed proposal, not evidence that changes are already implemented, performance is proven or deployment is authorized.
