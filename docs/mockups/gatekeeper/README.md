@@ -1,5 +1,7 @@
 # Gatekeeper assessment UI prototype
 
+The latest [V2 implementation plan](OPTION1-V2-IMPLEMENTATION-PLAN.md) specifies **20 notifications on the current page**, full assessment with saved display-only details, and a Joule-style conversation without Settings/History tabs. It includes code findings, file-by-file impact and acceptance checks. The older eight-record prototype below remains a workflow reference; its navigation and simulated policy are not the production requirements.
+
 Open `Gatekeeper-options.html` in a web browser. It is a standalone offline mockup with embedded styles, scripts and simulated data; no installation is required.
 
 ## Selected direction: Option 1 — Complete batch
