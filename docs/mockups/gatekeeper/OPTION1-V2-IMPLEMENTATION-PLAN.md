@@ -4,6 +4,8 @@ Review and revised implementation plan, 17 October 2026.
 
 **Revision 2 — session-only state.** The user clarified that no durable SAP/assessment storage is expected at the BTP agent level. This revision removes the earlier mandatory database/restart-recovery requirement. Throughout this plan, “saved” or “stored assessment” means a typed snapshot held temporarily for the active session, not a durable business record.
 
+**Business source of truth:** confirmed decisions are implemented in SAP. **Show Remaining Notifications** queries SAP's current pending-work eligibility again. Notifications whose verified new status no longer matches that scope disappear from the remaining list; the agent does not need a durable local “processed” ledger.
+
 ## Decision and scope
 
 The proposed plan needs substantive changes before implementation. Renaming a link and asking the model to copy a prior table cannot establish a reliable assessment system. In V2, bulk is deliberately a quick pre-screen and individual review is deeper. Freezing the quick verdict would make the views look consistent while retaining incomplete analysis.
@@ -198,6 +200,22 @@ Show the saved assessment's time/version in unobtrusive detail metadata. It is a
 - If reassessment fails, retain the prior snapshot as a dated, outdated record and show the new run's incomplete state. Do not replace it with an invented verdict or re-enable its old approval.
 - Policy/model/rubric changes that affect evaluation also have versions. Do not replace a verdict under the same assessment ID.
 
+### F. Remaining work is determined by SAP
+
+Keep these meanings separate:
+
+- **Assessed:** the agent has prepared a proposal. The notification still belongs in the pending worklist until a backend action changes its eligibility.
+- **Action confirmed by the user:** permission was given, but the agent must still verify the actual backend outcome.
+- **Processed in SAP:** the action's resulting status/eligibility is verified. SAP's worklist filter determines whether that notification remains pending.
+
+**Show Remaining Notifications** performs a fresh SAP count/list with the same authorized plant and pending-work predicates (APRQ/no maintenance order and approved scope/type constraints). Do not subtract IDs from a durable local list or infer processing from an assessment, an Accept click, or an assumed status mapping. Approve/Rework/Complete and manual outcomes remove a row only when its actual new state no longer matches that pending scope. A failed action normally leaves it pending; an uncertain response requires re-reading SAP rather than guessing or replaying the write.
+
+Invalidate the temporary worklist snapshot after a verified mutation and on an explicit Show Remaining/Refresh request. Build a new 20-row page from the refreshed pending data, normally starting at page 1 so changed offsets do not skip untreated notifications. Existing running assessment jobs retain their original captured membership, but a successfully processed member must not regain active HIL actions through a late result/event. Old conversational result cards can remain dated snapshots; the refreshed remaining list reflects current SAP status.
+
+If approval changed SAP status but its follow-up audit comment failed, report that partial outcome. Its queue eligibility still follows the verified SAP status; comment recovery must not approve it again or create a false pending approval.
+
+The active-session assessment cache supports display consistency only. It is not a second system of record for business decisions. Standard SAP action results/comments and any approved existing audit trail carry the retained business outcome.
+
 ## 4. Backend design and request/result contracts
 
 ### One assessment service
@@ -357,7 +375,7 @@ The PRD's valid-company-policy inputs and action-map contradictions are implemen
 | --- | --- |
 | `app/agent_executor.py` | Add deterministic display/start/explain/reassess/action routes; resolve explicit page/assessment contexts; reject invalid whole IDs; remove substring-based write authorization; dispatch saved details without model invocation; stream structured run results; enforce runtime-equivalent permissions. |
 | `app/agent.py` | Separate conversation explanations from assessment execution; remove transcript authority and quick/full split; align table contracts and page size; provide selected immutable assessment context for follow-ups; preserve summarization without depending on it for decisions. |
-| `app/tools.py` | Extract reusable read/check capabilities from nested tool closures as needed; use full evidence projections; unify duplicate pool logic; return typed errors/completeness; retain write guard and extend its validated context; preserve SAP action ordering. |
+| `app/tools.py` | Extract reusable read/check capabilities from nested tool closures as needed; use full evidence projections; unify duplicate pool logic; return typed errors/completeness; retain write guard and extend its validated context; preserve SAP action ordering. Query fresh SAP eligibility/count/list for Show Remaining instead of relying on a local processed-ID ledger. |
 | `app/s4hana_client.py` | Add lifecycle-managed connection pooling, read retry policy and version handling. Repair `$batch` before it is used. Preserve destinations, proxy/auth, CSRF and actual backend ETag semantics. |
 | `app/config_loader.py` / `app/config/agent_config.yaml` | Validate real catalogs/plant dependencies and the approved mapping; expose immutable version/hash snapshot; handle reload/invalid configuration explicitly; connect policy to assessment. |
 | `app/skills/session-tracking/SKILL.md` | Remove pre-screen-only decision rules, all-seen-page accumulation, conflicting table shapes and mandatory later full review. Define raw 20-row pages, full-page assessment and saved-detail behavior. |
@@ -463,6 +481,8 @@ Do not modify the Maintenance Creation Agent or the older checkout's agent imple
 | HIL-03 | Approve succeeds, comment fails or outcome is uncertain |Shows known partial success; retry only the missing safe step. Timeout/process loss requires backend outcome reconciliation, not blind mutation replay or a claimed exactly-once guarantee. |
 | HIL-04 | CF and Joule paths |Equivalent display/confirmation restrictions verified at execution boundaries. |
 | HIL-05 | Low-confidence decision/override |Requires the additional recorded uncertainty acknowledgment; ordinary navigation or generic Accept text cannot satisfy it. |
+| QUEUE-01 | Show Remaining after a backend decision |Fresh SAP count/list excludes a notification whose verified new state leaves the pending scope. Assessment alone/Accept click alone never removes it. Failed or uncertain actions use actual backend state. |
+| QUEUE-02 | Pagination and late results after mutation |Invalidate/refresh the list snapshot, restart appropriate paging without skipped untreated rows, and prevent late assessment events from re-enabling actions on processed records. |
 | DATA-01 | Session state/checkpoints/cache/audit |No durable assessment/SAP data at agent BTP level; verify the selected checkpointer and logs as well as the new session store. Only approved business audit is retained in its authorized destination. |
 | SESSION-01 | TTL/capacity/isolation |Expire and evict records/checkpoint histories with actions disabled; reject late results from expired run generations. Verified users/conversations cannot read each other's records. Model summarization and 20 concurrent item tasks cannot overwrite another item's typed state. |
 | QUALITY-01 | Representative expert-reviewed cases |Full checks and decision/rationale quality meet the agreed pilot acceptance set; include true duplicates, separate occurrences, ambiguity and unavailable evidence. |
